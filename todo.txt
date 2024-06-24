@@ -1,0 +1,15 @@
+THROUGHOUT:
+ - refactoring, make code flexible and scalable
+
+OBJECTIVES:
+ - init (DONE)
+ - create env and player (DONE)
+ - create obstacles (DONE)
+ - implement simple physics and collision (DONE)
+ - add projectiles
+ - add weapons
+ - add parrying mechanics
+ - design simple level
+ - add enemies + AI
+ - flush out levels
+ - add menu/level system
