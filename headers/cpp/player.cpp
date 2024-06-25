@@ -96,7 +96,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
                                 (int)(pbPos.y - std::min(70.0f, lavNormal.y * 70.0f)) },
                             {   (int)(pbPos.x + std::min(70.0f, lavNormal.x * 70.0f)), 
                                 (int)(pbPos.y + std::min(70.0f, lavNormal.y * 70.0f)) },
-                olc::BLUE);
+                                olc::BLUE);
 
         }
         else {
@@ -106,17 +106,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
 
     // mouse updates
 
-    // why is there a delay to the projectile?
-    // projetile's trajectory is delayed by one click
-    // i think it has something to do with the mouse event click delay and how it
-    // delays the variable updating
-    // sometimes, the init vel.y is opposite, too
     if (engine->GetMouse(0).bPressed) {
-        vec2D mouseDist = { engine->GetMouseX() - _center.x, engine->GetMouseY() - _center.y};
-        _lookAngleVector = vec2DNormalise(mouseDist);
-        //_lookAngleDeg = atan2f(mouseDist.y, mouseDist.x);
-        //_lookAngleDeg = radToDeg(_lookAngleDeg);
-        engine->DrawString({ 50, 630 }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
 
         std::cout << "m1 clicked; shooting" << std::endl;
         vec2D projVel = vec2DMult(_lookAngleVector, fElapsedTime * 400000.0f);

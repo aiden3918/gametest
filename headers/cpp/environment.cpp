@@ -51,11 +51,10 @@ void Environment::addProjectile(Projectile& projectile) {
 void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse) {
 	if (_projectiles.size() == 0) return;
 
-
 	int screenWidth = pge->GetScreenSize().x;
 	int screenHeight = pge->GetScreenSize().y;
 
-	for (int i = 0; i < _projectiles.size() - 1; i++) {
+	for (int i = 0; i < _projectiles.size(); i++) {
 		Projectile* p = &_projectiles[i];
 
 		p->update(pge, fElapsedTime, mouse);
