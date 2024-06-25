@@ -16,7 +16,7 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
 
     _size = get_png_image_dimensions(filename);
 
-    _allowingUserInput = true;
+    _canMove = true;
     updateHitbox(); 
 }
 Player::~Player() {}
@@ -24,12 +24,12 @@ Player::~Player() {}
 void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environment* env, vec2D& mouse) {
 
     // movement and collisions
-    vel.x = 0.0f;
+    if (_movementCtr == 0.0f) vel.x = 0.0f;
     vec2D playerContactPoint, playerContactNormal;
     float playerT;
     std::vector<std::pair<GameObject, float>> possibleCollidingTiles;
 
-    if (_allowingUserInput) {
+    if (_movementCtr == 0.0f) {
         if (engine->GetKey(olc::A).bHeld) vel.x = -200.0f;
         if (engine->GetKey(olc::D).bHeld) vel.x = 200.0f;
     }
@@ -42,11 +42,21 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
         playerT);
 
     // walljump mechanics (unfinished, prevent movement input for a split second to allow vel.x change)
-    if (_allowingUserInput && (engine->GetKey(olc::W).bPressed || engine->GetKey(olc::SPACE).bPressed) &&
-        playerContactNormal.y != 1 && playerT == 0.0f)
+    if (_movementCtr > 0.0f) {
+        if (_movementCtr < _movementDuration) _movementCtr += fElapsedTime;
+        else _movementCtr = 0.0f;
+    }
+
+    if (_canMove && (engine->GetKey(olc::W).bPressed || engine->GetKey(olc::SPACE).bPressed) &&
+        playerContactNormal.y != 1 && playerT == 0.0f && _movementCtr == 0.0f)
     {
+        std::cout << "pcn: " << playerContactNormal.x << ", " << playerContactNormal.y << std::endl;
         vel.y = -500.0f;
-        vel.x = (playerContactNormal.x * fElapsedTime * 1500.0f);
+        // walljump
+        if (playerContactNormal.x != 0.0f) {
+            vel.x = (playerContactNormal.x * fElapsedTime * 50000.0f);
+            _movementCtr += fElapsedTime;
+        }
     }
 
     //pos.x += getDisp1(vel.x, accel.x, fElapsedTime);

@@ -30,8 +30,6 @@ private:
     std::unique_ptr<olc::Sprite> _sprite;
     unsigned int _uiSize[2];
     float _secCtr;
-    bool _allowingUserInput;
-    bool _allowingMovement;
     bool _allowingMouse;
     vec2D _lookAngleVector;
     float _lookAngleDeg;
@@ -40,6 +38,10 @@ private:
     float _parryDuration = 0.2f;
     bool _parrying;
     GameObject* _parryBox;
+
+    float _movementCtr = 0.0f;
+    float _movementDuration = 0.1f;
+    bool _canMove;
 
 };
 
