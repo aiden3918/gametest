@@ -13,10 +13,12 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
 
     if (affectedByGrav) accel.y = 1000.0f;
     _sprite = std::make_unique<olc::Sprite>(filename);
-
     _size = get_png_image_dimensions(filename);
 
     _canMove = true;
+
+    _displayPos = { 0, 0 };
+
     updateHitbox(); 
 }
 Player::~Player() {}
@@ -123,6 +125,8 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
         testProj.bounces = 3;
         env->addProjectile(testProj);
     }
+
+    _displayPos = { (engine->ScreenWidth() - _size.x) / 2.0f, (engine->ScreenHeight() / _size.y) / 2.0f };
     engine->DrawSprite({ (int)pos.x, (int)pos.y }, _sprite.get());
 
     // debug info

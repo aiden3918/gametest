@@ -27,6 +27,8 @@ private:
     void updateCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject, 
         float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt);
 
+    vec2D _displayPos;
+
     std::unique_ptr<olc::Sprite> _sprite;
     unsigned int _uiSize[2];
     float _secCtr;
