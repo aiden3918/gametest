@@ -25,6 +25,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
 
     // movement and collisions
     if (_movementCtr == 0.0f) vel.x = 0.0f;
+
     vec2D playerContactPoint, playerContactNormal;
     float playerT;
     std::vector<std::pair<GameObject, float>> possibleCollidingTiles;
@@ -41,7 +42,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     updateCollisions(fElapsedTime, env, possibleCollidingTiles, playerContactPoint, playerContactNormal,
         playerT);
 
-    // walljump mechanics (unfinished, prevent movement input for a split second to allow vel.x change)
+    // walljump mechanics
     if (_movementCtr > 0.0f) {
         if (_movementCtr < _movementDuration) _movementCtr += fElapsedTime;
         else _movementCtr = 0.0f;
@@ -59,8 +60,6 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
         }
     }
 
-    //pos.x += getDisp1(vel.x, accel.x, fElapsedTime);
-    //pos.y += getDisp1(vel.y, accel.y, fElapsedTime);
     // technically an approximation, but is ok 
     pos.x += vel.x * fElapsedTime;
     pos.y += vel.y * fElapsedTime;
@@ -71,10 +70,10 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     engine->DrawLine({ (int)_center.x, (int)_center.y }, { (int)mouse.x, (int)mouse.y }, olc::YELLOW);
     vec2D mouseDist = { mouse.x - _center.x, mouse.y - _center.y };
     _lookAngleVector = vec2DNormalise(mouseDist);
-    _lookAngleDeg = atan2f(mouseDist.y, mouseDist.x);
-    _lookAngleDeg = radToDeg(_lookAngleDeg);
     engine->DrawString({ 50, 630 }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
-    engine->DrawString({ 50, 660 }, "look angle: " + std::to_string(_lookAngleDeg) + " deg");
+    //_lookAngleDeg = atan2f(mouseDist.y, mouseDist.x);
+    //_lookAngleDeg = radToDeg(_lookAngleDeg);
+    // engine->DrawString({ 50, 660 }, "look angle: " + std::to_string(_lookAngleDeg) + " deg");
 
     // ability updates
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
@@ -84,8 +83,8 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
         vec2D parryBoxSize = { 100.0f, 100.0f };
         vec2D lavScaled = vec2DMult(_lookAngleVector, 100.0f);
         // vec2D newParryPos = vec2DAdd(pos, lavScaled);
-        vec2D dummy = { _center.x - parryBoxSize.x / 2.0f, _center.y - parryBoxSize.y / 2.0f };
-        vec2D newParryPos = vec2DAdd(dummy, lavScaled);
+        vec2D oldParryPos = { _center.x - parryBoxSize.x / 2.0f, _center.y - parryBoxSize.y / 2.0f };
+        vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
 
         // newParryPos.x -= parryBoxSize.x / 2.0f; newParryPos.y -= parryBoxSize.y / 2.0f;
         _parryBox = new GameObject(newParryPos, parryBoxSize, { 0, 0 }, { 0, 0 }, false, false);
@@ -115,7 +114,6 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     }
 
     // mouse updates
-
     if (engine->GetMouse(0).bPressed) {
 
         std::cout << "m1 clicked; shooting" << std::endl;
