@@ -7,6 +7,7 @@
 #include "headers/h/player.h"
 #include "headers/h/tile.h"
 #include "headers/h/util.h"
+#include "headers/h/entity.h"
 
 class Game : public olc::PixelGameEngine {
 public:
@@ -20,17 +21,23 @@ public:
     bool OnUserCreate() override
     {
         std::string playerSpriteRef = "assets/sprites/sprite-temp.png";
-        mainPlayer = new Player({ 500, 300 }, { 0, 0 }, { 0, 0 }, playerSpriteRef, true, true);
+        mainPlayer = new Player({ 400, 300 }, { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
         worldEnvironment = new Environment();
-        Tile floor = Tile({ 0, 600 }, { 1280, 120 });
+        Tile floor = Tile({ -500, 600 }, { 2500, 120 });
         Tile ceiling = Tile({ 0, 0 }, { 1280, 50 });
         Tile wall = Tile({ 100, 300 }, { 50, 200 });
         Tile wall2 = Tile({ 700, 400 }, { 200, 50 });
+
+        Entity dummy1 = Entity({ 800, 200 }, { 0, 0 }, { 0, 0 }, { 50, 100 }, DUMMY);
+        dummy1.hp = 9999.0f;
+        dummy1.dmg = 0.0f;
+
         worldEnvironment->addTile(floor);
         worldEnvironment->addTile(ceiling);
         worldEnvironment->addTile(wall);
         worldEnvironment->addTile(wall2);
+        worldEnvironment->addEntity(dummy1);
 
         return true;
     }
@@ -40,9 +47,11 @@ public:
         Clear(olc::GREY);
         vec2D mouseInfo = { GetMouseX(), GetMouseY() };
 
-        worldEnvironment->drawTiles(this, fElapsedTime);
+        vec2D displayOffset = mainPlayer->getDisplayOffset();
+        worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
-        worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo);
+        worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
+        worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset);
 
         return true;
     }

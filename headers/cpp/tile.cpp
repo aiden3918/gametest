@@ -16,7 +16,7 @@ Tile::Tile(vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, olc::Pixel
 }
 Tile::~Tile() {}
 
-void Tile::update(olc::PixelGameEngine* engine, float elapsedTime) {
+void Tile::update(olc::PixelGameEngine* engine, float elapsedTime, vec2D displayOffset) {
 	updateHitbox();
-	engine->FillRect({ (int)pos.x, (int)pos.y }, { (int)_size.x, (int)_size.y }, color);
+	engine->FillRect({ (int)(pos.x + displayOffset.x), (int)(pos.y + displayOffset.y)}, {(int)_size.x, (int)_size.y}, color);
 }

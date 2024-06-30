@@ -17,7 +17,7 @@ Projectile::Projectile(vec2D initPos, float size, ProjShape shape, bool friendly
 }
 Projectile::~Projectile() {}
 
-void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse) {
+void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
 
 	vel.x += accel.x * fElapsedTime;
 	vel.y += accel.y * fElapsedTime;
@@ -32,7 +32,7 @@ void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D
 	else {
 		// thicker bullet
 		for (int i = -1; i < 2; i++) {
-			engine->DrawLine({ (int)(pos.x - vel.x * fElapsedTime) + i, (int)(pos.y - vel.y * fElapsedTime) + i }, { (int)pos.x + i, (int)pos.y + i }, color);
+			engine->DrawLine({ (int)(round((pos.x - vel.x * fElapsedTime) + displayOffset.x + i)), (int)(round((pos.y - vel.y * fElapsedTime) + displayOffset.y + i)) }, { (int)(pos.x + displayOffset.x + i), (int)(pos.y + displayOffset.y + i) }, color);
 		}
 	}
 		//else engine->DrawLine({ (int)(pos.x -= 10), (int)(pos.y -= 10) }, { (int)pos.x, (int)pos.y }, color);

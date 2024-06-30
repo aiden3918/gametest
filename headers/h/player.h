@@ -10,24 +10,44 @@
 #include "util.h"
 #include "gameObject.h"
 #include <algorithm>
+#include <fstream>
+#include "../extern-lib/rapidjson/document.h"
+#include "../extern-lib/rapidjson/writer.h"
+#include "../extern-lib/rapidjson/stringbuffer.h"
+
+const enum Weapons {VANTABLADE, POCKETROCKET};
+const std::string weaponNames[2] = { "Vantablade", "Pocket Rocket" };
 
 class Player : public GameObject {
 public:
     // need this to work with pge
     Player();
-    Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, bool affectedByGrav = true, bool tangible = true);
+    Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, vec2D screenSize, bool affectedByGrav = true, bool tangible = true);
     ~Player();
     // init(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, bool affectedByGrav = true, bool canCollide = true);
     
     void update(olc::PixelGameEngine* engine, float fElapsedTime, Environment* env, vec2D& mouse);
     float getLookAngleDeg();
     vec2D getLookAngleVec();
+
+    vec2D getDisplayOffset();
 private:
 
     void updateCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject, 
         float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt);
 
+    inline void updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT);
+    inline void updateHorizontalMovement(olc::PixelGameEngine* engine);
+    inline void updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
+    inline void updateWeapons(olc::PixelGameEngine* engine);
+    inline void updateParry(olc::PixelGameEngine* engine, float &fElapsedTime);
+    inline void updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
+
     vec2D _displayPos;
+    vec2D _displayCenter;
+
+    vec2D _displayOffset;
 
     std::unique_ptr<olc::Sprite> _sprite;
     unsigned int _uiSize[2];
@@ -40,10 +60,13 @@ private:
     float _parryDuration = 0.2f;
     bool _parrying;
     GameObject* _parryBox;
+    line _parryLine;
 
     float _movementCtr = 0.0f;
     float _movementDuration = 0.1f;
     bool _canMove;
+
+    Weapons currentWeapon;
 
 };
 

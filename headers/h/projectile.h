@@ -20,7 +20,7 @@ public:
 		 bool parriable = true);
 	~Projectile();
 
-	void update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse);
+	void update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset);
 	void updateHitbox();
 	ProjShape getShape();
 	// bool checkCollision(Environment* env, Tile& possibleTileCollided);

@@ -3,24 +3,9 @@
 Environment::Environment() {}
 Environment::~Environment() {}
 
-bool Environment::gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile) {
-
-	AABB objectHitbox = gameObject.getHitbox();
-
-	for (Tile& i : _tangibleTiles) {
-		AABB tileHitbox = i.getHitbox();
-		if (checkAABBCollision(objectHitbox, tileHitbox)) {
-			collidedTile = i;
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime) { 
-	for (Tile &t : _tangibleTiles) t.update(pge, fElapsedTime); 
-	for (Tile &t : _intangibleTiles) t.update(pge, fElapsedTime);
+void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &displayOffset) {
+	for (Tile &t : _tangibleTiles) t.update(pge, fElapsedTime, displayOffset);
+	for (Tile &t : _intangibleTiles) t.update(pge, fElapsedTime, displayOffset);
 
 	if (pge->GetKey(olc::T).bPressed) std::cout << _tangibleTiles.size() << std::endl;
 }
@@ -48,7 +33,7 @@ void Environment::addProjectile(Projectile& projectile) {
 	_projectiles.push_back(projectile);
 }
 
-void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse) {
+void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse, vec2D &displayOffset) {
 	if (_projectiles.size() == 0) return;
 
 	int screenWidth = pge->GetScreenSize().x;
@@ -57,10 +42,11 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 	for (int i = 0; i < _projectiles.size(); i++) {
 		Projectile* p = &_projectiles[i];
 
-		p->update(pge, fElapsedTime, mouse);
+		p->update(pge, fElapsedTime, mouse, displayOffset);
 
 		// if out of screen
-		if (!checkPtCollision(p->pos, { {0, 0}, {(float)screenWidth, (float)screenHeight } })
+		vec2D projDisplayPos = { p->pos.x + displayOffset.x, p->pos.y + displayOffset.y };
+		if (!checkPtCollision(projDisplayPos, { {0, 0}, {(float)screenWidth, (float)screenHeight} })
 			&& p->bounces > 0) {
 			_eraseProj(i);
 			return;
@@ -111,3 +97,79 @@ void Environment::_eraseProj(int& index) {
 	_projectiles.erase(_projectiles.begin() + index);
 	std::cout << "proj deleted" << std::endl;
 }
+
+void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
+	for (int i = 0; i < _entities.size(); i++) {
+		if (_entities[i].hp <= 0) _deleteEntity(i);
+		else {
+			handleEntityCollisions(fElapsedTime);
+			_entities[i].update(pge, fElapsedTime, mouse, displayOffset);
+		}
+	}
+}
+
+void Environment::addEntity(Entity& entity) {
+	_entities.push_back(entity);
+}
+
+void Environment::addEntity(vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
+	bool affectedByGrav, bool tangible) {
+	Entity entity = Entity(initPos, initVel, initAccel, size, entityType, affectedByGrav, tangible);
+	_entities.push_back(entity);
+}
+
+void Environment::_deleteEntity(int& index) {
+	_entities.erase(_entities.begin() + index);
+}
+
+void Environment::handleEntityCollisions(float &fElapsedTime) {
+
+	for (auto& e : _entities) {
+		e.vel.x += e.accel.x * fElapsedTime;
+		e.vel.y += e.accel.y * fElapsedTime;
+
+		std::vector<std::pair<GameObject, float>> possibleColTiles;
+		vec2D pct; vec2D pcn; float pt;
+
+		for (auto& i : getTangibleTiles()) {
+			if (checkDynamicRectVsRectCollision(e, i, fElapsedTime, pct, pcn, pt)) {
+
+				std::cout << "dummy collision detected" << std::endl;
+
+				//std::cout << "Player contact with test box" << std::endl;
+				//std::cout << pcn.x << " " << pcn.y << std::endl;
+
+				possibleColTiles.push_back({ i, pt });
+			}
+		}
+
+		// sort tiles by proximity by checking tNear;
+		std::sort(possibleColTiles.begin(), possibleColTiles.end(),
+			[](const std::pair<GameObject, float>& a, const std::pair<GameObject, float>& b) {
+				return a.second < b.second;
+			}
+		);
+
+		for (auto& k : possibleColTiles) {
+			if (checkDynamicRectVsRectCollision(e, k.first, fElapsedTime, pct, pcn, pt)) {
+				e.vel.x += pcn.x * std::abs(e.vel.x) * (1 - pt);
+				e.vel.y += pcn.y * std::abs(e.vel.y) * (1 - pt);
+			}
+		}
+	}
+}
+
+//bool Environment::gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile) {
+//
+//	AABB objectHitbox = gameObject.getHitbox();
+//
+//	for (Tile& i : _tangibleTiles) {
+//		AABB tileHitbox = i.getHitbox();
+//		if (checkAABBCollision(objectHitbox, tileHitbox)) {
+//			collidedTile = i;
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}

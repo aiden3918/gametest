@@ -24,6 +24,11 @@ struct AABB {
 	vec2D max;
 };
 
+struct line {
+	vec2D start;
+	vec2D stop;
+};
+
 // treating a struct as a vector here feels wrong, but compiler says its ok sooooooo
 inline vec2D vec2DAdd(vec2D& a, vec2D& b) { return { a.x + b.x, a.y + b.y }; }
 inline vec2D vec2DSub(vec2D& a, vec2D& b) { return { a.x - b.x, a.y - b.y }; }

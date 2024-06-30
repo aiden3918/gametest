@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gameV2.cpp" />
+    <ClCompile Include="headers\cpp\entity.cpp" />
     <ClCompile Include="headers\cpp\environment.cpp" />
     <ClCompile Include="headers\cpp\gameObject.cpp" />
     <ClCompile Include="headers\cpp\player.cpp" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="headers\extern-lib\olcPixelGameEngine.h" />
     <ClInclude Include="headers\h\collision.h" />
+    <ClInclude Include="headers\h\entity.h" />
     <ClInclude Include="headers\h\environment.h" />
     <ClInclude Include="headers\h\gameObject.h" />
     <ClInclude Include="headers\h\player.h" />
@@ -151,6 +153,7 @@
     <Text Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\weapons.json" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

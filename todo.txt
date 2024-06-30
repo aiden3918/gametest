@@ -6,10 +6,14 @@ OBJECTIVES:
  - create env and player (DONE)
  - create obstacles (DONE)
  - implement simple physics and collision (DONE)
- - add projectiles
+ - add projectiles (DONE)
  - add weapons
  - add parrying mechanics
  - design simple level
  - add enemies + AI
  - flush out levels
  - add menu/level system
+
+ NOTES:
+ - always add display offset in drawing function (last step) so actual cartesian coordinates are preserved,
+ just not displayed. helps with math, physics, and stuff

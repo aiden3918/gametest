@@ -15,7 +15,7 @@ public:
 	Tile(vec2D initPos, vec2D size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
 	~Tile();
 
-	void update(olc::PixelGameEngine* engine, float elapsedTime);
+	void update(olc::PixelGameEngine* engine, float elapsedTime, vec2D displayOffset);
 
 public:
 	olc::Pixel color;
