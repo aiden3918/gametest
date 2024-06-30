@@ -19,9 +19,6 @@ Projectile::~Projectile() {}
 
 void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
 
-	vel.x += accel.x * fElapsedTime;
-	vel.y += accel.y * fElapsedTime;
-
 	// vec2D oldPos = pos;
 
 	pos.x += vel.x * fElapsedTime;
