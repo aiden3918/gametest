@@ -47,7 +47,7 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 		// if out of screen
 		vec2D projDisplayPos = { p->pos.x + displayOffset.x, p->pos.y + displayOffset.y };
 		if (!checkPtCollision(projDisplayPos, { {0, 0}, {(float)screenWidth, (float)screenHeight} })
-			&& p->bounces > 0) {
+			|| p->bounces < 1 || p->pierce < 1) {
 			_eraseProj(i);
 			return;
 		}
@@ -66,7 +66,6 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 					projCtT >= 0.0f && projCtT <= 1.0f) {
 
 					p->bounces--;
-					if (p->bounces == 0) _eraseProj(i);
 
 					/*(projCtN.x != 0) ? p->vel.x *= -1.0f : p->vel.y *= -1.0f;*/
 
@@ -133,8 +132,6 @@ void Environment::handleEntityCollisions(float &fElapsedTime) {
 
 		for (auto& i : getTangibleTiles()) {
 			if (checkDynamicRectVsRectCollision(e, i, fElapsedTime, pct, pcn, pt)) {
-
-				std::cout << "dummy collision detected" << std::endl;
 
 				//std::cout << "Player contact with test box" << std::endl;
 				//std::cout << pcn.x << " " << pcn.y << std::endl;
