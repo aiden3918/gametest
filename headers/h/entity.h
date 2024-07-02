@@ -19,9 +19,10 @@ public:
     ~Entity();
 
     void update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mouse, vec2D& displayOffset);
+    EntityType getType();
 
-    float hp; 
-    float dmg;
+    float hp = 1.0f; 
+    float dmg = 0.0f;
 
     //test (use sprites in future)
     olc::Pixel color;

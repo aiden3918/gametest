@@ -30,6 +30,8 @@ public:
 	int pierce = 1;
 	bool isFriendly;
 
+	float dmg = 1.0f;
+
 protected:
 	bool _parriable;
 	float _length;

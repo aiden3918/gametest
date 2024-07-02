@@ -9,6 +9,8 @@
 #include "collision.h"
 #include "util.h"
 #include "gameObject.h"
+#include "entity.h"
+#include "animation.h"
 #include <algorithm>
 #include <fstream>
 #include "../extern-lib/rapidjson/document.h"
@@ -31,42 +33,67 @@ public:
     vec2D getLookAngleVec();
 
     vec2D getDisplayOffset();
+
+    float hp = 100.0f;
+    float movespeed = 200.0f;
+    float jumpspeed = 500.0f;
+
+    // weapon data
+    Weapons currentWeapon;
+    float currentWeaponDmg;
+    float currentWeaponInterval;
 private:
 
-    void updateCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject, 
+    void _updateTileCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject, 
         float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt);
 
-    inline void updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT);
-    inline void updateHorizontalMovement(olc::PixelGameEngine* engine);
-    inline void updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
-    inline void updateWeapons(olc::PixelGameEngine* engine);
-    inline void updateParry(olc::PixelGameEngine* engine, float &fElapsedTime);
-    inline void updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
-    inline void updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
+    inline void _updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT);
+    inline void _updateHorizontalMovement(olc::PixelGameEngine* engine);
+    inline void _updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
+    inline void _updateWeapons(olc::PixelGameEngine* engine);
+    inline void _updateParry(olc::PixelGameEngine* engine, float &fElapsedTime);
+    inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
+    inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void _updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime);
 
+    // "scroll effect" data
     vec2D _displayPos;
     vec2D _displayCenter;
 
     vec2D _displayOffset;
 
+    // sprite data
     std::unique_ptr<olc::Sprite> _sprite;
     unsigned int _uiSize[2];
-    float _secCtr;
-    bool _allowingMouse;
+    float _secCtr; // ????
+
+    // mouse data
+    bool _allowingMouse = true;
     vec2D _lookAngleVector;
     float _lookAngleDeg;
 
+    // parry ability data
     float _parryCtr = 0.0f;
     float _parryDuration = 0.2f;
     bool _parrying;
     GameObject* _parryBox;
     line _parryLine;
 
+    // movement data
     float _movementCtr = 0.0f;
     float _movementDuration = 0.1f;
-    bool _canMove;
+    bool _canMove = true;
 
-    Weapons currentWeapon;
+    //iframes data
+    float _iFramesCounter = 0.0f;
+    float _iFramesInterval = 0.5f; // cannot get hit within 0.5s of each other
+    bool _invincible = false;
+
+    // animation data
+    vec2D partialSpriteSize = { 50.0f, 100.0f };
+    animationHandler animHandler;
+
 
 };
 

@@ -31,15 +31,17 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     float playerT;
     std::vector<std::pair<GameObject, float>> possibleCollidingTiles;
 
-    updateHorizontalMovement(engine);
+    _updateHorizontalMovement(engine);
 
     vel.x += accel.x * fElapsedTime;
     vel.y += accel.y * fElapsedTime;
 
-    updateCollisions(fElapsedTime, env, possibleCollidingTiles, playerContactPoint, playerContactNormal,
+    _updateTileCollisions(fElapsedTime, env, possibleCollidingTiles, playerContactPoint, playerContactNormal,
         playerT);
 
-    updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
+    _updateEnemyCollisions(engine, env, fElapsedTime);
+
+    _updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
 
     // technically an approximation, but is ok 
     pos.x += vel.x * fElapsedTime;
@@ -52,26 +54,28 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     _displayOffset = vec2DSub(_displayPos, pos);
 
     // mouse info
-    updateMouseInfo(engine, mouse);
+    _updateMouseInfo(engine, mouse);
 
     // weapon selection
-    updateWeapons(engine);
+    _updateWeapons(engine);
 
     // ability updates
-    updateParry(engine, fElapsedTime);
+    _updateParry(engine, fElapsedTime);
 
     // mouse updates
-    updateMouseMechanics(engine, env, fElapsedTime);
+    _updateMouseMechanics(engine, env, fElapsedTime);
 
     // finally, display character
     engine->DrawSprite({ (int)_displayPos.x, (int)_displayPos.y }, _sprite.get());
 
     // debug info
-    updatePlayerInfo(engine, playerContactNormal, playerContactPoint, playerT);
+    _updatePlayerInfo(engine, playerContactNormal, playerContactPoint, playerT);
+
+    _updatePlayerUI(engine, fElapsedTime);
 
 }
 
-void Player::updateCollisions(float& fElapsedTime, Environment* env, 
+void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
     std::vector<std::pair<GameObject, float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt) 
 {
     for (auto& i : env->getTangibleTiles()) {
@@ -100,7 +104,7 @@ void Player::updateCollisions(float& fElapsedTime, Environment* env,
     }
 }
 
-inline void Player::updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT) {
+inline void Player::_updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT) {
     // walljump mechanics
     if (_movementCtr > 0.0f) {
         if (_movementCtr < _movementDuration) _movementCtr += fElapsedTime;
@@ -111,7 +115,7 @@ inline void Player::updateJumpMechanics(olc::PixelGameEngine* engine, float fEla
         pcn.y != 1 && playerT == 0.0f && _movementCtr == 0.0f)
     {
         std::cout << "pcn: " << pcn.x << ", " << pcn.y << std::endl;
-        vel.y = -500.0f;
+        vel.y = -jumpspeed;
         // walljump
         if (pcn.x != 0.0f) {
             vel.x = (pcn.x * fElapsedTime * 50000.0f);
@@ -120,16 +124,16 @@ inline void Player::updateJumpMechanics(olc::PixelGameEngine* engine, float fEla
     }
 }
 
-inline void Player::updateHorizontalMovement(olc::PixelGameEngine* engine) {
+inline void Player::_updateHorizontalMovement(olc::PixelGameEngine* engine) {
     if (_movementCtr == 0.0f) {
         vel.x = 0.0f;
-        if (engine->GetKey(olc::A).bHeld) vel.x = -200.0f;
-        if (engine->GetKey(olc::D).bHeld) vel.x = 200.0f;
+        if (engine->GetKey(olc::A).bHeld) vel.x = -movespeed;
+        if (engine->GetKey(olc::D).bHeld) vel.x = movespeed;
     }
     // if (engine->GetKey(olc::S).bHeld) vel.y = 100.0f;
 }
 
-inline void Player::updateWeapons(olc::PixelGameEngine* engine) {
+inline void Player::_updateWeapons(olc::PixelGameEngine* engine) {
     if (engine->GetKey(olc::K1).bPressed) {
         currentWeapon = VANTABLADE;
         std::cout << "Vantablade equipped" << std::endl;
@@ -141,7 +145,7 @@ inline void Player::updateWeapons(olc::PixelGameEngine* engine) {
     }
 }
 
-inline void Player::updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse) {
+inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse) {
     engine->DrawLine({ (int)_displayCenter.x, (int)_displayCenter.y }, { (int)mouse.x, (int)mouse.y }, olc::YELLOW);
     vec2D mouseDist = { mouse.x - _displayCenter.x, mouse.y - _displayCenter.y };
     _lookAngleVector = vec2DNormalise(mouseDist);
@@ -151,7 +155,7 @@ inline void Player::updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse) 
     // engine->DrawString({ 50, 660 }, "look angle: " + std::to_string(_lookAngleDeg) + " deg");
 }
 
-inline void Player::updateParry(olc::PixelGameEngine* engine, float &fElapsedTime) {
+inline void Player::_updateParry(olc::PixelGameEngine* engine, float &fElapsedTime) {
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
         std::cout << "parry" << std::endl;
         _parryCtr += fElapsedTime;
@@ -201,7 +205,7 @@ inline void Player::updateParry(olc::PixelGameEngine* engine, float &fElapsedTim
     }
 }
 
-inline void Player::updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime) {
+inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime) {
     if (engine->GetMouse(0).bPressed) {
         switch (currentWeapon) {
             case VANTABLADE:
@@ -218,7 +222,7 @@ inline void Player::updateMouseMechanics(olc::PixelGameEngine* engine, Environme
     }
 }
 
-inline void Player::updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT) {
+inline void Player::_updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT) {
     if (engine->GetKey(olc::I).bPressed) {
         std::cout << "pos: (" << pos.x << ", " << pos.y << ")" << std::endl;
         std::cout << "vel: (" << vel.x << ", " << vel.y << ")" << std::endl;
@@ -227,6 +231,29 @@ inline void Player::updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, v
         std::cout << "contact pt: (" << pcp.x << ", " << pcp.y << ")" << std::endl;
         std::cout << "pct: " << pT << std::endl;
     }
+}
+
+inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
+    vec2D pct; vec2D pcn; float pt;
+
+    // if invincible, do not bother
+    if (_iFramesCounter > 0.0f) {
+        _iFramesCounter += fElapsedTime;
+        if (_iFramesCounter > _iFramesInterval) _iFramesCounter = 0.0f;
+        return;
+    }
+    
+    for (auto& e : env->getEntities()) {
+        if (checkDynamicRectVsRectCollision(*this, e, fElapsedTime, pct, pcn, pt) && e.getType() == ENEMY) {
+            std::cout << "collided with enemy" << std::endl;
+            hp -= e.dmg;
+            _iFramesCounter += fElapsedTime;
+        }
+    }
+}
+
+inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {
+    engine->DrawString({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN);
 }
 
 float Player::getLookAngleDeg() { return _lookAngleDeg; }

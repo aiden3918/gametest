@@ -99,12 +99,15 @@ void Environment::_eraseProj(int& index) {
 
 void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
 	for (int i = 0; i < _entities.size(); i++) {
-		if (_entities[i].hp <= 0) _deleteEntity(i);
-		else {
-			handleEntityCollisions(fElapsedTime);
-			_entities[i].update(pge, fElapsedTime, mouse, displayOffset);
+		if (_entities[i].hp <= 0) {
+			_deleteEntity(i);
+			return;
 		}
 	}
+
+	handleEntityTileCollisions(fElapsedTime);
+	handleEntityProjCollisions(fElapsedTime);
+	for (auto &e: _entities) e.update(pge, fElapsedTime, mouse, displayOffset);
 }
 
 void Environment::addEntity(Entity& entity) {
@@ -121,7 +124,7 @@ void Environment::_deleteEntity(int& index) {
 	_entities.erase(_entities.begin() + index);
 }
 
-void Environment::handleEntityCollisions(float &fElapsedTime) {
+void Environment::handleEntityTileCollisions(float &fElapsedTime) {
 
 	for (auto& e : _entities) {
 		e.vel.x += e.accel.x * fElapsedTime;
@@ -155,6 +158,25 @@ void Environment::handleEntityCollisions(float &fElapsedTime) {
 		}
 	}
 }
+
+void Environment::handleEntityProjCollisions(float& fElapsedTime) {
+	for (auto& e : _entities) {
+		AABB entityHB = e.getHitbox();
+		for (auto& p : _projectiles) {
+			if (p.getShape() == LINE) {
+				if (checkPtCollision(p.pos, entityHB) && (e.getType() == DUMMY || e.getType() == ENEMY)) {
+					std::cout << "something got hit" << std::endl;
+					e.hp -= p.dmg;
+					p.pierce--;
+				}
+			}
+			// for circle
+			else { return; }
+		}
+	}
+}
+
+std::vector<Entity> Environment::getEntities() { return _entities; }
 
 //bool Environment::gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile) {
 //

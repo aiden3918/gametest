@@ -11,9 +11,6 @@
 
 #define PI 3.14159f
 
-// probably will add on as we go
-enum AnimationState {IDLE, RUN, WALK, HURT, RELOAD, SHOOT, DEATH, PARRY, ACTION1, ACTION2, ACTION3, ACTION4};
-
 struct vec2D {
 	float x = 0.0f;
 	float y = 0.0f;

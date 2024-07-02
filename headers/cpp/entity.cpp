@@ -37,3 +37,5 @@ void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mou
         "HP: " + std::to_string(hp), color);
 }
 
+EntityType Entity::getType() { return _type; }
+

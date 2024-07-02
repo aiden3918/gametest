@@ -35,10 +35,12 @@ public:
 	void addEntity(Entity& entity);
 	void addEntity(vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
 		bool affectedByGrav = true, bool tangible = true);
-	void handleEntityCollisions(float &fElapsedTime);
+	void handleEntityTileCollisions(float &fElapsedTime);
+	void handleEntityProjCollisions(float& fElapsedTime);
 
 	std::vector<Tile> getTangibleTiles();
 	std::vector<Tile> getIntangibleTiles();
+	std::vector<Entity> getEntities();
 
 protected:
 	std::vector<Tile> _tangibleTiles;

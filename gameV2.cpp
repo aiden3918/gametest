@@ -33,11 +33,18 @@ public:
         dummy1.hp = 9999.0f;
         dummy1.dmg = 0.0f;
 
+        Entity friendly1 = Entity({ 1000, 200 }, { 0, 0 }, { 0, 0 }, { 50, 100 }, FRIENDLY);
+
+        Entity enemy1 = Entity({ 1200, 200 }, { 0, 0 }, { 0, 0 }, { 50, 100 }, ENEMY);
+        enemy1.dmg = 1.0f;
+
         worldEnvironment->addTile(floor);
         worldEnvironment->addTile(ceiling);
         worldEnvironment->addTile(wall);
         worldEnvironment->addTile(wall2);
         worldEnvironment->addEntity(dummy1);
+        worldEnvironment->addEntity(friendly1);
+        worldEnvironment->addEntity(enemy1);
 
         return true;
     }
