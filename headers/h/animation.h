@@ -17,7 +17,7 @@ enum AnimationState { IDLE, RUN, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION
 // if no animation for a specific action, leave that row blank
 // (i.e. no run animation, leave row 2 blank)
 struct animationHandler {
-	std::unique_ptr<olc::Decal> spriteSheetDecal;
+	// std::unique_ptr<olc::Decal> spriteSheetDecal;
 	std::unique_ptr<olc::Sprite> spriteSheet;
 
 	// spritesheet size, hope this helps!
@@ -32,6 +32,8 @@ struct animationHandler {
 	int FPS = 60;
 	float frameDuration;
 	float timeSinceLastFrame = 0.0f;
+	
+	bool flip = 0;
 
 	// animations and how many frames they have
 	// std::vector<std::pair<AnimationState, int>> animationsData;
@@ -40,17 +42,18 @@ struct animationHandler {
 	// std::pair<AnimationState, int> currentAnimData;
 
 
-	void init(std::string& filename, AnimationState &initAnim, vec2D& spriteSheetSize, vec2D& partialSize, int initFrame = 0)
+	void init(std::string& filename, AnimationState initAnim, vec2D& partialSize, int initFrame = 0)
 	{
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
 		spriteSheetSize = get_png_image_dimensions(filename);
+		std::cout << filename << ": " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
 
-		partialSpriteSize = spriteSheetSize;
+		partialSpriteSize = partialSize;
 		// currentAnimData = initAnim;
 		currentAnimState = initAnim;
 		currentFrame = initFrame;
 
-		spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
+		// spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
 
 		frameDuration = 1.0f / FPS;
 	}
@@ -69,9 +72,14 @@ struct animationHandler {
 		drawAnimation(engine, screenPos);
 	}
 
-	void setAnimType(AnimationState &animType, int &frames, int initFrame = 0) {
+	void setFPS(int fps) {
+		FPS = fps;
+		frameDuration = 1.0f / FPS;
+	}
+
+	void setAnimType(AnimationState animType, int frames, int initFrame = 0) {
 		currentAnimState = animType;
-		numFrames = frames;
+		numFrames = frames - 1; // because frames are counted from 0
 		currentFrame = initFrame;
 	}
 
@@ -80,8 +88,8 @@ struct animationHandler {
 		// partial sprite x = spritesize.x * frame
 		// partial sprite y = spritesize.y * animType
 		engine->DrawPartialSprite((int)screenPos.x, (int)screenPos.y, spriteSheet.get(),
-			partialSpriteSize.x * currentFrame, partialSpriteSize.y * currentAnimState,
-			partialSpriteSize.x, partialSpriteSize.y);
+			(int)(partialSpriteSize.x * currentFrame), (int)(partialSpriteSize.y * currentAnimState),
+			(int)partialSpriteSize.x, (int)partialSpriteSize.y, 1U, 0 + flip);
 	}
 
 };

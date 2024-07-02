@@ -38,8 +38,6 @@ protected:
 	vec2D _size;
 	bool _isColliding;
 
-	AnimationState _animState;
-
 	float _internalCtr;
 	 
 	// probably deprecated

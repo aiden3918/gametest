@@ -18,9 +18,6 @@
     <ClCompile Include="gameV2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="headers\cpp\environment.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="headers\cpp\gameObject.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
@@ -34,6 +31,9 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="headers\cpp\entity.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="headers\cpp\environment.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,9 +65,15 @@
     <ClInclude Include="headers\h\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\h\animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\sprites\sprite-temp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\sprites\player.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

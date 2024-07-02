@@ -55,6 +55,7 @@ private:
     inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
     inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void _handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime);
     inline void _updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime);
 
     // "scroll effect" data
@@ -91,7 +92,7 @@ private:
     bool _invincible = false;
 
     // animation data
-    vec2D partialSpriteSize = { 50.0f, 100.0f };
+    vec2D _partialSpriteSize = { 50.0f, 100.0f };
     animationHandler animHandler;
 
 

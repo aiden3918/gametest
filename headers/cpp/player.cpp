@@ -12,10 +12,16 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
     isTangible = tangible;
 
     if (affectedByGrav) accel.y = 1000.0f;
-    _sprite = std::make_unique<olc::Sprite>(filename);
-    _size = get_png_image_dimensions(filename);
 
-    _canMove = true;
+    vec2D spriteSheetSize = get_png_image_dimensions(filename);
+    animHandler.init(filename, IDLE, _partialSpriteSize);
+    animHandler.setFPS(5);
+
+    //_sprite = std::make_unique<olc::Sprite>(filename);
+    //_size = get_png_image_dimensions(filename);
+    _size = _partialSpriteSize;
+
+    // _canMove = true;
 
     _displayPos = { (screenSize.x - _size.x) / 2.0f, 1.5f * (screenSize.y - _size.y) / 2.0f };
 
@@ -66,7 +72,8 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     _updateMouseMechanics(engine, env, fElapsedTime);
 
     // finally, display character
-    engine->DrawSprite({ (int)_displayPos.x, (int)_displayPos.y }, _sprite.get());
+    // engine->DrawSprite({ (int)_displayPos.x, (int)_displayPos.y }, animHandler.spriteSheet.get());
+    _handleAnimation(engine, fElapsedTime);
 
     // debug info
     _updatePlayerInfo(engine, playerContactNormal, playerContactPoint, playerT);
@@ -250,6 +257,21 @@ inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environ
             _iFramesCounter += fElapsedTime;
         }
     }
+}
+
+inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime) {
+    if (vel.x == 0) {
+        if (animHandler.currentAnimState != IDLE) animHandler.setAnimType(IDLE, 1);
+    }
+    else if (vel.x < 0) {
+        if (animHandler.currentAnimState != RUN) animHandler.setAnimType(RUN, 4);
+        animHandler.flip = 1;
+    }
+    else {
+        if (animHandler.currentAnimState != RUN) animHandler.setAnimType(RUN, 4);
+        animHandler.flip = 0;
+    }
+    animHandler.update(engine, _displayPos, fElapsedTime);
 }
 
 inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {

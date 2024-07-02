@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\extern-lib\olcPixelGameEngine.h" />
+    <ClInclude Include="headers\h\animation.h" />
     <ClInclude Include="headers\h\collision.h" />
     <ClInclude Include="headers\h\entity.h" />
     <ClInclude Include="headers\h\environment.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="projectile.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\sprites\player.png" />
     <Image Include="assets\sprites\sprite-temp.png" />
   </ItemGroup>
   <ItemGroup>

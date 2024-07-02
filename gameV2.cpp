@@ -20,7 +20,8 @@ public:
 
     bool OnUserCreate() override
     {
-        std::string playerSpriteRef = "assets/sprites/sprite-temp.png";
+        //std::string playerSpriteRef = "assets/sprites/sprite-temp.png";
+        std::string playerSpriteRef = "assets/sprites/player.png";
         mainPlayer = new Player({ 400, 300 }, { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
         worldEnvironment = new Environment();
