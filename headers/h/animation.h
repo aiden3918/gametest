@@ -8,12 +8,12 @@
 #include "util.h"
 
 // probably will add on as we go
-enum AnimationState { IDLE, RUN, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4 };
+const enum AnimationState { IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4 };
 
 // probably want it on the gpu because its quicker
 // MAKE SURE SPRITESHEET FOLLOWS ANIMATIONSTATE RULES AS FOLLOWS:
 // rows should be in this order exactly:
-// IDLE, RUN, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4
+// IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4
 // if no animation for a specific action, leave that row blank
 // (i.e. no run animation, leave row 2 blank)
 struct animationHandler {
@@ -23,7 +23,7 @@ struct animationHandler {
 	// spritesheet size, hope this helps!
 	vec2D spriteSheetSize;
 	// size of the animation frame in the spritesheet
-	vec2D partialSpriteSize;
+	vec2D partialSize;
 
 	// keeps track of current anim type and frame
 	AnimationState currentAnimState;
@@ -42,13 +42,12 @@ struct animationHandler {
 	// std::pair<AnimationState, int> currentAnimData;
 
 
-	void init(std::string& filename, AnimationState initAnim, vec2D& partialSize, int initFrame = 0)
-	{
+	void init(std::string& filename, AnimationState initAnim, vec2D& partialSpriteSize, int initFrame = 0) {
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
 		spriteSheetSize = get_png_image_dimensions(filename);
-		std::cout << filename << ": " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
+		std::cout << filename << " loaded: " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
 
-		partialSpriteSize = partialSize;
+		partialSize = partialSpriteSize;
 		// currentAnimData = initAnim;
 		currentAnimState = initAnim;
 		currentFrame = initFrame;
@@ -88,8 +87,8 @@ struct animationHandler {
 		// partial sprite x = spritesize.x * frame
 		// partial sprite y = spritesize.y * animType
 		engine->DrawPartialSprite((int)screenPos.x, (int)screenPos.y, spriteSheet.get(),
-			(int)(partialSpriteSize.x * currentFrame), (int)(partialSpriteSize.y * currentAnimState),
-			(int)partialSpriteSize.x, (int)partialSpriteSize.y, 1U, 0 + flip);
+			(int)(partialSize.x * currentFrame), (int)(partialSize.y * currentAnimState),
+			(int)partialSize.x, (int)partialSize.y, 1U, 0 + flip);
 	}
 
 };

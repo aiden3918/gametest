@@ -4,6 +4,9 @@ Environment::Environment() {}
 Environment::~Environment() {}
 
 void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &displayOffset) {
+
+	if (_tangibleTiles.size() == 0 && _intangibleTiles.size() == 0) return;
+
 	for (Tile &t : _tangibleTiles) t.update(pge, fElapsedTime, displayOffset);
 	for (Tile &t : _intangibleTiles) t.update(pge, fElapsedTime, displayOffset);
 
@@ -24,7 +27,8 @@ std::vector<Tile> Environment::getIntangibleTiles() { return _intangibleTiles; }
 
 void Environment::addProjectile(vec2D initPos, float size, ProjShape shape, bool friendly,
 	vec2D initVel, vec2D initAccel, olc::Pixel initColor,
-	bool affectedByGrav, bool tangible, bool parriable) {
+	bool affectedByGrav, bool tangible, bool parriable) 
+{
 	Projectile proj = Projectile(initPos, size, shape, friendly, initVel, initAccel, initColor, affectedByGrav, tangible, parriable);
 	_projectiles.push_back(proj);
 }
@@ -33,7 +37,9 @@ void Environment::addProjectile(Projectile& projectile) {
 	_projectiles.push_back(projectile);
 }
 
-void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse, vec2D &displayOffset) {
+void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse, 
+	vec2D &displayOffset) 
+{
 	if (_projectiles.size() == 0) return;
 
 	int screenWidth = pge->GetScreenSize().x;
@@ -46,10 +52,13 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 
 		// if out of screen
 		vec2D projDisplayPos = { p->pos.x + displayOffset.x, p->pos.y + displayOffset.y };
+
 		if (!checkPtCollision(projDisplayPos, { {0, 0}, {(float)screenWidth, (float)screenHeight} })
 			|| p->bounces < 1 || p->pierce < 1) {
+
 			_eraseProj(i);
 			return;
+
 		}
 		
 		if (p->getShape() == LINE) {
@@ -98,6 +107,8 @@ void Environment::_eraseProj(int& index) {
 }
 
 void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
+	if (_entities.size() == 0) return;
+	
 	for (int i = 0; i < _entities.size(); i++) {
 		if (_entities[i].hp <= 0) {
 			_deleteEntity(i);

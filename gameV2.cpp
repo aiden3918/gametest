@@ -53,6 +53,8 @@ public:
     bool OnUserUpdate(float fElapsedTime) override
     {
         Clear(olc::GREY);
+        SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
+
         vec2D mouseInfo = { GetMouseX(), GetMouseY() };
 
         vec2D displayOffset = mainPlayer->getDisplayOffset();
