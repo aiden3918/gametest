@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\endem\source\repos\game\x64\Release\gameV2.exe</FullPath>
+      <FullPath>C:\Users\endem\source\repos\game\gameV2\gameV2.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
