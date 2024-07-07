@@ -28,12 +28,11 @@
 		WHITE(255, 255, 255), BLACK(0, 0, 0), BLANK(0, 0, 0, 0);
 
 / Please use integral types in place of enumeration; program will enumerate later
-/ bools have to be in binary (int) format
 
 / Entities
-e dummy1 800 200 0 0 0 0 50 100 0 0 0 1 1
-e friendly1 1000 200 0 0 0 0 50 100 1 0 0 1 1 
-e enemy1 1200 200 0 0 0 0 50 100 2 0 1.0 1 1 
+e dummy1 800 200 0 0 0 0 50 100 0 0 0 true true
+e friendly1 1000 200 0 0 0 0 50 100 1 0 0 true true
+e enemy1 1200 200 0 0 0 0 50 100 2 0 1.0 true true 
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Tiles

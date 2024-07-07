@@ -1,4 +1,14 @@
-﻿  player.cpp
+﻿  environment.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/environment.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/environment.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/environment.cpp')
+  
+  player.cpp
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'headers/cpp/player.cpp')
   
@@ -8,4 +18,16 @@ C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: 
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'headers/cpp/player.cpp')
   
+  projectile.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/projectile.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/projectile.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/projectile.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\cpp\projectile.cpp(30,71): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+  Generating Code...
   gameV2.vcxproj -> C:\Users\endem\source\repos\game\x64\Debug\gameV2.exe

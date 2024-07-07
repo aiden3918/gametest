@@ -2,6 +2,8 @@
 
 Projectile::Projectile() {}
 Projectile::Projectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible, bool parriable) {
+	name = _name;
+
 	pos = initPos;
 	vel = initVel;
 	accel = initAccel;

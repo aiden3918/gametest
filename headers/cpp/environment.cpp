@@ -33,7 +33,8 @@ Environment::Environment(std::string &worldDataFile) {
 			bool affectedByGrav; bool tangible;
 
 			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size.x >> size.y >> initVel.x >> initVel.y 
-				>> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> affectedByGrav >> tangible;
+				>> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >> 
+				affectedByGrav >> std::boolalpha >> tangible;
 
 			addTile(name, initPos, size, initVel, initAccel, olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible);
 
@@ -42,13 +43,17 @@ Environment::Environment(std::string &worldDataFile) {
 		if (fileline[0] == 'e') {
 			//e posx posy velx vely accelx accely sizex sizey velx vely entityType aiType dmg affectedByGrav tangible 
 			vec2D initPos; vec2D initVel; vec2D initAccel; vec2D size; 
-			int entityType; int aiType; float damage;
+			int entityTypeNum; int aiTypeNum; float damage;
 			bool affectedByGrav; bool tangible;
 
-			stream >> typeJunk >> name >> initPos.x >> initPos.y >> initVel.x >> initVel.y >> initAccel.x >>
-				initAccel.y >> size.x >> size.y >> entityType >> aiType >> damage >> affectedByGrav >> tangible;
+			EntityType entityType;
+			AIType aiType;
 
-			addEntity(name, initPos, initVel, initAccel, size, EntityType(entityType), AIType(aiType), damage, affectedByGrav, tangible);
+			stream >> typeJunk >> name >> initPos.x >> initPos.y >> initVel.x >> initVel.y >> initAccel.x >>
+				initAccel.y >> size.x >> size.y >> entityTypeNum >> aiTypeNum >> damage >> std::boolalpha >>
+				affectedByGrav >> std::boolalpha >> tangible;
+
+			addEntity(name, initPos, initVel, initAccel, size, EntityType(entityTypeNum), AIType(aiTypeNum), damage, affectedByGrav, tangible);
 
 		}
 
@@ -58,8 +63,8 @@ Environment::Environment(std::string &worldDataFile) {
 			bool tangible; bool parriable;
 
 			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size >> shape >> friendly >> initVel.x 
-				>> initVel.y >> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> affectedByGrav 
-				>> tangible >> parriable;
+				>> initVel.y >> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >> 
+				affectedByGrav >> std::boolalpha >> tangible >> std::boolalpha >> parriable;
 
 			addProjectile(name, initPos, size, ProjShape(shape), friendly, initVel, initAccel,
 				olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible, parriable);
