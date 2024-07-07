@@ -18,7 +18,33 @@
 #include "../extern-lib/rapidjson/stringbuffer.h"
 
 const enum Weapons {VANTABLADE, POCKETROCKET};
-const std::string weaponNames[2] = { "Vantablade", "Pocket Rocket" };
+
+struct GeneralWeapon {
+    std::string name;
+    Weapons id;
+
+    float dmg;
+    float firerate; // in use/second
+    float cooldownTime; // 1 / firerate
+
+    // firerate is in uses/second
+    GeneralWeapon() {}
+    ~GeneralWeapon() {}
+
+    GeneralWeapon(std::string weaponName, Weapons weaponID, float weaponDmg, float weaponFirerate) {
+        name = weaponName;
+        id = weaponID;
+
+        dmg = weaponDmg;
+        firerate = weaponFirerate;
+        cooldownTime = 1.0f / firerate;
+    }
+};
+
+const GeneralWeapon weaponData[2] = {
+    GeneralWeapon("Vantablade", VANTABLADE, 3.0f, 5.0f),
+    GeneralWeapon("Pocket Rocket", POCKETROCKET, 1.0f, 3.0f)
+};
 
 class Player : public GameObject {
 public:
@@ -55,7 +81,7 @@ private:
     inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
     inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
-    inline void _handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime);
+    inline void _handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& pct, vec2D& pcn, float& pt);
     inline void _updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime);
 
     // "scroll effect" data
@@ -94,7 +120,10 @@ private:
     // animation data
     vec2D _partialSpriteSize = { 50.0f, 100.0f };
     animationHandler animHandler;
-
+    
+    // weapon data
+    GeneralWeapon _currentWeapon;
+    float _weaponCDCtr = 0.0f;
 
 };
 

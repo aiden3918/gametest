@@ -1,8 +1,10 @@
 #include "../h/entity.h"
 
 Entity::Entity() {}
-Entity::Entity(vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType, 
-	bool affectedByGrav, bool tangible) {
+Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType, 
+    AIType aiType, float damage, bool affectedByGrav, bool tangible) {
+
+    _name = name;
 
     pos = initPos;
     vel = initVel;
@@ -17,10 +19,20 @@ Entity::Entity(vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, Entity
     updateHitbox();
 
     _type = entityType;
+    _ai = aiType;
     color = defaultEntityColors[entityType];
+
+    switch (_type) {
+    case DUMMY: hp = 9999.0f; break;
+    case FRIENDLY: hp = 1.0f; break;
+    case ENEMY: hp = 10.0f; break;
+    }
+
+    dmg = damage;
 }
 Entity::~Entity() {}
 
+// collisions and behavior will be handled by environment. Why? because i suck at coding
 void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mouse, vec2D &displayOffset) {
 
     //vel.x += accel.x * fElapsedTime;
@@ -37,5 +49,10 @@ void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mou
         "HP: " + std::to_string(hp), color);
 }
 
-EntityType Entity::getType() { return _type; }
+// returns dummy, friendly, or enemy
+EntityType Entity::getAIType() { return _type; }
+
+// returns specific ai behavior type
+AIType Entity::getAI() { return _ai; }
+
 

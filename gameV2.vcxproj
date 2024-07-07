@@ -143,15 +143,16 @@
     <ClInclude Include="headers\h\environment.h" />
     <ClInclude Include="headers\h\gameObject.h" />
     <ClInclude Include="headers\h\player.h" />
+    <ClInclude Include="headers\h\projectile.h" />
     <ClInclude Include="headers\h\tile.h" />
     <ClInclude Include="headers\h\util.h" />
-    <ClInclude Include="projectile.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\sprites\player.png" />
     <Image Include="assets\sprites\sprite-temp.png" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\worlddata.txt" />
     <Text Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>

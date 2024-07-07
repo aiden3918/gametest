@@ -1,7 +1,9 @@
 #include "../h/tile.h"
 
 Tile::Tile() {}
-Tile::Tile(vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible) {
+Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible) {
+	_name = name;
+	
 	pos = initPos;
 	vel = initVel;
 	accel = initAccel;

@@ -12,7 +12,7 @@ class GameObject {
 public:
 	// need this to work with pge
 	GameObject();
-	GameObject(vec2D initPos, vec2D size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, bool affectedByGrav = false, bool tangible = true);
+	GameObject(std::string name, vec2D initPos, vec2D size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, bool affectedByGrav = false, bool tangible = true);
 	~GameObject();
 
 	void updateHitbox();
@@ -24,6 +24,8 @@ public:
 	vec2D vel;
 	vec2D accel;
 
+	std::string getName();
+
 	bool isTangible;
 
 	//void setDirColState(collisionDirectionState collDirState) { _collDirState = collDirState; }
@@ -31,6 +33,8 @@ public:
 	//collisionDirectionState getCollisionState() { return _collDirState; }
 
 protected:
+	std::string _name;
+
 	bool _affectedByGrav;
 	AABB _hitbox;
 	vec2D _center;

@@ -16,6 +16,7 @@ const enum AnimationState { IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, P
 // IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4
 // if no animation for a specific action, leave that row blank
 // (i.e. no run animation, leave row 2 blank)
+// default direction is right (+x)
 struct animationHandler {
 	// std::unique_ptr<olc::Decal> spriteSheetDecal;
 	std::unique_ptr<olc::Sprite> spriteSheet;

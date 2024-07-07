@@ -1,7 +1,9 @@
 #include "../h/gameObject.h"
 
 GameObject::GameObject() {}
-GameObject::GameObject(vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, bool affectedByGrav, bool tangible) {
+GameObject::GameObject(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, bool affectedByGrav, bool tangible) {
+	_name = name;
+
 	pos = initPos;
 	vel = initVel;
 	accel = initAccel;
@@ -23,3 +25,4 @@ void GameObject::updateHitbox() {
 AABB GameObject::getHitbox() { return _hitbox; }
 vec2D GameObject::getSize() { return _size; }
 vec2D GameObject::getCenter() { return _center; }
+std::string GameObject::getName() { return _name; }

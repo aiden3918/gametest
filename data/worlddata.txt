@@ -1,0 +1,50 @@
+/ Syntax:
+
+/ Entity:
+/ e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
+
+/ Entity AI Types:
+/ const enum EntityType { DUMMY = 0, FRIENDLY = 1, ENEMY = 2};
+/ const enum AIType { STATIONARY = 0, FOLLOWER = 1, SENTRY = 2, WALKER = 3, DRONE = 4};
+
+/ Tile:
+/ t name posx posy sizex sizey velx vely accelx accely rCol gCol bCol affectedByGrav tangible
+
+/ Projectile (idk why you would want to spawn projectiles on world gen but whatever flots your boat): 
+/ p name posx posy sizex sizey shape friendly velx vely accelx accely rCol gCol bCol affectedByGrav tangible 
+/   parriable
+
+/ Projectile Types:
+/ enum ProjShape {LINE = 0, CIRCLE = 1};
+
+/ RGB Values:
+		GREY(192, 192, 192), DARK_GREY(128, 128, 128), VERY_DARK_GREY(64, 64, 64),
+		RED(255, 0, 0), DARK_RED(128, 0, 0), VERY_DARK_RED(64, 0, 0),
+		YELLOW(255, 255, 0), DARK_YELLOW(128, 128, 0), VERY_DARK_YELLOW(64, 64, 0),
+		GREEN(0, 255, 0), DARK_GREEN(0, 128, 0), VERY_DARK_GREEN(0, 64, 0),
+		CYAN(0, 255, 255), DARK_CYAN(0, 128, 128), VERY_DARK_CYAN(0, 64, 64),
+		BLUE(0, 0, 255), DARK_BLUE(0, 0, 128), VERY_DARK_BLUE(0, 0, 64),
+		MAGENTA(255, 0, 255), DARK_MAGENTA(128, 0, 128), VERY_DARK_MAGENTA(64, 0, 64),
+		WHITE(255, 255, 255), BLACK(0, 0, 0), BLANK(0, 0, 0, 0);
+
+/ Please use integral types in place of enumeration; program will enumerate later
+/ bools have to be in binary (int) format
+
+/ Entities
+e dummy1 800 200 0 0 0 0 50 100 0 0 0 1 1
+e friendly1 1000 200 0 0 0 0 50 100 1 0 0 1 1 
+e enemy1 1200 200 0 0 0 0 50 100 2 0 1.0 1 1 
+/ e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
+
+/ Tiles
+t floor -500 600 2500 120 0 0 0 0 0 0 0 false true
+t ceiling 0 0 1280 50 0 0 0 0 0 0 0 false true
+t wall1 100 200 50 200 0 0 0 0 0 0 0 false true
+t wall2 700 400 200 50 0 0 0 0 0 0 0 false true
+/ t name posx posy sizex sizey velx vely accelx accely rCol gCol bCol affectedByGrav tangible
+
+/ Projectiles
+
+/ p name posx posy sizex sizey shape friendly velx vely accelx accely rCol gCol bCol affectedByGrav tangible 
+/   parriable
+

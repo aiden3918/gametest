@@ -15,7 +15,7 @@ class Projectile : public GameObject {
 public:
 	// need this to work with pge
 	Projectile();
-	Projectile(vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = {0, 0},
+	Projectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = {0, 0},
 		vec2D initAccel = {0, 0}, olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true,
 		 bool parriable = true);
 	~Projectile();

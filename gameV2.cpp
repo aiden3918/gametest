@@ -24,28 +24,29 @@ public:
         std::string playerSpriteRef = "assets/sprites/player.png";
         mainPlayer = new Player({ 400, 300 }, { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
-        worldEnvironment = new Environment();
-        Tile floor = Tile({ -500, 600 }, { 2500, 120 });
-        Tile ceiling = Tile({ 0, 0 }, { 1280, 50 });
-        Tile wall = Tile({ 100, 300 }, { 50, 200 });
-        Tile wall2 = Tile({ 700, 400 }, { 200, 50 });
+        std::string worldDataRef = "data/worlddata.txt";
+        worldEnvironment = new Environment(worldDataRef);
+        
+        //worldEnvironment = new Environment();
+        //Tile floor = Tile("floor", { -500, 600 }, {2500, 120});
+        //Tile ceiling = Tile("ceiling", { 0, 0 }, {1280, 50});
+        //Tile wall = Tile("wall", { 100, 200 }, {50, 200});
+        //Tile wall2 = Tile("wall2", { 700, 400 }, {200, 50});
 
-        Entity dummy1 = Entity({ 800, 200 }, { 0, 0 }, { 0, 0 }, { 50, 100 }, DUMMY);
-        dummy1.hp = 9999.0f;
-        dummy1.dmg = 0.0f;
+        //Entity dummy1 = Entity("dummy1",{ 800, 200 }, {0, 0}, {0, 0}, {50, 100}, DUMMY, STATIONARY);
+        //dummy1.hp = 9999.0f;
 
-        Entity friendly1 = Entity({ 1000, 200 }, { 0, 0 }, { 0, 0 }, { 50, 100 }, FRIENDLY);
+        //Entity friendly1 = Entity("friendly1", { 1000, 200 }, {0, 0}, {0, 0}, {50, 100}, FRIENDLY, STATIONARY);
 
-        Entity enemy1 = Entity({ 1200, 200 }, { 0, 0 }, { 0, 0 }, { 50, 100 }, ENEMY);
-        enemy1.dmg = 1.0f;
+        //Entity enemy1 = Entity("enemy1", { 1200, 200 }, {0, 0}, {0, 0}, {50, 100}, ENEMY, STATIONARY);
 
-        worldEnvironment->addTile(floor);
-        worldEnvironment->addTile(ceiling);
-        worldEnvironment->addTile(wall);
-        worldEnvironment->addTile(wall2);
-        worldEnvironment->addEntity(dummy1);
-        worldEnvironment->addEntity(friendly1);
-        worldEnvironment->addEntity(enemy1);
+        //worldEnvironment->addTile(floor);
+        //worldEnvironment->addTile(ceiling);
+        //worldEnvironment->addTile(wall);
+        //worldEnvironment->addTile(wall2);
+        //worldEnvironment->addEntity(dummy1);
+        //worldEnvironment->addEntity(friendly1);
+        //worldEnvironment->addEntity(enemy1);
 
         return true;
     }

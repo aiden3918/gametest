@@ -1,6 +1,72 @@
 #include "../h/environment.h"
 
 Environment::Environment() {}
+Environment::Environment(std::string &worldDataFile) {
+	std::ifstream worldData(worldDataFile);
+
+	if (!worldData.is_open()) {
+		std::cout << "cannot open file " << worldDataFile << "; environment has not been created" << std::endl;
+		return;
+	}
+	std::cout << "successfully opened file" << worldDataFile << std::endl;
+
+	while (!worldData.eof()) {
+		char fileline[500];
+		std::stringstream stream;
+
+		worldData.getline(fileline, 500);
+
+		// read current file line
+		// note: it seems that the arrows indicate the direction of the passage of information 
+		// during the stream
+		stream << fileline;
+
+		// used to store first letter of line
+		char typeJunk;
+		int rgb[3];
+		std::string name;
+
+		if (fileline[0] == 't') {
+
+			vec2D initPos; vec2D size; vec2D initVel; vec2D initAccel; 
+			olc::Pixel color; 
+			bool affectedByGrav; bool tangible;
+
+			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size.x >> size.y >> initVel.x >> initVel.y 
+				>> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> affectedByGrav >> tangible;
+
+			addTile(name, initPos, size, initVel, initAccel, olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible);
+
+		}
+
+		if (fileline[0] == 'e') {
+			//e posx posy velx vely accelx accely sizex sizey velx vely entityType aiType dmg affectedByGrav tangible 
+			vec2D initPos; vec2D initVel; vec2D initAccel; vec2D size; 
+			int entityType; int aiType; float damage;
+			bool affectedByGrav; bool tangible;
+
+			stream >> typeJunk >> name >> initPos.x >> initPos.y >> initVel.x >> initVel.y >> initAccel.x >>
+				initAccel.y >> size.x >> size.y >> entityType >> aiType >> damage >> affectedByGrav >> tangible;
+
+			addEntity(name, initPos, initVel, initAccel, size, EntityType(entityType), AIType(aiType), damage, affectedByGrav, tangible);
+
+		}
+
+		if (fileline[0] == 'p') {
+			vec2D initPos;  float size; int shape; bool friendly; vec2D initVel;
+			vec2D initAccel; olc::Pixel initColor; bool affectedByGrav;
+			bool tangible; bool parriable;
+
+			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size >> shape >> friendly >> initVel.x 
+				>> initVel.y >> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> affectedByGrav 
+				>> tangible >> parriable;
+
+			addProjectile(name, initPos, size, ProjShape(shape), friendly, initVel, initAccel,
+				olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible, parriable);
+		}
+
+	}
+}
 Environment::~Environment() {}
 
 void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &displayOffset) {
@@ -13,9 +79,9 @@ void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D
 	if (pge->GetKey(olc::T).bPressed) std::cout << _tangibleTiles.size() << std::endl;
 }
 
-void Environment::addTile(vec2D& initPos, vec2D& size, vec2D initVel, vec2D initAccel, olc::Pixel color, bool affectedByGrav, bool tangible) {
+void Environment::addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel, vec2D initAccel, olc::Pixel color, bool affectedByGrav, bool tangible) {
 
-	Tile newTile = Tile(initPos, size, initVel, initAccel, color, affectedByGrav, tangible);
+	Tile newTile = Tile(name, initPos, size, initVel, initAccel, color, affectedByGrav, tangible);
 	(newTile.isTangible) ? _tangibleTiles.push_back(newTile) : _intangibleTiles.push_back(newTile);
 
 }
@@ -25,11 +91,11 @@ void Environment::addTile(Tile& newTile) { (newTile.isTangible) ? _tangibleTiles
 std::vector<Tile> Environment::getTangibleTiles() { return _tangibleTiles; }
 std::vector<Tile> Environment::getIntangibleTiles() { return _intangibleTiles; }
 
-void Environment::addProjectile(vec2D initPos, float size, ProjShape shape, bool friendly,
+void Environment::addProjectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly,
 	vec2D initVel, vec2D initAccel, olc::Pixel initColor,
 	bool affectedByGrav, bool tangible, bool parriable) 
 {
-	Projectile proj = Projectile(initPos, size, shape, friendly, initVel, initAccel, initColor, affectedByGrav, tangible, parriable);
+	Projectile proj = Projectile(name, initPos, size, shape, friendly, initVel, initAccel, initColor, affectedByGrav, tangible, parriable);
 	_projectiles.push_back(proj);
 }
 
@@ -118,6 +184,7 @@ void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, ve
 
 	handleEntityTileCollisions(fElapsedTime);
 	handleEntityProjCollisions(fElapsedTime);
+
 	for (auto &e: _entities) e.update(pge, fElapsedTime, mouse, displayOffset);
 }
 
@@ -125,9 +192,10 @@ void Environment::addEntity(Entity& entity) {
 	_entities.push_back(entity);
 }
 
-void Environment::addEntity(vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
-	bool affectedByGrav, bool tangible) {
-	Entity entity = Entity(initPos, initVel, initAccel, size, entityType, affectedByGrav, tangible);
+void Environment::addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
+	AIType aiType, float damage, bool affectedByGrav, bool tangible) {
+	Entity entity = Entity(name, initPos, initVel, initAccel, size, entityType, aiType, damage, affectedByGrav, 
+		tangible);
 	_entities.push_back(entity);
 }
 
@@ -175,7 +243,7 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 		AABB entityHB = e.getHitbox();
 		for (auto& p : _projectiles) {
 			if (p.getShape() == LINE) {
-				if (checkPtCollision(p.pos, entityHB) && (e.getType() == DUMMY || e.getType() == ENEMY)) {
+				if (checkPtCollision(p.pos, entityHB) && (e.getAIType() == DUMMY || e.getAIType() == ENEMY)) {
 					std::cout << "something got hit" << std::endl;
 					e.hp -= p.dmg;
 					p.pierce--;

@@ -1,0 +1,17 @@
+﻿  projectile.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/projectile.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/projectile.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'headers/cpp/projectile.cpp')
+  
+C:\Users\endem\source\repos\game\gameV2\headers\cpp\projectile.cpp(28,71): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+  Generating code
+  2 of 2270 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  gameV2.vcxproj -> C:\Users\endem\source\repos\game\x64\Release\gameV2.exe

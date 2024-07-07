@@ -1,7 +1,7 @@
 #include "../h/projectile.h"
 
 Projectile::Projectile() {}
-Projectile::Projectile(vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible, bool parriable) {
+Projectile::Projectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible, bool parriable) {
 	pos = initPos;
 	vel = initVel;
 	accel = initAccel;
@@ -29,14 +29,31 @@ void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D
 	else {
 		// thicker bullet
 		for (int i = -1; i < 2; i++) {
-			engine->DrawLine({ (int)(round((pos.x - vel.x * fElapsedTime) + displayOffset.x + i)), (int)(round((pos.y - vel.y * fElapsedTime) + displayOffset.y + i)) }, { (int)(pos.x + displayOffset.x + i), (int)(pos.y + displayOffset.y + i) }, color);
+			engine->DrawLine(
+				{ (int)((pos.x - vel.x * 0.01) + displayOffset.x + i),
+				(int)((pos.y - vel.y * 0.01) + displayOffset.y + i) },
+				{ (int)(pos.x + displayOffset.x + i),
+				(int)(pos.y + displayOffset.y + i) },
+				color);
 		}
 	}
 		//else engine->DrawLine({ (int)(pos.x -= 10), (int)(pos.y -= 10) }, { (int)pos.x, (int)pos.y }, color);
 }
 
-// does nothing now because its not a rect
-void Projectile::updateHitbox() { return; }
+// hitbox is set based on shape
+void Projectile::updateHitbox() { 
+	if (_shape == LINE) {
+		_center = pos;
+		_hitbox = {pos, pos};
+	}
+	else {
+		_center = pos;
+		_hitbox = {
+			{_center.x - _radius, _center.y - _radius},
+			{_center.x + _radius, _center.y + _radius}
+		};
+	}
+}
 ProjShape Projectile::getShape() { return _shape; }
 
 //bool Projectile::checkCollision(Environment* env, Tile& possibleTileCollided) {

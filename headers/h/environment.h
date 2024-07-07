@@ -13,9 +13,13 @@
 #include "entity.h"
 #include <vector>
 
+#include <sstream>
+#include <fstream>
+
 class Environment {
 public:
 	Environment();
+	Environment(std::string &worldDataFile);
 	~Environment();
 
 	// bool gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile);
@@ -24,17 +28,17 @@ public:
 	void drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse, vec2D& displayOffset);
 	void drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset);
 
-	void addTile(vec2D& initPos, vec2D& size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel color = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
+	void addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel color = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
 	void addTile(Tile& newTile);
 
-	void addProjectile(vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = { 0, 0 },
+	void addProjectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = { 0, 0 },
 		vec2D initAccel = { 0, 0 }, olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false,
 		bool tangible = true, bool parriable = true);
 	void addProjectile(Projectile& projectile);
 
 	void addEntity(Entity& entity);
-	void addEntity(vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
-		bool affectedByGrav = true, bool tangible = true);
+	void addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
+		AIType aiType, float damage = 1.0f, bool affectedByGrav = true, bool tangible = true);
 	void handleEntityTileCollisions(float &fElapsedTime);
 	void handleEntityProjCollisions(float& fElapsedTime);
 
