@@ -3,7 +3,7 @@
 #ifndef entity_h
 #define entity_h
 
-#include "iostream"
+#include <iostream>
 #include "../extern-lib/olcPixelGameEngine.h"
 #include "gameObject.h"
 #include "util.h"
@@ -12,16 +12,13 @@
 
 // most implementations should be in dummy, friendly, and enemy, in that order
 const enum EntityType { DUMMY, FRIENDLY, ENEMY };
+const enum AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
 
 //const enum DummyAI { DUMMY  };
 //const enum FriendlyAI { STATIONARY, FOLLOWER };
 //const enum EnemyAI { SENTRY, WALKER, DRONE };
 
-const enum AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
-
-
 const olc::Pixel defaultEntityColors[3] = { olc::WHITE, olc::GREEN, olc::RED };
-
 
 class Entity : public GameObject {
 public:

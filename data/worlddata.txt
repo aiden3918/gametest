@@ -27,12 +27,10 @@
 		MAGENTA(255, 0, 255), DARK_MAGENTA(128, 0, 128), VERY_DARK_MAGENTA(64, 0, 64),
 		WHITE(255, 255, 255), BLACK(0, 0, 0), BLANK(0, 0, 0, 0);
 
-/ Please use integral types in place of enumeration; program will enumerate later
-
 / Entities
-e dummy1 800 200 0 0 0 0 50 100 0 0 0 true true
-e friendly1 1000 200 0 0 0 0 50 100 1 0 0 true true
-e enemy1 1200 200 0 0 0 0 50 100 2 0 1.0 true true 
+e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY 0 true true
+e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY 0 true true
+e enemy1 1200 200 0 0 0 0 50 100 ENEMY STATIONARY 1.0 true true 
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Tiles

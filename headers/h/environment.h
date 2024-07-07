@@ -46,6 +46,20 @@ public:
 	std::vector<Tile> getIntangibleTiles();
 	std::vector<Entity> getEntities();
 
+	std::map<std::string, EntityType> entityTypeMap{
+		{"DUMMY", DUMMY},
+		{"FRIENDLY", FRIENDLY},
+		{"ENEMY", ENEMY}
+	};
+
+	std::map <std::string, AIType> aiTypeMap{
+		{"STATIONARY", STATIONARY},
+		{"FOLLOWER", FOLLOWER},
+		{"SENTRY", SENTRY},
+		{"WALKER", WALKER},
+		{"DRONE", DRONE}
+	};
+
 protected:
 	std::vector<Tile> _tangibleTiles;
 	std::vector<Tile> _intangibleTiles;

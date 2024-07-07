@@ -46,14 +46,15 @@ Environment::Environment(std::string &worldDataFile) {
 			int entityTypeNum; int aiTypeNum; float damage;
 			bool affectedByGrav; bool tangible;
 
-			EntityType entityType;
-			AIType aiType;
+			// use std::map to create a conversion table for both
+			std::string entityTypeStr; std::string aiTypeStr;
 
 			stream >> typeJunk >> name >> initPos.x >> initPos.y >> initVel.x >> initVel.y >> initAccel.x >>
-				initAccel.y >> size.x >> size.y >> entityTypeNum >> aiTypeNum >> damage >> std::boolalpha >>
+				initAccel.y >> size.x >> size.y >> entityTypeStr >> aiTypeStr >> damage >> std::boolalpha >>
 				affectedByGrav >> std::boolalpha >> tangible;
 
-			addEntity(name, initPos, initVel, initAccel, size, EntityType(entityTypeNum), AIType(aiTypeNum), damage, affectedByGrav, tangible);
+			addEntity(name, initPos, initVel, initAccel, size, entityTypeMap[entityTypeStr], aiTypeMap[aiTypeStr],
+				damage, affectedByGrav, tangible);
 
 		}
 
@@ -248,7 +249,7 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 		AABB entityHB = e.getHitbox();
 		for (auto& p : _projectiles) {
 			if (p.getShape() == LINE) {
-				if (checkPtCollision(p.pos, entityHB) && (e.getAIType() == DUMMY || e.getAIType() == ENEMY)) {
+				if (checkPtCollision(p.pos, entityHB) && e.getAIType() != FRIENDLY) {
 					std::cout << "something got hit" << std::endl;
 					e.hp -= p.dmg;
 					p.pierce--;

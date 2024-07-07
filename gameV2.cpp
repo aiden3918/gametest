@@ -74,7 +74,7 @@ public:
     vec2D screenSize = { 1280, 720 };
 
 private:
-    Player* mainPlayer;
+    Player* mainPlayer = nullptr;
     Environment* worldEnvironment = nullptr;
 };
 
