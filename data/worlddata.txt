@@ -4,8 +4,8 @@
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Entity AI Types:
-/ const enum EntityType { DUMMY = 0, FRIENDLY = 1, ENEMY = 2};
-/ const enum AIType { STATIONARY = 0, FOLLOWER = 1, SENTRY = 2, WALKER = 3, DRONE = 4};
+/ const enum EntityType { DUMMY, FRIENDLY, ENEMY };
+/ const enum AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
 
 / Tile:
 / t name posx posy sizex sizey velx vely accelx accely rCol gCol bCol affectedByGrav tangible
@@ -15,9 +15,9 @@
 /   parriable
 
 / Projectile Types:
-/ enum ProjShape {LINE = 0, CIRCLE = 1};
+/ enum ProjShape { LINE, CIRCLE };
 
-/ RGB Values:
+/ RGB Values (constants dont work right now):
 		GREY(192, 192, 192), DARK_GREY(128, 128, 128), VERY_DARK_GREY(64, 64, 64),
 		RED(255, 0, 0), DARK_RED(128, 0, 0), VERY_DARK_RED(64, 0, 0),
 		YELLOW(255, 255, 0), DARK_YELLOW(128, 128, 0), VERY_DARK_YELLOW(64, 64, 0),
@@ -30,7 +30,7 @@
 / Entities
 e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY 0 true true
 e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY 0 true true
-e enemy1 1200 200 0 0 0 0 50 100 ENEMY STATIONARY 1.0 true true 
+e enemy1 1200 200 0 0 0 0 50 100 ENEMY SENTRY 1.0 true true 
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Tiles
@@ -42,6 +42,6 @@ t wall2 700 400 200 50 0 0 0 0 0 0 0 false true
 
 / Projectiles
 
-/ p name posx posy sizex sizey shape friendly velx vely accelx accely rCol gCol bCol affectedByGrav tangible 
-/   parriable
+/ p name posx posy sizex sizey shape friendly velx vely accelx accely rCol gCol bCol affectedByGrav 
+/   tangible parriable
 

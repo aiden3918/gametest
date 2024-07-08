@@ -45,7 +45,12 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     _updateTileCollisions(fElapsedTime, env, possibleCollidingTiles, playerContactPoint, playerContactNormal,
         playerT);
 
-    _updateEnemyCollisions(engine, env, fElapsedTime);
+    if (_iFramesCounter == 0.0f) {
+        _updateEnemyCollisions(engine, env, fElapsedTime);
+   
+        _updateProjCollisions(engine, env, fElapsedTime);
+    }
+    else (_iFramesCounter > _iFramesInterval) ? _iFramesCounter = 0.0f : _iFramesCounter += fElapsedTime;
 
     _updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
 
@@ -263,7 +268,7 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
             case POCKETROCKET:
 
                 vec2D projVel = vec2DMult(_lookAngleVector, 2000.0f);
-                Projectile testProj = Projectile("playerProj", _center, 10, LINE, true, projVel, {0, 0}, olc::RED);
+                Projectile testProj = Projectile("playerProj", _center, 10, ProjShape::LINE, true, projVel, {0, 0}, olc::GREEN);
                 testProj.bounces = 3;
 
                 env->addProjectile(testProj);
@@ -294,19 +299,35 @@ inline void Player::_updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, 
 
 inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
     vec2D pct; vec2D pcn; float pt;
-
-    // if invincible, do not bother
-    if (_iFramesCounter > 0.0f) {
-        _iFramesCounter += fElapsedTime;
-        if (_iFramesCounter > _iFramesInterval) _iFramesCounter = 0.0f;
-        return;
-    }
     
     for (auto& e : env->getEntities()) {
-        if (checkDynamicRectVsRectCollision(*this, e, fElapsedTime, pct, pcn, pt) && e.getAIType() == ENEMY) {
+        if (checkDynamicRectVsRectCollision(*this, e, fElapsedTime, pct, pcn, pt) && e.getType() == EntityType::ENEMY) {
             std::cout << "collided with enemy" << std::endl;
             hp -= e.dmg;
-            _iFramesCounter += fElapsedTime;
+            _iFramesCounter += 0.0001f;
+        }
+    }
+}
+
+inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
+    std::vector<Projectile>* envProjectilesPtr = env->getActualProjectilesVec();
+
+    for (auto &p : *envProjectilesPtr) {
+        if (p.isFriendly) continue;
+
+        switch (p.getShape()) {
+        case ProjShape::LINE: {
+            if (checkPtCollision(p.pos, _hitbox)) {
+                hp -= p.dmg;
+                // pierce does not decrease because we are not editing the actual projectile, just a copy
+                p.pierce--;
+                _iFramesCounter += 0.0001f;
+            }
+            break;
+        }
+        case ProjShape::CIRCLE: {
+            break;
+        }
         }
     }
 }
@@ -332,7 +353,7 @@ inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElaps
 }
 
 inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {
-    engine->DrawString({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN);
+    engine->DrawString({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN, 2);
 }
 
 float Player::getLookAngleDeg() { return _lookAngleDeg; }

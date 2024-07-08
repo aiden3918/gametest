@@ -20,12 +20,14 @@ Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, 
 
     _type = entityType;
     _ai = aiType;
-    color = defaultEntityColors[entityType];
+
+    int entityTypeNum = static_cast<int>(entityType);
+    color = defaultEntityColors[entityTypeNum];
 
     switch (_type) {
-    case DUMMY: hp = 9999.0f; break;
-    case FRIENDLY: hp = 1.0f; break;
-    case ENEMY: hp = 10.0f; break;
+    case EntityType::DUMMY: hp = 9999.0f; break;
+    case EntityType::FRIENDLY: hp = 1.0f; break;
+    case EntityType::ENEMY: hp = 10.0f; break;
     }
 
     dmg = damage;
@@ -50,9 +52,25 @@ void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mou
 }
 
 // returns dummy, friendly, or enemy
-EntityType Entity::getAIType() { return _type; }
+EntityType Entity::getType() { return _type; }
 
 // returns specific ai behavior type
 AIType Entity::getAI() { return _ai; }
 
+
+//void Entity::updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D &playerPos) {
+//    if (_ai == STATIONARY) return;
+//
+//    switch (_ai) {
+//        case SENTRY: {
+//            vec2D playerDirVec = vec2DSub(playerPos, pos);
+//            playerDirVec = vec2DNormalise(playerDirVec);
+//
+//            if (attackCtr == 0.0f) {
+//                attackCtr += fElapsedTime;
+//            }
+//            break;
+//        }
+//    }
+//}
 

@@ -9,7 +9,7 @@
 #include "collision.h"
 // #include "environment.h"
 
-enum ProjShape {LINE, CIRCLE};
+const enum class ProjShape {LINE, CIRCLE};
 
 class Projectile : public GameObject {
 public:

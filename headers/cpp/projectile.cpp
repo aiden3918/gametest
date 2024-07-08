@@ -12,7 +12,7 @@ Projectile::Projectile(std::string name, vec2D initPos, float size, ProjShape sh
 	isFriendly = friendly;
 	_affectedByGrav = affectedByGrav;
 	_shape = shape;
-	(_shape == CIRCLE) ? _radius = size : _length = size;
+	(_shape == ProjShape::CIRCLE) ? _radius = size : _length = size;
 
 	if (affectedByGrav) accel.y = 500.0f;
 
@@ -27,7 +27,7 @@ void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D
 	pos.y += vel.y * fElapsedTime;
 
 	// trail effect for line
-	if (_shape == CIRCLE) engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color);
+	if (_shape == ProjShape::CIRCLE) engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color);
 	else {
 		// thicker bullet
 		for (int i = -1; i < 2; i++) {
@@ -44,7 +44,7 @@ void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D
 
 // hitbox is set based on shape
 void Projectile::updateHitbox() { 
-	if (_shape == LINE) {
+	if (_shape == ProjShape::LINE) {
 		_center = pos;
 		_hitbox = {pos, pos};
 	}

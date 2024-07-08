@@ -11,8 +11,8 @@
 // W.I.P.
 
 // most implementations should be in dummy, friendly, and enemy, in that order
-const enum EntityType { DUMMY, FRIENDLY, ENEMY };
-const enum AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
+const enum class EntityType { DUMMY, FRIENDLY, ENEMY };
+const enum class AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
 
 //const enum DummyAI { DUMMY  };
 //const enum FriendlyAI { STATIONARY, FOLLOWER };
@@ -29,17 +29,21 @@ public:
     ~Entity();
 
     void update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mouse, vec2D& displayOffset);
-    EntityType getAIType();
+    EntityType getType();
     AIType getAI();
-    
-    template <typename T>
-    T getAI();
+
+    void updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos);
 
     float hp = 1.0f; 
     float dmg = 0.0f;
 
     //test (use sprites in future)
     olc::Pixel color;
+
+    float attackCtr = 0.0f;
+    float attackInterval = 1.0f; // attack cooldown interval (in sec)
+
+    float projSpeed = 500.0f;
 
 private:
     EntityType _type;

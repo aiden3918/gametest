@@ -81,6 +81,7 @@ private:
     inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
     inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void _updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& pct, vec2D& pcn, float& pt);
     inline void _updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime);
 

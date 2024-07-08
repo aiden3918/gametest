@@ -57,12 +57,14 @@ public:
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
 
         vec2D mouseInfo = { GetMouseX(), GetMouseY() };
+        vec2D playerPos = mainPlayer->pos;
+        vec2D playerCenter = mainPlayer->getCenter();
 
         vec2D displayOffset = mainPlayer->getDisplayOffset();
         worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
-        worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset);
+        worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);
 
         return true;
     }

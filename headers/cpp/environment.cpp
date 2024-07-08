@@ -53,7 +53,7 @@ Environment::Environment(std::string &worldDataFile) {
 				initAccel.y >> size.x >> size.y >> entityTypeStr >> aiTypeStr >> damage >> std::boolalpha >>
 				affectedByGrav >> std::boolalpha >> tangible;
 
-			addEntity(name, initPos, initVel, initAccel, size, entityTypeMap[entityTypeStr], aiTypeMap[aiTypeStr],
+			addEntity(name, initPos, initVel, initAccel, size, _entityTypeMap[entityTypeStr], _aiTypeMap[aiTypeStr],
 				damage, affectedByGrav, tangible);
 
 		}
@@ -133,7 +133,7 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 
 		}
 		
-		if (p->getShape() == LINE) {
+		if (p->getShape() == ProjShape::LINE) {
 
 			for (auto& t : _tangibleTiles) {
 				collisionDirectionState colDir;
@@ -178,7 +178,15 @@ void Environment::_eraseProj(int& index) {
 	std::cout << "proj deleted" << std::endl;
 }
 
-void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
+std::vector<Projectile> Environment::getProjectiles() { return _projectiles; }
+std::vector<Projectile>* Environment::getActualProjectilesVec() { 
+	std::vector<Projectile>* projPtr = new std::vector<Projectile>;
+	projPtr = &_projectiles;
+	return projPtr;
+}
+
+void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, 
+	vec2D& displayOffset, vec2D& playerPos) {
 	if (_entities.size() == 0) return;
 	
 	for (int i = 0; i < _entities.size(); i++) {
@@ -192,6 +200,8 @@ void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, ve
 	handleEntityProjCollisions(fElapsedTime);
 
 	for (auto &e: _entities) e.update(pge, fElapsedTime, mouse, displayOffset);
+
+	updateEntityBehaviors(pge, fElapsedTime, playerPos);
 }
 
 void Environment::addEntity(Entity& entity) {
@@ -248,8 +258,8 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 	for (auto& e : _entities) {
 		AABB entityHB = e.getHitbox();
 		for (auto& p : _projectiles) {
-			if (p.getShape() == LINE) {
-				if (checkPtCollision(p.pos, entityHB) && e.getAIType() != FRIENDLY) {
+			if (p.getShape() == ProjShape::LINE) {
+				if (checkPtCollision(p.pos, entityHB) && e.getType() != EntityType::FRIENDLY) {
 					std::cout << "something got hit" << std::endl;
 					e.hp -= p.dmg;
 					p.pierce--;
@@ -259,6 +269,36 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 			else { return; }
 		}
 	}
+}
+
+void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
+
+	// std::cout << "ueb" << std::endl;
+	for (auto& e : _entities) {
+		// e.updateEntityBehavior(engine, fElapsedTime, playerPos);
+
+		if (e.getAI() == AIType::STATIONARY) continue;
+
+		switch (e.getAI()) {
+		case AIType::SENTRY:
+			// std::cout << e.getName() << " is a sentry" << std::endl;
+			if (e.attackCtr == 0.0f) {
+				vec2D playerDirVec = vec2DSub(playerPos, e.pos);
+				playerDirVec = vec2DNormalise(playerDirVec);
+				vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
+
+				Projectile entityProj = Projectile("entityProj", e.pos, 10, ProjShape::LINE, false, projVel, { 0, 0 }, olc::RED);
+				addProjectile(entityProj);
+
+				e.attackCtr += 0.0001f;
+			}
+			else {
+				(e.attackCtr > e.attackInterval) ? e.attackCtr = 0.0f : e.attackCtr += fElapsedTime;
+			}
+			break;
+		}
+	}
+
 }
 
 std::vector<Entity> Environment::getEntities() { return _entities; }
