@@ -256,13 +256,19 @@ void Environment::handleEntityTileCollisions(float &fElapsedTime) {
 
 void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 	for (auto& e : _entities) {
+
 		AABB entityHB = e.getHitbox();
+
 		for (auto& p : _projectiles) {
+
 			if (p.getShape() == ProjShape::LINE) {
-				if (checkPtCollision(p.pos, entityHB) && e.getType() != EntityType::FRIENDLY) {
-					std::cout << "something got hit" << std::endl;
-					e.hp -= p.dmg;
-					p.pierce--;
+				if (checkPtCollision(p.pos, entityHB)) {
+					if ((p.isFriendly && e.getType() != EntityType::FRIENDLY) ||
+						(!p.isFriendly && e.getType() != EntityType::ENEMY)) {
+						std::cout << "something got hit" << std::endl;
+						e.hp -= p.dmg;
+						p.pierce--;
+					}
 				}
 			}
 			// for circle
@@ -283,11 +289,14 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 		case AIType::SENTRY:
 			// std::cout << e.getName() << " is a sentry" << std::endl;
 			if (e.attackCtr == 0.0f) {
-				vec2D playerDirVec = vec2DSub(playerPos, e.pos);
+
+				vec2D entityCenter = e.getCenter();
+
+				vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
 				playerDirVec = vec2DNormalise(playerDirVec);
 				vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
 
-				Projectile entityProj = Projectile("entityProj", e.pos, 10, ProjShape::LINE, false, projVel, { 0, 0 }, olc::RED);
+				Projectile entityProj = Projectile("entityProj", entityCenter, 10, ProjShape::LINE, false, projVel, {0, 0}, olc::RED);
 				addProjectile(entityProj);
 
 				e.attackCtr += 0.0001f;

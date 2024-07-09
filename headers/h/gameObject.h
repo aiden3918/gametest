@@ -20,6 +20,8 @@ public:
 	vec2D getSize();
 	vec2D getCenter();
 
+	void fillBasicRect(olc::PixelGameEngine* engine, vec2D &displayOffset);
+
 	vec2D pos;
 	vec2D vel;
 	vec2D accel;
@@ -27,6 +29,8 @@ public:
 	std::string getName();
 
 	bool isTangible;
+
+	olc::Pixel color;
 
 	//void setDirColState(collisionDirectionState collDirState) { _collDirState = collDirState; }
 	//void resetDirColState() { _collDirState = { false, false, false, false, false }; }

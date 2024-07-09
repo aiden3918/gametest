@@ -183,70 +183,85 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
 inline void Player::_updateParry(olc::PixelGameEngine* engine, float &fElapsedTime) {
     
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
-        std::cout << "parry" << std::endl;
-        _parryCtr += fElapsedTime;
 
-        vec2D parryBoxSize = { _partialSpriteSize.x * 1.5f, _partialSpriteSize.x * 1.5f };
-        vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x);
-        // vec2D newParryPos = vec2DAdd(pos, lavScaled);
-        vec2D oldParryPos = { _center.x - parryBoxSize.x / 2.0f, _center.y - parryBoxSize.y / 2.0f };
-        vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
+        vec2D parryHBSize = vec2DMult(_partialSpriteSize, _parryBoxScale);
+        //vec2D parryBoxPos = pos;
+        //parryBoxPos.y -= _partialSpriteSize.y * (_parryBoxScale - 1.0f);
+        //(_lookAngleVector.x < 0.0f) ? parryBoxPos.x -= 
+        //    (_partialSpriteSize.x * (_parryBoxScale - 1.0f) + 10.0f) : parryBoxPos.x += 10.0f;
 
-        vec2D lavNormal = { _lookAngleVector.y, -_lookAngleVector.x };
-        // newParryPos.x -= parryBoxSize.x / 2.0f; newParryPos.y -= parryBoxSize.y / 2.0f;
-        _parryBox = new GameObject("playerParryBox", newParryPos, parryBoxSize, {0, 0}, {0, 0}, false, false);
-        vec2D parryLinePos = vec2DAdd(_center, lavScaled);
-        _parryLine = {
-            {
-                parryLinePos.x - std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-                parryLinePos.y - std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x) 
-                    - (_partialSpriteSize.x / 2.0f)
-            },
-            {
-                parryLinePos.x + std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-                parryLinePos.y + std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x) 
-                    - (_partialSpriteSize.x / 2.0f)
-            } 
-        };
+        _parryBox = new GameObject("parryBox", pos, parryHBSize);
+        _parryBox->color = olc::GREEN;
+
+        _parryCtr += 0.0001f;
+
+        //std::cout << "parry" << std::endl;
+        //_parryCtr += fElapsedTime;
+        //vec2D parryBoxSize = { _partialSpriteSize.x * 1.5f, _partialSpriteSize.x * 1.5f };
+        //vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x * 1.1f);
+        //// vec2D newParryPos = vec2DAdd(pos, lavScaled);
+        //vec2D oldParryPos = { _center.x - parryBoxSize.x / 2.0f, _center.y - parryBoxSize.y / 2.0f };
+        //vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
+        //vec2D lavNormal = { _lookAngleVector.y, -_lookAngleVector.x };
+        //// newParryPos.x -= parryBoxSize.x / 2.0f; newParryPos.y -= parryBoxSize.y / 2.0f;
+        //_parryBox = new GameObject("playerParryBox", newParryPos, parryBoxSize, {0, 0}, {0, 0}, false, false);
+        //vec2D parryLinePos = vec2DAdd(_center, lavScaled);
+        //_parryLine = {
+        //    {
+        //        parryLinePos.x - std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
+        //        parryLinePos.y - std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x) 
+        //            - (_partialSpriteSize.x / 2.0f)
+        //    },
+        //    {
+        //        parryLinePos.x + std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
+        //        parryLinePos.y + std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x) 
+        //            - (_partialSpriteSize.x / 2.0f)
+        //    } 
+        //};
 
     }
 
     if (_parryCtr > 0.0f) {
         if (_parryCtr < _parryDuration) {
-            vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x);
-            // vec2D newParryPos = vec2DAdd(pos, lavScaled);
-            vec2D oldParryPos = { _center.x - _parryBox->getSize().x / 2.0f, _center.y - _parryBox->getSize().y / 2.0f};
-            vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
 
+            _parryBox->pos = pos;
+            _parryBox->pos.y -= _partialSpriteSize.y * (_parryBoxScale - 1.0f);
+            (_lookAngleVector.x < 0.0f) ? _parryBox->pos.x -=
+                (_partialSpriteSize.x * (_parryBoxScale - 1.0f) + 10.0f) : _parryBox->pos.x += 10.0f;
+
+            _parryBox->fillBasicRect(engine, _displayOffset);
             _parryCtr += fElapsedTime;
 
-            _parryBox->pos = newParryPos;
-            vec2D pbPos = _parryBox->pos;
-            vec2D pbSize = _parryBox->getSize();
-            engine->FillRect({ (int)(pbPos.x + _displayOffset.x), (int)(pbPos.y + _displayOffset.y) }, 
-                { (int)pbSize.x, (int)pbSize.y }, olc::GREEN);
-
-            vec2D lavNormal = { _lookAngleVector.y, -_lookAngleVector.x };
-            vec2D parryLinePos = vec2DAdd(_center, lavScaled);
-            _parryLine = {
-                {
-                    parryLinePos.x - std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-                    parryLinePos.y - std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x)
-                        - (_partialSpriteSize.x / 2.0f)
-                },
-                {
-                    parryLinePos.x + std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-                    parryLinePos.y + std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x)
-                        - (_partialSpriteSize.x / 2.0f)
-                }
-            };
-
-            pbPos.x += pbSize.x / 2.0f; pbPos.y += pbSize.y / 2.0f;
-            engine->DrawLine(
-                { (int)(_parryLine.start.x + _displayOffset.x), (int)(_parryLine.start.y + _displayOffset.y) },
-                { (int)(_parryLine.stop.x + _displayOffset.x), (int)(_parryLine.stop.y + _displayOffset.y) },
-                olc::BLUE
-            );
+            //vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x);
+            //// vec2D newParryPos = vec2DAdd(pos, lavScaled);
+            //vec2D oldParryPos = { _center.x - _parryBox->getSize().x / 2.0f, _center.y - _parryBox->getSize().y / 2.0f};
+            //vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
+            //_parryCtr += fElapsedTime;
+            //_parryBox->pos = newParryPos;
+            //vec2D pbPos = _parryBox->pos;
+            //vec2D pbSize = _parryBox->getSize();
+            //engine->FillRect({ (int)(pbPos.x + _displayOffset.x), (int)(pbPos.y + _displayOffset.y) }, 
+            //    { (int)pbSize.x, (int)pbSize.y }, olc::GREEN);
+            //vec2D lavNormal = { _lookAngleVector.y, -_lookAngleVector.x };
+            //vec2D parryLinePos = vec2DAdd(_center, lavScaled);
+            //_parryLine = {
+            //    {
+            //        parryLinePos.x - std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
+            //        parryLinePos.y - std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x)
+            //            - (_partialSpriteSize.x / 2.0f)
+            //    },
+            //    {
+            //        parryLinePos.x + std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
+            //        parryLinePos.y + std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x)
+            //            - (_partialSpriteSize.x / 2.0f)
+            //    }
+            //};
+            //pbPos.x += pbSize.x / 2.0f; pbPos.y += pbSize.y / 2.0f;
+            //engine->DrawLine(
+            //    { (int)(_parryLine.start.x + _displayOffset.x), (int)(_parryLine.start.y + _displayOffset.y) },
+            //    { (int)(_parryLine.stop.x + _displayOffset.x), (int)(_parryLine.stop.y + _displayOffset.y) },
+            //    olc::BLUE
+            //);
 
         }
         else {
@@ -316,18 +331,24 @@ inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environm
         if (p.isFriendly) continue;
 
         switch (p.getShape()) {
-        case ProjShape::LINE: {
-            if (checkPtCollision(p.pos, _hitbox)) {
-                hp -= p.dmg;
-                // pierce does not decrease because we are not editing the actual projectile, just a copy
-                p.pierce--;
-                _iFramesCounter += 0.0001f;
+            case ProjShape::LINE: {
+                if (checkPtCollision(p.pos, _hitbox)) {
+                    hp -= p.dmg;
+                    p.pierce--;
+                    _iFramesCounter += 0.0001f;
+                }
+                break;
             }
-            break;
-        }
-        case ProjShape::CIRCLE: {
-            break;
-        }
+            case ProjShape::CIRCLE: {
+                AABB projHB = p.getHitbox();
+                // does not account for corners (tbd)
+                if (checkAABBCollision(projHB, _hitbox)) {
+                    hp -= p.dmg;
+                    p.pierce--;
+                    _iFramesCounter += 0.0001f;
+                }
+                break;
+            }
         }
     }
 }
@@ -350,6 +371,9 @@ inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElaps
         if (animHandler.currentAnimState != JUMP) animHandler.setAnimType(JUMP, 1);
     }
     animHandler.update(engine, _displayPos, fElapsedTime);
+
+    vec2D displayPos = vec2DAdd(pos, _displayOffset);
+    engine->DrawRect({(int)displayPos.x, (int)displayPos.y}, {(int)_partialSpriteSize.x, (int)_partialSpriteSize.y}, olc::WHITE);
 }
 
 inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {

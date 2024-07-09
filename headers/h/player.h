@@ -31,6 +31,7 @@ struct GeneralWeapon {
     GeneralWeapon() {}
     ~GeneralWeapon() {}
 
+    // name, weaponID (enum), damage, firerate
     GeneralWeapon(std::string weaponName, Weapons weaponID, float weaponDmg, float weaponFirerate) {
         name = weaponName;
         id = weaponID;
@@ -107,6 +108,7 @@ private:
     bool _parrying;
     GameObject* _parryBox;
     line _parryLine;
+    float _parryBoxScale = 1.25f;
 
     // movement data
     float _movementCtr = 0.0f;

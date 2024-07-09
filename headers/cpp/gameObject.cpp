@@ -26,3 +26,7 @@ AABB GameObject::getHitbox() { return _hitbox; }
 vec2D GameObject::getSize() { return _size; }
 vec2D GameObject::getCenter() { return _center; }
 std::string GameObject::getName() { return _name; }
+
+void GameObject::fillBasicRect(olc::PixelGameEngine* engine, vec2D& displayOffset) {
+	engine->FillRect({ (int)(pos.x + displayOffset.x), (int)(pos.y + displayOffset.y) }, { (int)_size.x, (int)_size.y }, color);
+}
