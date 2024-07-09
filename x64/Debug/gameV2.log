@@ -1,13 +1,11 @@
-﻿  environment.cpp
+﻿  player.cpp
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'headers/cpp/environment.cpp')
+  (compiling source file 'headers/cpp/player.cpp')
   
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'headers/cpp/environment.cpp')
+  (compiling source file 'headers/cpp/player.cpp')
   
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'headers/cpp/environment.cpp')
+  (compiling source file 'headers/cpp/player.cpp')
   
-C:\Users\endem\source\repos\game\gameV2\headers\cpp\environment.cpp(46,8): warning C4101: 'entityTypeNum': unreferenced local variable
-C:\Users\endem\source\repos\game\gameV2\headers\cpp\environment.cpp(46,27): warning C4101: 'aiTypeNum': unreferenced local variable
   gameV2.vcxproj -> C:\Users\endem\source\repos\game\x64\Debug\gameV2.exe

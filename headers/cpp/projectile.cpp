@@ -56,7 +56,9 @@ void Projectile::updateHitbox() {
 		};
 	}
 }
+
 ProjShape Projectile::getShape() { return _shape; }
+bool Projectile::isParriable() { return _parriable; }
 
 //bool Projectile::checkCollision(Environment* env, Tile& possibleTileCollided) {
 //	for (auto& i : env->getTangibleTiles()) {

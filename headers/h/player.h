@@ -78,7 +78,7 @@ private:
     inline void _updateHorizontalMovement(olc::PixelGameEngine* engine);
     inline void _updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
     inline void _updateWeapons(olc::PixelGameEngine* engine);
-    inline void _updateParry(olc::PixelGameEngine* engine, float &fElapsedTime);
+    inline void _updateParry(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
     inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
     inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);

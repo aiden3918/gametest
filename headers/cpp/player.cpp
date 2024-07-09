@@ -71,7 +71,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     _updateWeapons(engine);
 
     // ability updates
-    _updateParry(engine, fElapsedTime);
+    _updateParry(engine, env, fElapsedTime);
 
     // mouse updates
     _updateMouseMechanics(engine, env, fElapsedTime);
@@ -180,7 +180,7 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
 
 
 // probably should organize these; so messy
-inline void Player::_updateParry(olc::PixelGameEngine* engine, float &fElapsedTime) {
+inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime) {
     
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
 
@@ -231,6 +231,28 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, float &fElapsedTi
 
             _parryBox->fillBasicRect(engine, _displayOffset);
             _parryCtr += fElapsedTime;
+
+            // memory leak, perhaps?
+            std::vector<Projectile>* envProjsPtr = env->getActualProjectilesVec();
+            AABB parryBoxHB = _parryBox->getHitbox();
+
+            for (auto& p : *envProjsPtr) {
+
+                AABB projHB = p.getHitbox();
+
+                if (p.getShape() == ProjShape::LINE && !checkPtCollision(p.pos, parryBoxHB)) return;
+                if (p.getShape() == ProjShape::CIRCLE && !checkAABBCollision(projHB, parryBoxHB)) return;
+
+                // redirect projectile
+                float projSpeed = vec2DMag(p.vel);
+                p.vel = vec2DMult(_lookAngleVector, projSpeed * 2.0f);
+                p.isFriendly = true;
+
+                // end parry
+                _parryCtr = _parryDuration;
+            }
+
+            // delete envProjsPtr;
 
             //vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x);
             //// vec2D newParryPos = vec2DAdd(pos, lavScaled);

@@ -23,6 +23,7 @@ public:
 	void update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset);
 	void updateHitbox();
 	ProjShape getShape();
+	bool isParriable();
 	// bool checkCollision(Environment* env, Tile& possibleTileCollided);
 
 	olc::Pixel color;
