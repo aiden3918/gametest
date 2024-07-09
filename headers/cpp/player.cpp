@@ -240,13 +240,16 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
 
                 AABB projHB = p.getHitbox();
 
-                if (p.getShape() == ProjShape::LINE && !checkPtCollision(p.pos, parryBoxHB)) return;
-                if (p.getShape() == ProjShape::CIRCLE && !checkAABBCollision(projHB, parryBoxHB)) return;
+                if (p.getShape() == ProjShape::LINE && !checkPtCollision(p.pos, parryBoxHB)) continue;
+                if (p.getShape() == ProjShape::CIRCLE && !checkAABBCollision(projHB, parryBoxHB)) continue;
 
                 // redirect projectile
                 float projSpeed = vec2DMag(p.vel);
                 p.vel = vec2DMult(_lookAngleVector, projSpeed * 2.0f);
                 p.isFriendly = true;
+
+                // extra incentive to parry
+                p.dmg *= 2.0f;
 
                 // end parry
                 _parryCtr = _parryDuration;
