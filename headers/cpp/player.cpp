@@ -71,7 +71,11 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     _updateWeapons(engine);
 
     // ability updates
-    _updateParry(engine, env, fElapsedTime);
+    if (_parryCooldownCtr == 0.0f) _updateParry(engine, env, fElapsedTime);
+    else {
+        (_parryCooldownCtr < _parryCooldownDuration) ? _parryCooldownCtr += fElapsedTime : _parryCooldownCtr = 0.0f;
+    }
+
 
     // mouse updates
     _updateMouseMechanics(engine, env, fElapsedTime);
@@ -150,21 +154,16 @@ inline void Player::_updateWeapons(olc::PixelGameEngine* engine) {
     if (_weaponCDCtr != 0.0f) return;
 
     if (engine->GetKey(olc::K1).bPressed) {
-        _currentWeapon = weaponData[VANTABLADE];
+        int swordInt = static_cast<int>(Weapons::SWORD);
+        _currentWeapon = weaponData[swordInt];
         std::cout << _currentWeapon.name << " equipped" << std::endl;
         std::cout << "cooldown time: " << _currentWeapon.cooldownTime << std::endl;
-
-        //currentWeapon = VANTABLADE;
-        //std::cout << "Vantablade equipped" << std::endl;
     }
     else if (engine->GetKey(olc::K2).bPressed) {
-        _currentWeapon = weaponData[POCKETROCKET];
+        int gunInt = static_cast<int>(Weapons::GUN);
+        _currentWeapon = weaponData[gunInt];
         std::cout << _currentWeapon.name << " equipped" << std::endl;
         std::cout << "cooldown time: " << _currentWeapon.cooldownTime << std::endl;
-
-        //currentWeapon = POCKETROCKET;
-        //std::cout << "Pocket Rocket equipped" << std::endl;
-        // hehehehe
     }
 }
 
@@ -185,39 +184,10 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
 
         vec2D parryHBSize = vec2DMult(_partialSpriteSize, _parryBoxScale);
-        //vec2D parryBoxPos = pos;
-        //parryBoxPos.y -= _partialSpriteSize.y * (_parryBoxScale - 1.0f);
-        //(_lookAngleVector.x < 0.0f) ? parryBoxPos.x -= 
-        //    (_partialSpriteSize.x * (_parryBoxScale - 1.0f) + 10.0f) : parryBoxPos.x += 10.0f;
-
         _parryBox = new GameObject("parryBox", pos, parryHBSize);
         _parryBox->color = olc::GREEN;
 
         _parryCtr += 0.0001f;
-
-        //std::cout << "parry" << std::endl;
-        //_parryCtr += fElapsedTime;
-        //vec2D parryBoxSize = { _partialSpriteSize.x * 1.5f, _partialSpriteSize.x * 1.5f };
-        //vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x * 1.1f);
-        //// vec2D newParryPos = vec2DAdd(pos, lavScaled);
-        //vec2D oldParryPos = { _center.x - parryBoxSize.x / 2.0f, _center.y - parryBoxSize.y / 2.0f };
-        //vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
-        //vec2D lavNormal = { _lookAngleVector.y, -_lookAngleVector.x };
-        //// newParryPos.x -= parryBoxSize.x / 2.0f; newParryPos.y -= parryBoxSize.y / 2.0f;
-        //_parryBox = new GameObject("playerParryBox", newParryPos, parryBoxSize, {0, 0}, {0, 0}, false, false);
-        //vec2D parryLinePos = vec2DAdd(_center, lavScaled);
-        //_parryLine = {
-        //    {
-        //        parryLinePos.x - std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-        //        parryLinePos.y - std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x) 
-        //            - (_partialSpriteSize.x / 2.0f)
-        //    },
-        //    {
-        //        parryLinePos.x + std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-        //        parryLinePos.y + std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x) 
-        //            - (_partialSpriteSize.x / 2.0f)
-        //    } 
-        //};
 
     }
 
@@ -241,6 +211,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
                 AABB projHB = p.getHitbox();
 
                 if (p.getShape() == ProjShape::LINE && !checkPtCollision(p.pos, parryBoxHB)) continue;
+                // once again, only heuristic
                 if (p.getShape() == ProjShape::CIRCLE && !checkAABBCollision(projHB, parryBoxHB)) continue;
 
                 // redirect projectile
@@ -255,43 +226,11 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
                 _parryCtr = _parryDuration;
             }
 
-            // delete envProjsPtr;
-
-            //vec2D lavScaled = vec2DMult(_lookAngleVector, _partialSpriteSize.x);
-            //// vec2D newParryPos = vec2DAdd(pos, lavScaled);
-            //vec2D oldParryPos = { _center.x - _parryBox->getSize().x / 2.0f, _center.y - _parryBox->getSize().y / 2.0f};
-            //vec2D newParryPos = vec2DAdd(oldParryPos, lavScaled);
-            //_parryCtr += fElapsedTime;
-            //_parryBox->pos = newParryPos;
-            //vec2D pbPos = _parryBox->pos;
-            //vec2D pbSize = _parryBox->getSize();
-            //engine->FillRect({ (int)(pbPos.x + _displayOffset.x), (int)(pbPos.y + _displayOffset.y) }, 
-            //    { (int)pbSize.x, (int)pbSize.y }, olc::GREEN);
-            //vec2D lavNormal = { _lookAngleVector.y, -_lookAngleVector.x };
-            //vec2D parryLinePos = vec2DAdd(_center, lavScaled);
-            //_parryLine = {
-            //    {
-            //        parryLinePos.x - std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-            //        parryLinePos.y - std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x)
-            //            - (_partialSpriteSize.x / 2.0f)
-            //    },
-            //    {
-            //        parryLinePos.x + std::min(_partialSpriteSize.x, lavNormal.x * _partialSpriteSize.x),
-            //        parryLinePos.y + std::min(_partialSpriteSize.x, lavNormal.y * _partialSpriteSize.x)
-            //            - (_partialSpriteSize.x / 2.0f)
-            //    }
-            //};
-            //pbPos.x += pbSize.x / 2.0f; pbPos.y += pbSize.y / 2.0f;
-            //engine->DrawLine(
-            //    { (int)(_parryLine.start.x + _displayOffset.x), (int)(_parryLine.start.y + _displayOffset.y) },
-            //    { (int)(_parryLine.stop.x + _displayOffset.x), (int)(_parryLine.stop.y + _displayOffset.y) },
-            //    olc::BLUE
-            //);
-
         }
         else {
             delete _parryBox;
             _parryCtr = 0.0f;
+            _parryCooldownCtr += 0.0001f;
         }
     }
 }
@@ -303,18 +242,32 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
         std::cout << "attack" << std::endl;
 
         switch (_currentWeapon.id) {
-            case VANTABLADE:
+            case Weapons::SWORD: {
+                vec2D meleeSize = { _partialSpriteSize.y, _partialSpriteSize.y };
+                vec2D meleePosOffset = vec2DDiv(meleeSize, 2.0f);
+                vec2D meleePos = vec2DSub(_center, meleePosOffset);
+                vec2D meleeVel = vec2DMult(_lookAngleVector, 400.0f);
+                vec2D meleeAccel = vec2DMult(meleeVel, -2.0f);
+                Projectile meleeProj = Projectile("meleeProj", meleePos, meleeSize, true, meleeVel, 
+                    meleeAccel, olc::DARK_YELLOW);
+                meleeProj.lifespan = 0.5f;
+                meleeProj.pierce = 3;
+
+                env->addProjectile(meleeProj);
                 break;
-            case POCKETROCKET:
+            }
 
+            case Weapons::GUN: {
                 vec2D projVel = vec2DMult(_lookAngleVector, 2000.0f);
-                Projectile testProj = Projectile("playerProj", _center, 10, ProjShape::LINE, true, projVel, {0, 0}, olc::GREEN);
-                testProj.bounces = 3;
+                Projectile gunProj = Projectile("gunProj", _center, 10, ProjShape::LINE, true, projVel,
+                    { 0, 0 }, olc::GREEN);
+                gunProj.bounces = 3;
 
-                env->addProjectile(testProj);
+                env->addProjectile(gunProj);
 
                 std::cout << projVel.x << " " << projVel.y << std::endl;
                 break;
+            }
         }
 
         _weaponCDCtr += 0.001f;
@@ -403,6 +356,7 @@ inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElaps
 
 inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {
     engine->DrawString({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN, 2);
+    engine->DrawString({ 50, 100 }, "Current Weapon: " + _currentWeapon.name, olc::GREEN, 2);
 }
 
 float Player::getLookAngleDeg() { return _lookAngleDeg; }

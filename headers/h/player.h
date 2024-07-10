@@ -13,11 +13,11 @@
 #include "animation.h"
 #include <algorithm>
 #include <fstream>
-#include "../extern-lib/rapidjson/document.h"
-#include "../extern-lib/rapidjson/writer.h"
-#include "../extern-lib/rapidjson/stringbuffer.h"
+//#include "../extern-lib/rapidjson/document.h"
+//#include "../extern-lib/rapidjson/writer.h"
+//#include "../extern-lib/rapidjson/stringbuffer.h"
 
-const enum Weapons {VANTABLADE, POCKETROCKET};
+const enum class Weapons {SWORD, GUN};
 
 struct GeneralWeapon {
     std::string name;
@@ -43,8 +43,8 @@ struct GeneralWeapon {
 };
 
 const GeneralWeapon weaponData[2] = {
-    GeneralWeapon("Vantablade", VANTABLADE, 3.0f, 5.0f),
-    GeneralWeapon("Pocket Rocket", POCKETROCKET, 1.0f, 3.0f)
+    GeneralWeapon("Sword", Weapons::SWORD, 3.0f, 3.0f),
+    GeneralWeapon("Gun", Weapons::GUN, 1.0f, 3.0f)
 };
 
 class Player : public GameObject {
@@ -54,7 +54,7 @@ public:
     Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, vec2D screenSize, bool affectedByGrav = true, bool tangible = true);
     ~Player();
     // init(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, bool affectedByGrav = true, bool canCollide = true);
-    
+
     void update(olc::PixelGameEngine* engine, float fElapsedTime, Environment* env, vec2D& mouse);
     float getLookAngleDeg();
     vec2D getLookAngleVec();
@@ -71,17 +71,17 @@ public:
     float currentWeaponInterval;
 private:
 
-    void _updateTileCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject, 
-        float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt);
+    void _updateTileCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject,
+        float>>&possibleColTiles, vec2D& pct, vec2D& pcn, float& pt);
 
     inline void _updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT);
     inline void _updateHorizontalMovement(olc::PixelGameEngine* engine);
     inline void _updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
     inline void _updateWeapons(olc::PixelGameEngine* engine);
-    inline void _updateParry(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
-    inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void _updateParry(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
+    inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
-    inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime);
+    inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& pct, vec2D& pcn, float& pt);
     inline void _updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime);
@@ -109,6 +109,8 @@ private:
     GameObject* _parryBox;
     line _parryLine;
     float _parryBoxScale = 1.25f;
+    float _parryCooldownCtr = 0.0f;
+    float _parryCooldownDuration = 0.5f;
 
     // movement data
     float _movementCtr = 0.0f;
@@ -123,9 +125,9 @@ private:
     // animation data
     vec2D _partialSpriteSize = { 50.0f, 100.0f };
     animationHandler animHandler;
-    
+
     // weapon data
-    GeneralWeapon _currentWeapon;
+    GeneralWeapon _currentWeapon = weaponData[static_cast<int>(Weapons::SWORD)];
     float _weaponCDCtr = 0.0f;
 
 };

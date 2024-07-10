@@ -1,6 +1,8 @@
 #include "../h/projectile.h"
 
 Projectile::Projectile() {}
+
+// for linear/circle projectiles
 Projectile::Projectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible, bool parriable) {
 	name = _name;
 
@@ -16,45 +18,85 @@ Projectile::Projectile(std::string name, vec2D initPos, float size, ProjShape sh
 
 	if (affectedByGrav) accel.y = 500.0f;
 
+	updateHitbox();
+
+}
+
+// for rectangular projectiles (usually melee)
+Projectile::Projectile(std::string name, vec2D initPos, vec2D size, bool friendly, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible, bool parriable) {
+	name = _name;
+
+	pos = initPos;
+	vel = initVel;
+	accel = initAccel;
+	isTangible = tangible;
+	color = initColor;
+	isFriendly = friendly;
+	_affectedByGrav = affectedByGrav;
+	_shape = ProjShape::RECT;
+	_size = size;
+
+	if (affectedByGrav) accel.y = 500.0f;
+
+	updateHitbox();
+
 }
 Projectile::~Projectile() {}
 
 void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
 
 	// vec2D oldPos = pos;
+	vel.x += accel.x * fElapsedTime;
+	vel.y += accel.y * fElapsedTime;
 
 	pos.x += vel.x * fElapsedTime;
 	pos.y += vel.y * fElapsedTime;
 
+	updateHitbox();
+
 	// trail effect for line
-	if (_shape == ProjShape::CIRCLE) engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color);
-	else {
-		// thicker bullet
-		for (int i = -1; i < 2; i++) {
-			engine->DrawLine(
-				{ (int)((pos.x - vel.x * 0.01) + displayOffset.x + i),
-				(int)((pos.y - vel.y * 0.01) + displayOffset.y + i) },
-				{ (int)(pos.x + displayOffset.x + i),
-				(int)(pos.y + displayOffset.y + i) },
-				color);
+	switch (_shape) {
+		case ProjShape::CIRCLE: engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color); break;
+		case ProjShape::LINE: {
+			// thicker bullet
+			for (int i = -1; i < 2; i++) {
+				engine->DrawLine(
+					{ (int)((pos.x - vel.x * 0.01f) + displayOffset.x + i),
+					(int)((pos.y - vel.y * 0.01f) + displayOffset.y + i) },
+					{ (int)(pos.x + displayOffset.x + i),
+					(int)(pos.y + displayOffset.y + i) },
+					color);
+			}
+			break;
 		}
-	}
+		case ProjShape::RECT: {
+			fillBasicRect(engine, displayOffset);
+			break;
+		}
+	} 
 		//else engine->DrawLine({ (int)(pos.x -= 10), (int)(pos.y -= 10) }, { (int)pos.x, (int)pos.y }, color);
 }
 
 // hitbox is set based on shape
 void Projectile::updateHitbox() { 
-	if (_shape == ProjShape::LINE) {
+	switch (_shape) {
+	case ProjShape::LINE:
 		_center = pos;
-		_hitbox = {pos, pos};
-	}
-	else {
+		_hitbox = { pos, pos };
+		break;
+	case ProjShape::CIRCLE:
 		_center = pos;
 		_hitbox = {
 			{_center.x - _radius, _center.y - _radius},
 			{_center.x + _radius, _center.y + _radius}
 		};
+		break;
+	case ProjShape::RECT:
+		_hitbox = { {pos.x, pos.y}, {pos.x + _size.x, pos.y + _size.y} };
+		_center = { pos.x + (_size.x / 2.0f), pos.y + (_size.y / 2.0f) };
+		break;
 	}
+
 }
 
 ProjShape Projectile::getShape() { return _shape; }

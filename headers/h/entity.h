@@ -14,10 +14,6 @@
 const enum class EntityType { DUMMY, FRIENDLY, ENEMY };
 const enum class AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
 
-//const enum DummyAI { DUMMY  };
-//const enum FriendlyAI { STATIONARY, FOLLOWER };
-//const enum EnemyAI { SENTRY, WALKER, DRONE };
-
 const olc::Pixel defaultEntityColors[3] = { olc::WHITE, olc::GREEN, olc::RED };
 
 class Entity : public GameObject {

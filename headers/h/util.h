@@ -71,23 +71,5 @@ inline vec2D get_png_image_dimensions(std::string& file_path)
 }
 
 // ------------------------------------------------------------------------------------------------------
-// maybe deprecated? (i havent even implemented it yet lol)
-enum direction { LEFT, RIGHT, UP, DOWN, NONE };
-
-struct collisionDirectionState {
-	bool hasCollided = false; // idk if this is necessary yet
-	bool left = false;
-	bool right = false;
-	bool up = false;
-	bool down = false;
-
-	// std::vector<Tile> collidedTiles; // likely necessary to add logic for intangible tiles
-};
-
-struct axisCollisionState {
-	bool hasCollided = false;
-	bool upOrDown = false;
-	bool leftOrRight = false;
-};
 
 #endif // !util_h

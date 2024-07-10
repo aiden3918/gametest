@@ -77,6 +77,8 @@ protected:
 		{"LINE", ProjShape::LINE},
 		{"CIRCLE", ProjShape::CIRCLE}
 	};
+
+	vec2D _spawnLocation;
 };
 
 #endif

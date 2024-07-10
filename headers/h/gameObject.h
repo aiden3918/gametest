@@ -65,11 +65,10 @@ inline bool checkDynamicRectVsRectCollision(GameObject& objA, GameObject& objB, 
 	AABB objBHitbox = objB.getHitbox();
 	AABB expandedB = { {objBHitbox.min.x - xExpansion, objBHitbox.min.y - yExpansion},
 		{objBHitbox.max.x + xExpansion, objBHitbox.max.y + yExpansion} };
-	collisionDirectionState dummy;
 
 	vec2D modifiedDir = vec2DMult(objA.vel, elapsedTime);
 	vec2D objACenter = objA.getCenter();
-	if (checkRayCollision(objACenter, modifiedDir, expandedB, dummy, contactPoint, contactNormal, contactTime)) {
+	if (checkRayCollision(objACenter, modifiedDir, expandedB, contactPoint, contactNormal, contactTime)) {
 		if (contactTime >= 0.0f && contactTime <= 1.0f) return true;
 	}
 
@@ -88,11 +87,10 @@ inline bool checkDynamicCircleVsRectCollision(GameObject &circle, float &radius,
 	AABB rectHitbox = rect.getHitbox();
 	AABB expandedRect = { {rectHitbox.min.x - xExpansion, rectHitbox.min.y - yExpansion},
 		{rectHitbox.max.x + xExpansion, rectHitbox.max.y + yExpansion} };
-	collisionDirectionState dummy;
 
 	vec2D modifiedVel = vec2DMult(circle.vel, elapsedTime);
 	vec2D objACenter = circle.getCenter();
-	if (checkRayCollision(objACenter, modifiedVel, expandedRect, dummy, contactPoint, contactNormal, contactTime)) {
+	if (checkRayCollision(objACenter, modifiedVel, expandedRect, contactPoint, contactNormal, contactTime)) {
 		if (contactTime >= 0.0f && contactTime <= 1.0f) return true;
 	}
 

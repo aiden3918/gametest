@@ -59,7 +59,7 @@ inline bool checkCircleRectCollision(vec2D &circlePos, float &radius, AABB &rect
 // 2. direction of ray as vector (not normalised, i think)
 // 3. AABB coordinates of target rect
 // i NEED to learn how to properly use vectors / get familiar with them
-inline bool checkRayCollision(vec2D& rayOrigin, vec2D& rayDir, AABB& targetRect, collisionDirectionState& colDirState,
+inline bool checkRayCollision(vec2D& rayOrigin, vec2D& rayDir, AABB& targetRect,
     vec2D& contactPoint, vec2D& contactNormal, float& tHitNear) {
     // get near and far collision vectors
     // d = d_0 + t(v) (0 <= t <= 1)
@@ -94,24 +94,11 @@ inline bool checkRayCollision(vec2D& rayOrigin, vec2D& rayDir, AABB& targetRect,
     // collision on right or left
     if (tNear.x > tNear.y) {
         // initial direction of ray is used to determine which side it collided in
-        if (rayDir.x < 0) {
-            contactNormal = { 1, 0 };
-            colDirState.left = true;
-        }
-        else {
-            contactNormal = { -1, 0 };
-            colDirState.right = true;
-        }
+        (rayDir.x < 0) ? contactNormal = { 1, 0 } : contactNormal = { -1, 0 };
+
     } // collision on top or bottom
     else {
-        if (rayDir.y < 0) {
-            contactNormal = { 0 , 1 };
-            colDirState.up = true;
-        }
-        else {
-            contactNormal = { 0, -1 };
-            colDirState.down = true;
-        }
+        (rayDir.y < 0) ? contactNormal = { 0 , 1 } : contactNormal = { 0, -1 };
     }
 
     return true;

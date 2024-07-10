@@ -125,52 +125,64 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 		// if out of screen
 		vec2D projDisplayPos = { p->pos.x + displayOffset.x, p->pos.y + displayOffset.y };
 
-		if (!checkPtCollision(projDisplayPos, { {0, 0}, {(float)screenWidth, (float)screenHeight} })
-			|| p->bounces < 1 || p->pierce < 1) {
+		// delete point if its out of screen, out of bounces, out of pierces, or lived past its lifespan
+		// actually, because of lifespan implementation, out-of-screen is no longer necessary
+		if (/*!checkPtCollision(projDisplayPos, {{0, 0}, {(float)screenWidth, (float)screenHeight}})
+			||*/ p->bounces < 1 || p->pierce < 1 || p->lifespanCtr > p->lifespan) {
 
 			_eraseProj(i);
-			return;
+			continue;
 
 		}
 		
-		if (p->getShape() == ProjShape::LINE) {
+		vec2D projCtPt; vec2D projCtN; float projCtT;
+		vec2D projDir = vec2DMult(p->vel, fElapsedTime);
+		AABB projHB = p->getHitbox();
 
-			for (auto& t : _tangibleTiles) {
-				collisionDirectionState colDir;
-				AABB tHb = t.getHitbox();
-				vec2D projCtPt; vec2D projCtN; float projCtT;
+		for (auto& t : _tangibleTiles) {
+			AABB tileHB = t.getHitbox();
 
-				vec2D projDir = vec2DMult(p->vel, fElapsedTime);
-				// projectiles deleting early
-				// likely ray collisions are checking too far ahead
-				if (checkRayCollision(p->pos, projDir, tHb, colDir, projCtPt, projCtN, projCtT) &&
-					projCtT >= 0.0f && projCtT <= 1.0f) {
-
-					p->bounces--;
-
-					/*(projCtN.x != 0) ? p->vel.x *= -1.0f : p->vel.y *= -1.0f;*/
-
-					// reverse dir (-> + 2(<-) = <-)
-					//p->vel.x += 2.0f * (projCtN.x * std::abs(p->vel.x));
-					//p->vel.y += 2.0f * (projCtN.y * std::abs(p->vel.y));
-
-					if (projCtN.x != 0) p->vel.x *= -1.0f;
-					if (projCtN.y != 0) p->vel.y *= -1.0f;
-
+			// if not collided with tile, continue
+			switch (p->getShape()) {
+				case ProjShape::LINE: {
+					if (!(checkRayCollision(p->pos, projDir, tileHB, projCtPt, projCtN, projCtT) &&
+						projCtT >= 0.0f && projCtT <= 1.0f)) continue;
+					break;
 				}
+
+				case ProjShape::CIRCLE:
+				case ProjShape::RECT: {
+					if (!(checkDynamicRectVsRectCollision(*p, t, fElapsedTime, projCtPt, projCtN, projCtT)
+						&& projCtT >= 0.0f && projCtT <= 1.0f) ) continue;
+					break;
+				}
+
 			}
 
-		} else {
-			return;
+			p->bounces--;
+			if (projCtN.x != 0) p->vel.x *= -1.0f;
+			if (projCtN.y != 0) p->vel.y *= -1.0f;
+
 		}
 
+		//if (p->getShape() == ProjShape::LINE) {
+		//	for (auto& t : _tangibleTiles) {
+		//		AABB tHb = t.getHitbox();
+		//		if (checkRayCollision(p->pos, projDir, tHb, projCtPt, projCtN, projCtT) &&
+		//			projCtT >= 0.0f && projCtT <= 1.0f) {
+		//			p->bounces--;
+		//			if (projCtN.x != 0) p->vel.x *= -1.0f;
+		//			if (projCtN.y != 0) p->vel.y *= -1.0f;
+
+		//		}
+		//	}
+		//} else {
+		//	return;
+		//}
+
+		p->lifespanCtr += fElapsedTime;
+
 	}
-	//for (auto& p : _projectiles) {
-	//	if (p.getShape() == LINE && (p.pos.x > screenWidth || p.pos.x < 0 || p.pos.y > screenHeight || p.pos.y < 0)) {
-	//		_projectiles.erase(std::remove(_projectiles.begin(), _projectiles.end(), p));
-	//	}
-	//	p.update(pge, fElapsedTime, mouse);
-	//}
 }
 
 void Environment::_eraseProj(int& index) {
@@ -259,20 +271,26 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 
 		AABB entityHB = e.getHitbox();
 
+		// check ALL projectiles for collision with current entity;
 		for (auto& p : _projectiles) {
 
+			// trying to avoid nested hell 
+			// lines
 			if (p.getShape() == ProjShape::LINE) {
-				if (checkPtCollision(p.pos, entityHB)) {
-					if ((p.isFriendly && e.getType() != EntityType::FRIENDLY) ||
-						(!p.isFriendly && e.getType() != EntityType::ENEMY)) {
-						std::cout << "something got hit" << std::endl;
-						e.hp -= p.dmg;
-						p.pierce--;
-					}
-				}
+				if (!checkPtCollision(p.pos, entityHB)) continue;
 			}
-			// for circle
-			else { return; }
+			// circles and rects
+			else {
+				AABB projHB = p.getHitbox();
+				if (!checkAABBCollision(entityHB, projHB)) continue;
+			}
+
+			if ((p.isFriendly && e.getType() != EntityType::FRIENDLY) ||
+				(!p.isFriendly && e.getType() != EntityType::ENEMY)) {
+				std::cout << "something got hit" << std::endl;
+				e.hp -= p.dmg;
+				p.pierce--;
+			}
 		}
 	}
 }
@@ -286,43 +304,29 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 		if (e.getAI() == AIType::STATIONARY) continue;
 
 		switch (e.getAI()) {
-		case AIType::SENTRY:
-			// std::cout << e.getName() << " is a sentry" << std::endl;
-			if (e.attackCtr == 0.0f) {
+			case AIType::SENTRY: {
+				// std::cout << e.getName() << " is a sentry" << std::endl;
+				if (e.attackCtr == 0.0f) {
 
-				vec2D entityCenter = e.getCenter();
+					vec2D entityCenter = e.getCenter();
 
-				vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
-				playerDirVec = vec2DNormalise(playerDirVec);
-				vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
+					vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
+					playerDirVec = vec2DNormalise(playerDirVec);
+					vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
 
-				Projectile entityProj = Projectile("entityProj", entityCenter, 10, ProjShape::LINE, false, projVel, {0, 0}, olc::RED);
-				addProjectile(entityProj);
+					Projectile entityProj = Projectile("entityProj", entityCenter, 10, ProjShape::LINE, false, projVel, { 0, 0 }, olc::RED);
+					addProjectile(entityProj);
 
-				e.attackCtr += 0.0001f;
+					e.attackCtr += 0.0001f;
+				}
+				else {
+					(e.attackCtr > e.attackInterval) ? e.attackCtr = 0.0f : e.attackCtr += fElapsedTime;
+				}
+				break;
 			}
-			else {
-				(e.attackCtr > e.attackInterval) ? e.attackCtr = 0.0f : e.attackCtr += fElapsedTime;
-			}
-			break;
 		}
 	}
 
 }
 
 std::vector<Entity> Environment::getEntities() { return _entities; }
-
-//bool Environment::gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile) {
-//
-//	AABB objectHitbox = gameObject.getHitbox();
-//
-//	for (Tile& i : _tangibleTiles) {
-//		AABB tileHitbox = i.getHitbox();
-//		if (checkAABBCollision(objectHitbox, tileHitbox)) {
-//			collidedTile = i;
-//			return true;
-//		}
-//	}
-//
-//	return false;
-//}
