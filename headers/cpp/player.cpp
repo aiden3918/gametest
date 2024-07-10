@@ -89,6 +89,8 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
 
     _updatePlayerUI(engine, fElapsedTime);
 
+    _updateResetMechanics(engine, env, fElapsedTime);
+
 }
 
 void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
@@ -358,6 +360,13 @@ inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElaps
 inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {
     engine->DrawString({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN, 2);
     engine->DrawString({ 50, 100 }, "Current Weapon: " + _currentWeapon.name, olc::GREEN, 2);
+}
+
+inline void Player::_updateResetMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
+    if (engine->GetKey(olc::R).bPressed || pos.y > 2000.0f || hp < 0.0f) {
+        if (hp < 0.0f) hp = 100.0f;
+        pos = env->getSpawnPoint();
+    }
 }
 
 float Player::getLookAngleDeg() { return _lookAngleDeg; }

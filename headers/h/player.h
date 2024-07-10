@@ -85,6 +85,7 @@ private:
     inline void _updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& pct, vec2D& pcn, float& pt);
     inline void _updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime);
+    inline void _updateResetMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
 
     // "scroll effect" data
     vec2D _displayPos;
