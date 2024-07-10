@@ -198,6 +198,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
             _parryBox->pos.y -= _partialSpriteSize.y * (_parryBoxScale - 1.0f);
             (_lookAngleVector.x < 0.0f) ? _parryBox->pos.x -=
                 (_partialSpriteSize.x * (_parryBoxScale - 1.0f) + 10.0f) : _parryBox->pos.x += 10.0f;
+            _parryBox->updateHitbox();
 
             _parryBox->fillBasicRect(engine, _displayOffset);
             _parryCtr += fElapsedTime;

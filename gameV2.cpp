@@ -20,33 +20,12 @@ public:
 
     bool OnUserCreate() override
     {
-        //std::string playerSpriteRef = "assets/sprites/sprite-temp.png";
-        std::string playerSpriteRef = "assets/sprites/player.png";
-        mainPlayer = new Player({ 400, 300 }, { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
         std::string worldDataRef = "data/worlddata.txt";
         worldEnvironment = new Environment(worldDataRef);
-        
-        //worldEnvironment = new Environment();
-        //Tile floor = Tile("floor", { -500, 600 }, {2500, 120});
-        //Tile ceiling = Tile("ceiling", { 0, 0 }, {1280, 50});
-        //Tile wall = Tile("wall", { 100, 200 }, {50, 200});
-        //Tile wall2 = Tile("wall2", { 700, 400 }, {200, 50});
 
-        //Entity dummy1 = Entity("dummy1",{ 800, 200 }, {0, 0}, {0, 0}, {50, 100}, DUMMY, STATIONARY);
-        //dummy1.hp = 9999.0f;
-
-        //Entity friendly1 = Entity("friendly1", { 1000, 200 }, {0, 0}, {0, 0}, {50, 100}, FRIENDLY, STATIONARY);
-
-        //Entity enemy1 = Entity("enemy1", { 1200, 200 }, {0, 0}, {0, 0}, {50, 100}, ENEMY, STATIONARY);
-
-        //worldEnvironment->addTile(floor);
-        //worldEnvironment->addTile(ceiling);
-        //worldEnvironment->addTile(wall);
-        //worldEnvironment->addTile(wall2);
-        //worldEnvironment->addEntity(dummy1);
-        //worldEnvironment->addEntity(friendly1);
-        //worldEnvironment->addEntity(enemy1);
+        std::string playerSpriteRef = "assets/sprites/player.png";
+        mainPlayer = new Player(worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
         return true;
     }

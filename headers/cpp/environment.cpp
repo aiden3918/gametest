@@ -71,6 +71,10 @@ Environment::Environment(std::string &worldDataFile) {
 				olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible, parriable);
 		}
 
+		if (fileline[0] == 's') {
+			stream >> typeJunk >> _spawnLocation.x >> _spawnLocation.y;
+		}
+
 	}
 }
 Environment::~Environment() {}
@@ -330,3 +334,4 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 }
 
 std::vector<Entity> Environment::getEntities() { return _entities; }
+vec2D Environment::getSpawnPoint() { return _spawnLocation; }

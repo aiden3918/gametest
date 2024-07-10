@@ -27,6 +27,11 @@
 		MAGENTA(255, 0, 255), DARK_MAGENTA(128, 0, 128), VERY_DARK_MAGENTA(64, 0, 64),
 		WHITE(255, 255, 255), BLACK(0, 0, 0), BLANK(0, 0, 0, 0);
 
+/ Spawn point
+/ s spawnX spawnY
+
+-----------------------------------------------------------------------------------------------------------
+
 / Entities
 e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY 0 true true
 e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY 0 true true
@@ -44,4 +49,8 @@ t wall2 700 400 200 50 0 0 0 0 0 0 0 false true
 
 / p name posx posy sizex sizey shape friendly velx vely accelx accely rCol gCol bCol affectedByGrav 
 /   tangible parriable
+
+/ Spawn Point
+s 1400 300
+
 

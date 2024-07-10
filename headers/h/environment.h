@@ -50,6 +50,8 @@ public:
 	std::vector<Projectile> getProjectiles();
 	std::vector<Projectile>* getActualProjectilesVec();
 
+	vec2D getSpawnPoint();
+
 protected:
 	std::vector<Tile> _tangibleTiles;
 	std::vector<Tile> _intangibleTiles;

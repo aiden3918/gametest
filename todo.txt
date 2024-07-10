@@ -7,8 +7,8 @@ OBJECTIVES:
  - create obstacles (DONE)
  - implement simple physics and collision (DONE)
  - add projectiles (DONE)
- - add weapons
- - add parrying mechanics
+ - add weapons (DONE)
+ - add parrying mechanics (DONE)
  - design simple level
  - add enemies + AI
  - flush out levels
@@ -16,5 +16,5 @@ OBJECTIVES:
  - add animations (DONE)
 
  NOTES:
- - always add display offset in drawing function (last step) so actual cartesian coordinates are preserved,
+ - always add display offset in drawing function (last step) so actual coordinates are preserved,
  just not displayed. helps with math, physics, and stuff
