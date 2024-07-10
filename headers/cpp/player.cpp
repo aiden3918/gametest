@@ -136,8 +136,8 @@ inline void Player::_updateJumpMechanics(olc::PixelGameEngine* engine, float fEl
         vel.y = -jumpspeed;
         // walljump
         if (pcn.x != 0.0f) {
-            vel.x = (pcn.x * fElapsedTime * 50000.0f);
-            _movementCtr += fElapsedTime;
+            vel.x = (pcn.x * 500.0f);
+            _movementCtr += 0.0001f;
         }
     }
 }
