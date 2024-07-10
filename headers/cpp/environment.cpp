@@ -169,21 +169,6 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 
 		}
 
-		//if (p->getShape() == ProjShape::LINE) {
-		//	for (auto& t : _tangibleTiles) {
-		//		AABB tHb = t.getHitbox();
-		//		if (checkRayCollision(p->pos, projDir, tHb, projCtPt, projCtN, projCtT) &&
-		//			projCtT >= 0.0f && projCtT <= 1.0f) {
-		//			p->bounces--;
-		//			if (projCtN.x != 0) p->vel.x *= -1.0f;
-		//			if (projCtN.y != 0) p->vel.y *= -1.0f;
-
-		//		}
-		//	}
-		//} else {
-		//	return;
-		//}
-
 		p->lifespanCtr += fElapsedTime;
 
 	}
@@ -301,15 +286,13 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 
 void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
 
-	// std::cout << "ueb" << std::endl;
+	// cannot move this to entity.cpp because it spawns in projectiles
 	for (auto& e : _entities) {
-		// e.updateEntityBehavior(engine, fElapsedTime, playerPos);
 
 		if (e.getAI() == AIType::STATIONARY) continue;
 
 		switch (e.getAI()) {
 			case AIType::SENTRY: {
-				// std::cout << e.getName() << " is a sentry" << std::endl;
 				if (e.attackCtr == 0.0f) {
 
 					vec2D entityCenter = e.getCenter();

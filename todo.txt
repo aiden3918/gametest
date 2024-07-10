@@ -9,7 +9,7 @@ OBJECTIVES:
  - add projectiles (DONE)
  - add weapons (DONE)
  - add parrying mechanics (DONE)
- - design simple level
+ - design simple level (DONE)
  - add enemies + AI
  - flush out levels
  - add menu/level system

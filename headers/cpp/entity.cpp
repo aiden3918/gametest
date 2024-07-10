@@ -51,26 +51,13 @@ void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mou
         "HP: " + std::to_string(hp), color);
 }
 
+void Entity::updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
+    return;
+}
+
 // returns dummy, friendly, or enemy
 EntityType Entity::getType() { return _type; }
 
 // returns specific ai behavior type
 AIType Entity::getAI() { return _ai; }
-
-
-//void Entity::updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D &playerPos) {
-//    if (_ai == STATIONARY) return;
-//
-//    switch (_ai) {
-//        case SENTRY: {
-//            vec2D playerDirVec = vec2DSub(playerPos, pos);
-//            playerDirVec = vec2DNormalise(playerDirVec);
-//
-//            if (attackCtr == 0.0f) {
-//                attackCtr += fElapsedTime;
-//            }
-//            break;
-//        }
-//    }
-//}
 

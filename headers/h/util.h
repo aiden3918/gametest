@@ -70,6 +70,4 @@ inline vec2D get_png_image_dimensions(std::string& file_path)
 	return size;
 }
 
-// ------------------------------------------------------------------------------------------------------
-
 #endif // !util_h
