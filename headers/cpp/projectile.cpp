@@ -14,6 +14,7 @@ Projectile::Projectile(std::string name, vec2D initPos, float size, ProjShape sh
 	isFriendly = friendly;
 	_affectedByGrav = affectedByGrav;
 	_shape = shape;
+	_parriable = parriable;
 	(_shape == ProjShape::CIRCLE) ? _radius = size : _length = size;
 
 	if (affectedByGrav) accel.y = 500.0f;
@@ -35,6 +36,7 @@ Projectile::Projectile(std::string name, vec2D initPos, vec2D size, bool friendl
 	_affectedByGrav = affectedByGrav;
 	_shape = ProjShape::RECT;
 	_size = size;
+	_parriable = parriable;
 
 	if (affectedByGrav) accel.y = 500.0f;
 

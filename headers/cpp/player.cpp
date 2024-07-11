@@ -213,6 +213,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
 
                 AABB projHB = p.getHitbox();
 
+                if (!p.isParriable()) continue;
                 if (p.getShape() == ProjShape::LINE && !checkPtCollision(p.pos, parryBoxHB)) continue;
                 // once again, only heuristic
                 if (p.getShape() == ProjShape::CIRCLE && !checkAABBCollision(projHB, parryBoxHB)) continue;
@@ -252,9 +253,10 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
                 vec2D meleeVel = vec2DMult(_lookAngleVector, 400.0f);
                 vec2D meleeAccel = vec2DMult(meleeVel, -2.0f);
                 Projectile meleeProj = Projectile("meleeProj", meleePos, meleeSize, true, meleeVel, 
-                    meleeAccel, olc::DARK_YELLOW);
+                    meleeAccel, olc::DARK_YELLOW, false, true, false);
                 meleeProj.lifespan = 0.5f;
                 meleeProj.pierce = 3;
+                meleeProj.dmg = _currentWeapon.dmg;
 
                 env->addProjectile(meleeProj);
                 break;
@@ -265,6 +267,7 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
                 Projectile gunProj = Projectile("gunProj", _center, 10, ProjShape::LINE, true, projVel,
                     { 0, 0 }, olc::GREEN);
                 gunProj.bounces = 3;
+                gunProj.pierce = 2;
 
                 env->addProjectile(gunProj);
 

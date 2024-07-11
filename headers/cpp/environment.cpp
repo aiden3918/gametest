@@ -256,6 +256,9 @@ void Environment::handleEntityTileCollisions(float &fElapsedTime) {
 }
 
 void Environment::handleEntityProjCollisions(float& fElapsedTime) {
+
+	vec2D projCtPt; vec2D projCtNorm; float projT;
+
 	for (auto& e : _entities) {
 
 		AABB entityHB = e.getHitbox();
@@ -265,13 +268,21 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 
 			// trying to avoid nested hell 
 			// lines
+			// projT can be less than 0.0f because that would mean its inside
+			// DEBUG:	if projectile spawned inside, then it doesnt register. however, if you use regular
+			//			AABB collision, then local iframe implementation is needed
+			//			quick fix: make sure that all projectiles are able to completely pass through an
+			//			entity to trigger colllision
+			//			UPDATE: limited success with that one
 			if (p.getShape() == ProjShape::LINE) {
-				if (!checkPtCollision(p.pos, entityHB)) continue;
+				vec2D projDir = vec2DMult(p.vel, fElapsedTime);
+				if (!(checkRayCollision(p.pos, projDir, entityHB, projCtPt, projCtNorm, projT) &&
+					projT < 1.0f && projT > 0.0f)) continue;
 			}
 			// circles and rects
 			else {
 				AABB projHB = p.getHitbox();
-				if (!checkAABBCollision(entityHB, projHB)) continue;
+				if (!checkDynamicRectVsRectCollision(p, e, fElapsedTime, projCtPt, projCtNorm, projT)) continue;
 			}
 
 			if ((p.isFriendly && e.getType() != EntityType::FRIENDLY) ||

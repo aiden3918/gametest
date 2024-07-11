@@ -38,6 +38,11 @@ public:
 	float lifespan = 10.0f; // how long the projectile is allowed to last, maximum (seconds)
 
 	float speed;
+	
+	// kind of like the iframes of the projectile
+	// will be janky when supposed to collide with multiple entities
+	float activeCtr;
+	float activeDuration;
 
 protected:
 	bool _parriable;

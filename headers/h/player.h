@@ -65,10 +65,6 @@ public:
     float movespeed = 200.0f;
     float jumpspeed = 500.0f;
 
-    // weapon data
-    Weapons currentWeapon;
-    float currentWeaponDmg;
-    float currentWeaponInterval;
 private:
 
     void _updateTileCollisions(float& fElapsedTime, Environment* env, std::vector<std::pair<GameObject,
