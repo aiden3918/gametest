@@ -136,7 +136,7 @@ inline void Player::_updateJumpMechanics(olc::PixelGameEngine* engine, float fEl
         vel.y = -jumpspeed;
         // walljump
         if (pcn.x != 0.0f) {
-            vel.x = (pcn.x * 500.0f);
+            vel.x = (pcn.x * 400.0f);
             _movementCtr += 0.0001f;
         }
     }
@@ -225,8 +225,8 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
                 // extra incentive to parry
                 p.dmg *= 2.0f;
 
-                // end parry
-                _parryCtr = _parryDuration;
+                // on successful parry, there is no cooldown
+                _parryCtr = 0.0f;
             }
 
         }
