@@ -45,9 +45,9 @@ struct BackgroundSet {
 		middleSprite = std::make_unique<olc::Sprite>(middleFileRef);
 		frontSprite = std::make_unique<olc::Sprite>(frontFileRef);
 
-		backDecal = std::make_unique<olc::Decal>(backSprite);
-		middleDecal = std::make_unique<olc::Decal>(middleSprite);
-		frontDecal = std::make_unique<olc::Decal>(frontSprite);
+		backDecal = std::make_unique<olc::Decal>(backSprite.get());
+		middleDecal = std::make_unique<olc::Decal>(middleSprite.get());
+		frontDecal = std::make_unique<olc::Decal>(frontSprite.get());
 
 	}
 
