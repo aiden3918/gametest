@@ -9,11 +9,28 @@ BackgroundSet::BackgroundSet(std::string bgID, std::string backRef, std::string 
 	backSprite = std::make_unique<olc::Sprite>(backFileRef);
 	middleSprite = std::make_unique<olc::Sprite>(middleFileRef);
 	frontSprite = std::make_unique<olc::Sprite>(frontFileRef);
-	backDecal = std::make_unique<olc::Decal>(backSprite);
-	middleDecal = std::make_unique<olc::Decal>(middleSprite);
-	frontDecal = std::make_unique<olc::Decal>(frontDecal);
+	backDecal = std::make_unique<olc::Decal>(backSprite.get());
+	middleDecal = std::make_unique<olc::Decal>(middleSprite.get());
+	frontDecal = std::make_unique<olc::Decal>(frontSprite.get());
 }
 BackgroundSet::~BackgroundSet() {}
+
+void BackgroundSet::copy(BackgroundSet& bgSetToCopy) {
+	id = bgSetToCopy.id;
+
+	backFileRef = bgSetToCopy.backFileRef;
+	middleFileRef = bgSetToCopy.middleFileRef;
+	frontFileRef = bgSetToCopy.frontFileRef;
+
+	backSprite = std::move(bgSetToCopy.backSprite);
+
+	//backSprite = std::make_unique<olc::Sprite>(backFileRef);
+	//middleSprite = std::make_unique<olc::Sprite>(middleFileRef);
+	//frontSprite = std::make_unique<olc::Sprite>(frontFileRef);
+	//backDecal = std::make_unique<olc::Decal>(backSprite.get());
+	//middleDecal = std::make_unique<olc::Decal>(middleSprite.get());
+	//frontDecal = std::make_unique<olc::Decal>(frontSprite.get());
+}
 
 Background::Background() {}
 /*

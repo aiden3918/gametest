@@ -12,7 +12,7 @@ C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(44,51): warning C4244: 'initi
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.40.33807\include\memory(3595,35): error C2665: 'olc::Decal::Decal': no overloaded function could convert all the argument types
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.40.33807\include\xmemory(700,82): error C2280: 'BackgroundSet::BackgroundSet(const BackgroundSet &)': attempting to reference a deleted function
   player.cpp
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data

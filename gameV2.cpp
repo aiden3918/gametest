@@ -52,14 +52,19 @@ public:
         bgHandler->update(this, playerPos);
 
         worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
-        mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);
+
+        mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
 
         return true;
     }
 
     bool OnUserDestroy() override {
+        delete mainPlayer;
+        delete worldEnvironment;
+        delete bgHandler;
+
         return true;
     }
 
