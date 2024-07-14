@@ -36,6 +36,9 @@
     <ClCompile Include="headers\cpp\environment.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="headers\cpp\background.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\extern-lib\olcPixelGameEngine.h">
@@ -68,12 +71,24 @@
     <ClInclude Include="headers\h\projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\h\background.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\sprites\sprite-temp.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\sprites\player.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\backgrounds\backbgtest.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\backgrounds\frontbgtest.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\backgrounds\midbgtest.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

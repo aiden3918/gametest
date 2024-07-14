@@ -8,6 +8,8 @@
 #include "headers/h/tile.h"
 #include "headers/h/util.h"
 #include "headers/h/entity.h"
+#include "headers/h/background.h"
+#include <random>
 
 class Game : public olc::PixelGameEngine {
 public:
@@ -20,6 +22,7 @@ public:
 
     bool OnUserCreate() override
     {
+        srand(time(NULL));
 
         std::string worldDataRef = "data/worlddata.txt";
         worldEnvironment = new Environment(worldDataRef);
@@ -27,19 +30,27 @@ public:
         std::string playerSpriteRef = "assets/sprites/player.png";
         mainPlayer = new Player(worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
+        BackgroundSet testBgSet = BackgroundSet("test", "assets/backgrounds/backbgtest.png",
+            "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png");
+        bgHandler = new Background();
+        bgHandler->addBackground(testBgSet);
+        
+
         return true;
     }
 
     bool OnUserUpdate(float fElapsedTime) override
     {
-        Clear(olc::GREY);
-        SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
-
         vec2D mouseInfo = { GetMouseX(), GetMouseY() };
         vec2D playerPos = mainPlayer->pos;
         vec2D playerCenter = mainPlayer->getCenter();
 
         vec2D displayOffset = mainPlayer->getDisplayOffset();
+
+        Clear(olc::GREY);
+        SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
+        bgHandler->update(this, playerPos);
+
         worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
@@ -57,6 +68,7 @@ public:
 private:
     Player* mainPlayer = nullptr;
     Environment* worldEnvironment = nullptr;
+    Background* bgHandler = nullptr;
 };
 
 int main(int* argc, char** argv)

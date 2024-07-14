@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="gameV2.cpp" />
+    <ClCompile Include="headers\cpp\background.cpp" />
     <ClCompile Include="headers\cpp\entity.cpp" />
     <ClCompile Include="headers\cpp\environment.cpp" />
     <ClCompile Include="headers\cpp\gameObject.cpp" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="headers\extern-lib\olcPixelGameEngine.h" />
     <ClInclude Include="headers\h\animation.h" />
+    <ClInclude Include="headers\h\background.h" />
     <ClInclude Include="headers\h\collision.h" />
     <ClInclude Include="headers\h\entity.h" />
     <ClInclude Include="headers\h\environment.h" />
@@ -151,6 +153,9 @@
     <ClInclude Include="headers\h\util.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\backgrounds\backbgtest.png" />
+    <Image Include="assets\backgrounds\frontbgtest.png" />
+    <Image Include="assets\backgrounds\midbgtest.png" />
     <Image Include="assets\sprites\player.png" />
     <Image Include="assets\sprites\sprite-temp.png" />
   </ItemGroup>

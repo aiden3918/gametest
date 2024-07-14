@@ -91,6 +91,7 @@ private:
 
     // sprite data
     std::unique_ptr<olc::Sprite> _sprite;
+    std::unique_ptr<olc::Decal> _spriteDecal;
     unsigned int _uiSize[2];
     float _secCtr; // ????
 

@@ -20,6 +20,7 @@ const enum AnimationState { IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, P
 struct animationHandler {
 	// std::unique_ptr<olc::Decal> spriteSheetDecal;
 	std::unique_ptr<olc::Sprite> spriteSheet;
+	std::unique_ptr<olc::Decal> spriteSheetDecal;
 
 	// spritesheet size, hope this helps!
 	vec2D spriteSheetSize;
@@ -45,6 +46,7 @@ struct animationHandler {
 
 	void init(std::string& filename, AnimationState initAnim, vec2D& partialSpriteSize, int initFrame = 0) {
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
+		spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
 		spriteSheetSize = get_png_image_dimensions(filename);
 		std::cout << filename << " loaded: " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
 
@@ -84,9 +86,9 @@ struct animationHandler {
 	}
 
 	void drawAnimation(olc::PixelGameEngine* engine, vec2D& screenPos) {
-		// engine->DrawPartialDecal()
 		// partial sprite x = spritesize.x * frame
 		// partial sprite y = spritesize.y * animType
+		// use sprite sheet because decal cannot flip
 		engine->DrawPartialSprite((int)screenPos.x, (int)screenPos.y, spriteSheet.get(),
 			(int)(partialSize.x * currentFrame), (int)(partialSize.y * currentAnimState),
 			(int)partialSize.x, (int)partialSize.y, 1U, 0 + flip);
