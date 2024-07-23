@@ -46,7 +46,7 @@ struct animationHandler {
 
 	void init(std::string& filename, AnimationState initAnim, vec2D& partialSpriteSize, int initFrame = 0) {
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
-		spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
+		// spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
 		spriteSheetSize = get_png_image_dimensions(filename);
 		std::cout << filename << " loaded: " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
 

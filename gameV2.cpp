@@ -24,18 +24,17 @@ public:
     {
         srand(time(NULL));
 
-        std::string worldDataRef = "data/worlddata.txt";
+        const std::string worldDataRef = "data/worlddata.txt";
         worldEnvironment = new Environment(worldDataRef);
 
-        std::string playerSpriteRef = "assets/sprites/player.png";
+        const std::string playerSpriteRef = "assets/sprites/player.png";
         mainPlayer = new Player(worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
-        BackgroundSet testBgSet = BackgroundSet("test", "assets/backgrounds/backbgtest.png",
-            "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png");
+        const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png", 
+            "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
         bgHandler = new Background();
-        bgHandler->addBackground(testBgSet);
+        bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2]);
         
-
         return true;
     }
 
@@ -47,15 +46,14 @@ public:
 
         vec2D displayOffset = mainPlayer->getDisplayOffset();
 
-        Clear(olc::GREY);
+        Clear(olc::BLUE);
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
         bgHandler->update(this, playerPos);
 
+        mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
         worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);
-
-        mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
 
         return true;
     }
@@ -68,7 +66,7 @@ public:
         return true;
     }
 
-    vec2D screenSize = { 1280, 720 };
+    const vec2D screenSize = { 1280, 720 };
 
 private:
     Player* mainPlayer = nullptr;

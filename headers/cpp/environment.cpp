@@ -1,7 +1,7 @@
 #include "../h/environment.h"
 
 Environment::Environment() {}
-Environment::Environment(std::string &worldDataFile) {
+Environment::Environment(const std::string &worldDataFile) {
 	std::ifstream worldData(worldDataFile);
 
 	if (!worldData.is_open()) {

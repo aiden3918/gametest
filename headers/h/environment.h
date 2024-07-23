@@ -19,7 +19,7 @@
 class Environment {
 public:
 	Environment();
-	Environment(std::string &worldDataFile);
+	Environment(const std::string &worldDataFile);
 	~Environment();
 
 	// bool gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile);
