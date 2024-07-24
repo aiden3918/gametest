@@ -1,11 +1,20 @@
 ﻿  gameV2.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\extern-lib\olcPGEX_MiniAudio.h(313,38): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\extern-lib\olcPGEX_MiniAudio.h(313,22): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\extern-lib\olcPGEX_MiniAudio.h(390,34): warning C4244: 'initializing': conversion from 'float' to 'unsigned __int64', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\animation.h(97,50): warning C5055: operator '*': deprecated between enumerations and floating-point types
-C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(29,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(32,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(53,38): warning C4838: conversion from 'int32_t' to 'float' requires a narrowing conversion
 C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(53,38): warning C4244: 'initializing': conversion from 'int32_t' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(53,51): warning C4838: conversion from 'int32_t' to 'float' requires a narrowing conversion
 C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(53,51): warning C4244: 'initializing': conversion from 'int32_t' to 'float', possible loss of data
+  player.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(42,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(67,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(68,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\animation.h(97,50): warning C5055: operator '*': deprecated between enumerations and floating-point types
+  Generating Code...
   gameV2.vcxproj -> C:\Users\endem\source\repos\game\x64\Debug\gameV2.exe

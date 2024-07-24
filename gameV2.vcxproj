@@ -151,7 +151,6 @@
     <ClInclude Include="headers\h\gameObject.h" />
     <ClInclude Include="headers\h\player.h" />
     <ClInclude Include="headers\h\projectile.h" />
-    <ClInclude Include="headers\h\sound.h" />
     <ClInclude Include="headers\h\tile.h" />
     <ClInclude Include="headers\h\util.h" />
   </ItemGroup>

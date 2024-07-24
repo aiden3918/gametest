@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include "../extern-lib/olcPixelGameEngine.h"
-#include "sound.h"
+#include "../extern-lib/olcPGEX_MiniAudio.h"
 #include "util.h"
 #include "tile.h"
 #include "gameObject.h"
@@ -25,7 +25,7 @@ public:
 
 	// bool gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile);
 
-	void update(olc::PixelGameEngine* pge, SoundHandler* soundHandler, float& fElapsedTime, 
+	void update(olc::PixelGameEngine* pge, olc::MiniAudio* ma, float& fElapsedTime, 
 		vec2D& displayOffset, vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr);
 
 	void drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& displayOffset);

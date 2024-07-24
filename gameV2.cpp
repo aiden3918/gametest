@@ -4,7 +4,9 @@
 #define OLC_SOUNDWAVE
 #include "headers/extern-lib/olcSoundWaveEngine.h"
 
-#include "headers/h/sound.h"
+#define OLC_PGEX_MINIAUDIO
+#include "headers/extern-lib/olcPGEX_MiniAudio.h"
+
 #include "headers/h/collision.h"
 #include "headers/h/environment.h"
 #include "headers/h/gameObject.h"
@@ -39,10 +41,7 @@ public:
         _bgHandler = new Background();
         _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2]);
 
-        _soundHandler = new SoundHandler("data/sounds.txt");
-
-        soundtest.InitialiseAudio();
-        soundtest1.LoadAudioWaveform("assets/audio/ultrakillparry.wav");
+        _ma = new olc::MiniAudio;
 
         return true;
     }
@@ -62,19 +61,13 @@ public:
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
         _bgHandler->update(this, playerPos);
 
-        _mainPlayer->update(this, _soundHandler, fElapsedTime, _worldEnvironment, mouseInfo);
-        _worldEnvironment->update(this, _soundHandler, fElapsedTime, displayOffset, mouseInfo, 
+        _mainPlayer->update(this, _ma, fElapsedTime, _worldEnvironment, mouseInfo);
+        _worldEnvironment->update(this, _ma, fElapsedTime, displayOffset, mouseInfo, 
             playerCenter, globalFreezeCtr);
-        _soundHandler->update();
 
-        for (std::string s : _soundHandler->soundQueue) {
-            _soundHandler->waveEngine.PlayWaveform(_soundHandler->sounds[s]);
-        }
         /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/
-
-        if (GetKey(olc::K).bPressed) soundtest.PlayWaveform(&soundtest1);
 
         return true;
     }
@@ -84,6 +77,7 @@ public:
         delete _worldEnvironment;
         delete _bgHandler;
         delete _soundHandler;
+        delete _ma;
 
         return true;
     }
@@ -95,9 +89,7 @@ private:
     Environment* _worldEnvironment = nullptr;
     Background* _bgHandler = nullptr;
     SoundHandler* _soundHandler = nullptr;
-
-    olc::sound::WaveEngine soundtest;
-    olc::sound::Wave soundtest1;
+    olc::MiniAudio* _ma;
 };
 
 int main(int* argc, char** argv)

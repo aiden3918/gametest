@@ -4,8 +4,8 @@
 #define player_h
 
 #include <iostream>
+#include "../extern-lib/olcPGEX_MiniAudio.h"
 #include "../extern-lib/olcPixelGameEngine.h"
-#include "sound.h"
 #include "environment.h"
 #include "collision.h"
 #include "util.h"
@@ -52,11 +52,12 @@ class Player : public GameObject {
 public:
     // need this to work with pge
     Player();
-    Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, vec2D screenSize, bool affectedByGrav = true, bool tangible = true);
+    Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, vec2D screenSize, 
+        bool affectedByGrav = true, bool tangible = true);
     ~Player();
     // init(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, bool affectedByGrav = true, bool canCollide = true);
 
-    void update(olc::PixelGameEngine* engine, SoundHandler* soundHandler, float fElapsedTime, 
+    void update(olc::PixelGameEngine* engine, olc::MiniAudio* ma, float &fElapsedTime, 
         Environment* env, vec2D& mouse);
     float getLookAngleDeg();
     vec2D getLookAngleVec();
@@ -80,7 +81,7 @@ private:
     inline void _updateHorizontalMovement(olc::PixelGameEngine* engine);
     inline void _updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
     inline void _updateWeapons(olc::PixelGameEngine* engine);
-    inline void _updateParry(olc::PixelGameEngine* engine, SoundHandler* soundHandler,
+    inline void _updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
         Environment* env, float& fElapsedTime);
     inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);

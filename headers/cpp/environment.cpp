@@ -79,7 +79,7 @@ Environment::Environment(const std::string& worldDataFile) {
 }
 Environment::~Environment() {}
 
-void Environment::update(olc::PixelGameEngine* pge, SoundHandler* soundHandler,
+void Environment::update(olc::PixelGameEngine* pge, olc::MiniAudio* ma,
 	float& fElapsedTime, vec2D& displayOffset, vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr)
 {
 	_notFrozen = globalFreezeCtr == 0.0f;

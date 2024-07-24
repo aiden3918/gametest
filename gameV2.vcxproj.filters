@@ -77,9 +77,6 @@
     <ClInclude Include="headers\extern-lib\olcSoundWaveEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\h\sound.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\sprites\sprite-temp.png">
