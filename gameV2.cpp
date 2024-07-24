@@ -73,7 +73,6 @@ public:
         delete _mainPlayer;
         delete _worldEnvironment;
         delete _bgHandler;
-        delete _soundHandler;
         delete _ma;
 
         return true;
@@ -85,7 +84,6 @@ private:
     Player* _mainPlayer = nullptr;
     Environment* _worldEnvironment = nullptr;
     Background* _bgHandler = nullptr;
-    SoundHandler* _soundHandler = nullptr;
     olc::MiniAudio* _ma;
 };
 
