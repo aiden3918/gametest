@@ -243,7 +243,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, SoundHandler* sou
                 // freeze for the hitstop effect
                 freezeCtr += 0.00001f;
                 animHandler->setFPS(1); // hack to "freeze" character animation since freeze < 1 sec
-                soundHandler->playSound("playerParry");
+                soundHandler->addSoundToQueue("playerParry");
             }
 
         }

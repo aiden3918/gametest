@@ -15,6 +15,7 @@ struct SoundHandler {
 
 	olc::sound::WaveEngine waveEngine;
 	std::map<std::string, olc::sound::Wave*> sounds;
+	std::vector<std::string> soundQueue;
 
 	SoundHandler(const std::string soundFile) {
 		waveEngine.InitialiseAudio();
@@ -54,9 +55,20 @@ struct SoundHandler {
 	}
 	~SoundHandler() {}
 
-	void playSound(const char* soundName) {
-		waveEngine.PlayWaveform(sounds[soundName]);
-		std::cout << "played " << soundName << std::endl;
+	void addSoundToQueue(const std::string soundName) {
+		soundQueue.push_back(soundName);
+		std::cout << "added to queue: " << soundName << std::endl;
+	}
+
+	void update() {
+		if (soundQueue.size() == 0) return;
+
+		for (auto& s : soundQueue) {
+			std::cout << "playing " << s << std::endl;
+			waveEngine.PlayWaveform(sounds[s]);
+		}
+
+		soundQueue.clear();
 	}
 };
 

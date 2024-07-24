@@ -41,6 +41,9 @@ public:
 
         _soundHandler = new SoundHandler("data/sounds.txt");
 
+        soundtest.InitialiseAudio();
+        soundtest1.LoadAudioWaveform("assets/audio/ultrakillparry.wav");
+
         return true;
     }
 
@@ -60,10 +63,14 @@ public:
         _bgHandler->update(this, playerPos);
 
         _mainPlayer->update(this, _soundHandler, fElapsedTime, _worldEnvironment, mouseInfo);
-        _worldEnvironment->update(this, _soundHandler, fElapsedTime, displayOffset, mouseInfo, playerCenter, globalFreezeCtr);
+        _worldEnvironment->update(this, _soundHandler, fElapsedTime, displayOffset, mouseInfo, 
+            playerCenter, globalFreezeCtr);
+        _soundHandler->update();
         /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/
+
+        if (GetKey(olc::K).bPressed) soundtest.PlayWaveform(&soundtest1);
 
         return true;
     }
@@ -85,6 +92,8 @@ private:
     Background* _bgHandler = nullptr;
     SoundHandler* _soundHandler = nullptr;
 
+    olc::sound::WaveEngine soundtest;
+    olc::sound::Wave soundtest1;
 };
 
 int main(int* argc, char** argv)
