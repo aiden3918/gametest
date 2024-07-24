@@ -142,7 +142,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\extern-lib\olcPixelGameEngine.h" />
-    <ClInclude Include="headers\extern-lib\olcSoundWaveEngine.h" />
     <ClInclude Include="headers\h\animation.h" />
     <ClInclude Include="headers\h\background.h" />
     <ClInclude Include="headers\h\collision.h" />
