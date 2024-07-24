@@ -61,7 +61,7 @@ public:
         bgHandler->update(this, playerPos);
 
         mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
-        worldEnvironment->update(this, fElapsedTime, displayOffset, mouseInfo, playerPos, globalFreezeCtr);
+        worldEnvironment->update(this, fElapsedTime, displayOffset, mouseInfo, playerCenter, globalFreezeCtr);
         /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/

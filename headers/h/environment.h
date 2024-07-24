@@ -86,6 +86,8 @@ protected:
 
 	vec2D _spawnLocation;
 	bool _notFrozen = true; // updated every frame
+	std::unique_ptr<olc::Pixel> _screenFlash = std::make_unique<olc::Pixel>(255, 255, 255, 100);
+	// olc::Pixel* _screenFlash = new olc::Pixel(255, 255, 255, 200);
 };
 
 #endif

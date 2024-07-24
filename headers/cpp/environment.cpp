@@ -86,6 +86,7 @@ void Environment::update(olc::PixelGameEngine* pge, float& fElapsedTime, vec2D& 
 	drawTiles(pge, fElapsedTime, displayOffset);
 	drawProjectiles(pge, fElapsedTime, mouse, displayOffset);
 	drawEntities(pge, fElapsedTime, mouse, displayOffset, playerPos);
+	if (!_notFrozen) pge->FillRectDecal({0, 0}, pge->GetScreenSize(), *_screenFlash);
 }
 
 void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime,
