@@ -5,6 +5,8 @@ just a test of the basis of a possible 2d game, made with the OLC PixelGameEngin
 not meant to be any sort of finished/presentable product
 uhhhh if you're here, then you probably know what you are doing. if something bothers you, please email liaiden3918@gmail.com
 
+man i really need to learn how to properly use github
+
 ## Features (that were built from scratch)
 - Controllable player
 - basic weapon implementation
