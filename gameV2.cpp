@@ -1,9 +1,6 @@
 #define OLC_PGE_APPLICATION
 #include "headers/extern-lib/olcPixelGameEngine.h"  
 
-#define OLC_SOUNDWAVE
-#include "headers/extern-lib/olcSoundWaveEngine.h"
-
 #define OLC_PGEX_MINIAUDIO
 #include "headers/extern-lib/olcPGEX_MiniAudio.h"
 
