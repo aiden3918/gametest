@@ -20,33 +20,6 @@ BackgroundSet::~BackgroundSet() {}
 */
 
 Background::Background() {}
-/*
-Background::Background(bgSpriteRefVec spriteRefs) {
-	backgrounds = {};
-
-	for (int i = 0; i < spriteRefs.size(); i++) {
-
-		const std::string s[3] = { spriteRefs[i].first[0], spriteRefs[i].first[1], spriteRefs[i].first[2] };
-		BackgroundSet bgSet;
-		
-		bgSet.id = spriteRefs[i].second;
-
-		bgSet.backFileRef = s[0];
-		bgSet.middleFileRef = s[1];
-		bgSet.frontFileRef = s[2];
-
-		bgSet.backSprite = std::make_unique<olc::Sprite>(s[0]);
-		bgSet.middleSprite = std::make_unique<olc::Sprite>(s[1]);
-		bgSet.frontSprite = std::make_unique<olc::Sprite>(s[2]);
-
-		bgSet.backDecal = std::make_unique<olc::Decal>(bgSet.backSprite.get());
-		bgSet.middleDecal = std::make_unique<olc::Decal>(bgSet.middleSprite.get());
-		bgSet.frontDecal = std::make_unique<olc::Decal>(bgSet.frontDecal.get());
-
-		backgrounds.push_back(bgSet);
-	}
-}
-*/
 Background::~Background() {}
 
 void Background::setBackground(std::string id, const std::string backRef, const std::string midRef, 
