@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include "../extern-lib/olcPixelGameEngine.h"
+#include "sound.h"
 #include "environment.h"
 #include "collision.h"
 #include "util.h"
@@ -55,7 +56,8 @@ public:
     ~Player();
     // init(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, bool affectedByGrav = true, bool canCollide = true);
 
-    void update(olc::PixelGameEngine* engine, float fElapsedTime, Environment* env, vec2D& mouse);
+    void update(olc::PixelGameEngine* engine, SoundHandler* soundHandler, float fElapsedTime, 
+        Environment* env, vec2D& mouse);
     float getLookAngleDeg();
     vec2D getLookAngleVec();
 
@@ -78,7 +80,8 @@ private:
     inline void _updateHorizontalMovement(olc::PixelGameEngine* engine);
     inline void _updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
     inline void _updateWeapons(olc::PixelGameEngine* engine);
-    inline void _updateParry(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
+    inline void _updateParry(olc::PixelGameEngine* engine, SoundHandler* soundHandler,
+        Environment* env, float& fElapsedTime);
     inline void _updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);
     inline void _updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, vec2D pcp, float& pT);
     inline void _updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime);

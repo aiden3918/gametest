@@ -4,6 +4,7 @@
 #define OLC_SOUNDWAVE
 #include "headers/extern-lib/olcSoundWaveEngine.h"
 
+#include "headers/h/sound.h"
 #include "headers/h/collision.h"
 #include "headers/h/environment.h"
 #include "headers/h/gameObject.h"
@@ -28,19 +29,17 @@ public:
         srand(time(NULL));
 
         const std::string worldDataRef = "data/worlddata.txt";
-        worldEnvironment = new Environment(worldDataRef);
+        _worldEnvironment = new Environment(worldDataRef);
 
         const std::string playerSpriteRef = "assets/sprites/player.png";
-        mainPlayer = new Player(worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
+        _mainPlayer = new Player(_worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
         const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png",
             "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
-        bgHandler = new Background();
-        bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2]);
+        _bgHandler = new Background();
+        _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2]);
 
-        soundEngine.InitialiseAudio();
-        // accepts waveform only
-        parrySound.LoadAudioWaveform("assets/sounds/ping-pixabay.mp3");
+        _soundHandler = new SoundHandler("data/sounds.txt");
 
         return true;
     }
@@ -49,19 +48,19 @@ public:
     {
 
         vec2D mouseInfo = { GetMouseX(), GetMouseY() };
-        vec2D playerPos = mainPlayer->pos;
-        vec2D playerCenter = mainPlayer->getCenter();
+        vec2D playerPos = _mainPlayer->pos;
+        vec2D playerCenter = _mainPlayer->getCenter();
 
-        vec2D displayOffset = mainPlayer->getDisplayOffset();
+        vec2D displayOffset = _mainPlayer->getDisplayOffset();
 
-        float globalFreezeCtr = mainPlayer->freezeCtr;
+        float globalFreezeCtr = _mainPlayer->freezeCtr;
 
         Clear(olc::GREY);
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
-        bgHandler->update(this, playerPos);
+        _bgHandler->update(this, playerPos);
 
-        mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
-        worldEnvironment->update(this, fElapsedTime, displayOffset, mouseInfo, playerCenter, globalFreezeCtr);
+        _mainPlayer->update(this, _soundHandler, fElapsedTime, _worldEnvironment, mouseInfo);
+        _worldEnvironment->update(this, _soundHandler, fElapsedTime, displayOffset, mouseInfo, playerCenter, globalFreezeCtr);
         /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/
@@ -70,9 +69,10 @@ public:
     }
 
     bool OnUserDestroy() override {
-        delete mainPlayer;
-        delete worldEnvironment;
-        delete bgHandler;
+        delete _mainPlayer;
+        delete _worldEnvironment;
+        delete _bgHandler;
+        delete _soundHandler;
 
         return true;
     }
@@ -80,12 +80,11 @@ public:
     const vec2D screenSize = { 1280, 720 };
 
 private:
-    Player* mainPlayer = nullptr;
-    Environment* worldEnvironment = nullptr;
-    Background* bgHandler = nullptr;
+    Player* _mainPlayer = nullptr;
+    Environment* _worldEnvironment = nullptr;
+    Background* _bgHandler = nullptr;
+    SoundHandler* _soundHandler = nullptr;
 
-    olc::sound::WaveEngine soundEngine;
-    olc::sound::Wave parrySound;
 };
 
 int main(int* argc, char** argv)

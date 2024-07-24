@@ -79,8 +79,8 @@ Environment::Environment(const std::string& worldDataFile) {
 }
 Environment::~Environment() {}
 
-void Environment::update(olc::PixelGameEngine* pge, float& fElapsedTime, vec2D& displayOffset,
-	vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr)
+void Environment::update(olc::PixelGameEngine* pge, SoundHandler* soundHandler,
+	float& fElapsedTime, vec2D& displayOffset, vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr)
 {
 	_notFrozen = globalFreezeCtr == 0.0f;
 	drawTiles(pge, fElapsedTime, displayOffset);

@@ -29,7 +29,9 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
 }
 Player::~Player() {}
 
-void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environment* env, vec2D& mouse) {
+void Player::update(olc::PixelGameEngine* engine, SoundHandler* soundHandler,
+    float fElapsedTime, Environment* env, vec2D& mouse) 
+{
 
     // movement and collisions
 
@@ -72,7 +74,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
         _updateWeapons(engine);
 
         // ability updates
-        if (_parryCooldownCtr == 0.0f) _updateParry(engine, env, fElapsedTime);
+        if (_parryCooldownCtr == 0.0f) _updateParry(engine, soundHandler, env, fElapsedTime);
         else {
             (_parryCooldownCtr < _parryCooldownDuration) ? _parryCooldownCtr += fElapsedTime : _parryCooldownCtr = 0.0f;
         }
@@ -188,7 +190,9 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
 
 
 // probably should organize these; so messy
-inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
+inline void Player::_updateParry(olc::PixelGameEngine* engine, SoundHandler* soundHandler,
+    Environment* env, float& fElapsedTime) 
+{
 
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
 
@@ -239,6 +243,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
                 // freeze for the hitstop effect
                 freezeCtr += 0.00001f;
                 animHandler->setFPS(1); // hack to "freeze" character animation since freeze < 1 sec
+                soundHandler->playSound("playerParry");
             }
 
         }

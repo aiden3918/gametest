@@ -74,10 +74,10 @@
     <ClInclude Include="headers\h\background.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\extern-lib\olcPGEX_Sound.h">
+    <ClInclude Include="headers\extern-lib\olcSoundWaveEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\extern-lib\olcSoundWaveEngine.h">
+    <ClInclude Include="headers\h\sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -103,6 +103,9 @@
     <Text Include="data\worlddata.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="data\sounds.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -110,5 +113,10 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\audio\ultrakillparry.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>
