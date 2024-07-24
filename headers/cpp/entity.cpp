@@ -1,7 +1,7 @@
 #include "../h/entity.h"
 
 Entity::Entity() {}
-Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType, 
+Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
     AIType aiType, float damage, bool affectedByGrav, bool tangible) {
 
     _name = name;
@@ -35,7 +35,7 @@ Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, 
 Entity::~Entity() {}
 
 // collisions and behavior will be handled by environment. Why? because i suck at coding
-void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mouse, vec2D &displayOffset) {
+void Entity::update(float& fElapsedTime) {
 
     //vel.x += accel.x * fElapsedTime;
     //vel.y += accel.y * fElapsedTime;
@@ -44,16 +44,19 @@ void Entity::update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mou
     pos.y += vel.y * fElapsedTime;
 
     updateHitbox();
+}
 
-    engine->FillRect({ (int)(pos.x + displayOffset.x), (int)(pos.y + displayOffset.y) },
-        { (int)_size.x, (int)_size.y }, color);
-    engine->DrawString({ (int)(pos.x + displayOffset.x), (int)(pos.y - 15 + displayOffset.y) },
+void Entity::draw(olc::PixelGameEngine* engine, vec2D& displayOffset) {
+    engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
+        { _size.x, _size.y }, color);
+    engine->DrawStringDecal({ pos.x + displayOffset.x, pos.y - 15 + displayOffset.y },
         "HP: " + std::to_string(hp), color);
 }
 
-void Entity::updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
-    return;
-}
+// entity behavior update occurs in environment
+//void Entity::updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
+//    return;
+//}
 
 // returns dummy, friendly, or enemy
 EntityType Entity::getType() { return _type; }

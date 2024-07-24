@@ -45,7 +45,7 @@ Projectile::Projectile(std::string name, vec2D initPos, vec2D size, bool friendl
 }
 Projectile::~Projectile() {}
 
-void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset) {
+void Projectile::update(float& fElapsedTime) {
 
 	// vec2D oldPos = pos;
 	vel.x += accel.x * fElapsedTime;
@@ -56,31 +56,35 @@ void Projectile::update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D
 
 	updateHitbox();
 
+	lifespanCtr += fElapsedTime;
+}
+
+void Projectile::draw(olc::PixelGameEngine* engine, vec2D& displayOffset) {
+
 	// trail effect for line
 	switch (_shape) {
-		case ProjShape::CIRCLE: engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color); break;
-		case ProjShape::LINE: {
-			// thicker bullet
-			for (int i = -1; i < 2; i++) {
-				engine->DrawLine(
-					{ (int)((pos.x - vel.x * 0.01f) + displayOffset.x + i),
-					(int)((pos.y - vel.y * 0.01f) + displayOffset.y + i) },
-					{ (int)(pos.x + displayOffset.x + i),
-					(int)(pos.y + displayOffset.y + i) },
-					color);
-			}
-			break;
+	case ProjShape::CIRCLE: engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color); break;
+	case ProjShape::LINE: {
+		// thicker bullet
+		for (int i = -1; i < 2; i++) {
+			engine->DrawLineDecal({
+				(pos.x - vel.x * 0.01f) + displayOffset.x + i,
+				(pos.y - vel.y * 0.01f) + displayOffset.y + i }, {
+				pos.x + displayOffset.x + i,
+				pos.y + displayOffset.y + i },
+				color);
 		}
-		case ProjShape::RECT: {
-			fillBasicRect(engine, displayOffset);
-			break;
-		}
-	} 
-		//else engine->DrawLine({ (int)(pos.x -= 10), (int)(pos.y -= 10) }, { (int)pos.x, (int)pos.y }, color);
+		break;
+	}
+	case ProjShape::RECT: {
+		fillBasicRect(engine, displayOffset);
+		break;
+	}
+	}
 }
 
 // hitbox is set based on shape
-void Projectile::updateHitbox() { 
+void Projectile::updateHitbox() {
 	switch (_shape) {
 	case ProjShape::LINE:
 		_center = pos;

@@ -1,8 +1,8 @@
 #include "../h/player.h"
 
 Player::Player() {}
-Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, vec2D screenSize, 
-    bool affectedByGrav, bool tangible) 
+Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filename, vec2D screenSize,
+    bool affectedByGrav, bool tangible)
 {
     pos = initPos;
     vel = initVel;
@@ -14,8 +14,8 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
     if (affectedByGrav) accel.y = 1000.0f;
 
     vec2D spriteSheetSize = get_png_image_dimensions(filename);
-    animHandler.init(filename, IDLE, _partialSpriteSize);
-    animHandler.setFPS(15);
+    animHandler = new AnimationHandler(filename, IDLE, _partialSpriteSize);
+    animHandler->setFPS(15);
 
     //_sprite = std::make_unique<olc::Sprite>(filename);
     //_size = get_png_image_dimensions(filename);
@@ -25,7 +25,7 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
 
     _displayPos = { (screenSize.x - _size.x) / 2.0f, 1.33f * (screenSize.y - _size.y) / 2.0f };
 
-    updateHitbox(); 
+    updateHitbox();
 }
 Player::~Player() {}
 
@@ -37,49 +37,56 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
     float playerT;
     std::vector<std::pair<GameObject, float>> possibleCollidingTiles;
 
-    _updateHorizontalMovement(engine);
+    if (freezeCtr == 0.0f) {
+        _updateHorizontalMovement(engine);
 
-    vel.x += accel.x * fElapsedTime;
-    vel.y += accel.y * fElapsedTime;
+        vel.x += accel.x * fElapsedTime;
+        vel.y += accel.y * fElapsedTime;
 
-    _updateTileCollisions(fElapsedTime, env, possibleCollidingTiles, playerContactPoint, playerContactNormal,
-        playerT);
+        _updateTileCollisions(fElapsedTime, env, possibleCollidingTiles, playerContactPoint, playerContactNormal,
+            playerT);
 
-    if (_iFramesCounter == 0.0f) {
-        _updateEnemyCollisions(engine, env, fElapsedTime);
-   
-        _updateProjCollisions(engine, env, fElapsedTime);
+        if (_iFramesCounter == 0.0f) {
+            _updateEnemyCollisions(engine, env, fElapsedTime);
+
+            _updateProjCollisions(engine, env, fElapsedTime);
+        }
+        else (_iFramesCounter > _iFramesInterval) ? _iFramesCounter = 0.0f : _iFramesCounter += fElapsedTime;
+
+        _updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
+
+        // technically an approximation, but is ok 
+        pos.x += vel.x * fElapsedTime;
+        pos.y += vel.y * fElapsedTime;
+        updateHitbox();
+
+        // calculate display positions for scrolling effect
+        // _displayPos = { (engine->ScreenWidth() - _size.x) / 2.0f, 1.5f * (engine->ScreenHeight() - _size.y) / 2.0f };
+        _displayCenter = { _displayPos.x + (_size.x / 2.0f), _displayPos.y + (_size.y / 2.0f) };
+        _displayOffset = vec2DSub(_displayPos, pos);
+
+        // mouse info
+        _updateMouseInfo(engine, mouse);
+
+        // weapon selection
+        _updateWeapons(engine);
+
+        // ability updates
+        if (_parryCooldownCtr == 0.0f) _updateParry(engine, env, fElapsedTime);
+        else {
+            (_parryCooldownCtr < _parryCooldownDuration) ? _parryCooldownCtr += fElapsedTime : _parryCooldownCtr = 0.0f;
+        }
+
+        // mouse updates
+        _updateMouseMechanics(engine, env, fElapsedTime);
     }
-    else (_iFramesCounter > _iFramesInterval) ? _iFramesCounter = 0.0f : _iFramesCounter += fElapsedTime;
-
-    _updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
-
-    // technically an approximation, but is ok 
-    pos.x += vel.x * fElapsedTime;
-    pos.y += vel.y * fElapsedTime;
-    updateHitbox();
-
-    // calculate display positions for scrolling effect
-    // _displayPos = { (engine->ScreenWidth() - _size.x) / 2.0f, 1.5f * (engine->ScreenHeight() - _size.y) / 2.0f };
-    _displayCenter = { _displayPos.x + (_size.x / 2.0f), _displayPos.y + (_size.y / 2.0f) };
-    _displayOffset = vec2DSub(_displayPos, pos);
-
-    // mouse info
-    _updateMouseInfo(engine, mouse);
-
-    // weapon selection
-    _updateWeapons(engine);
-
-    // ability updates
-    if (_parryCooldownCtr == 0.0f) _updateParry(engine, env, fElapsedTime);
     else {
-        (_parryCooldownCtr < _parryCooldownDuration) ? _parryCooldownCtr += fElapsedTime : _parryCooldownCtr = 0.0f;
+        if (freezeCtr < freezeDuration) freezeCtr += fElapsedTime;
+        else {
+            animHandler->setFPS(15);
+            freezeCtr = 0.0f;
+        }
     }
-
-
-    // mouse updates
-    _updateMouseMechanics(engine, env, fElapsedTime);
-
     // finally, display character
     // engine->DrawSprite({ (int)_displayPos.x, (int)_displayPos.y }, animHandler.spriteSheet.get());
     _handleAnimation(engine, fElapsedTime, playerContactPoint, playerContactNormal, playerT);
@@ -94,7 +101,7 @@ void Player::update(olc::PixelGameEngine* engine, float fElapsedTime, Environmen
 }
 
 void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
-    std::vector<std::pair<GameObject, float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt) 
+    std::vector<std::pair<GameObject, float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt)
 {
     for (auto& i : env->getTangibleTiles()) {
         _isColliding = checkDynamicRectVsRectCollision(*this, i, fElapsedTime, pct, pcn, pt);
@@ -181,8 +188,8 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
 
 
 // probably should organize these; so messy
-inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime) {
-    
+inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
+
     if (engine->GetKey(olc::F).bPressed && _parryCtr == 0.0f) {
 
         vec2D parryHBSize = vec2DMult(_partialSpriteSize, _parryBoxScale);
@@ -228,6 +235,10 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
 
                 // on successful parry, there is no cooldown
                 _parryCtr = 0.0f;
+
+                // freeze for the hitstop effect
+                freezeCtr += 0.00001f;
+                animHandler->setFPS(1); // hack to "freeze" character animation since freeze < 1 sec
             }
 
         }
@@ -239,41 +250,41 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, Environment* env,
     }
 }
 
-inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float &fElapsedTime) {
+inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
 
     // bheld for automatic weapons, bpressed for semi-auto weapons (in-game)
     if (engine->GetMouse(0).bHeld && _weaponCDCtr == 0.0f) {
         std::cout << "attack" << std::endl;
 
         switch (_currentWeapon.id) {
-            case Weapons::SWORD: {
-                vec2D meleeSize = { _partialSpriteSize.y, _partialSpriteSize.y };
-                vec2D meleePosOffset = vec2DDiv(meleeSize, 2.0f);
-                vec2D meleePos = vec2DSub(_center, meleePosOffset);
-                vec2D meleeVel = vec2DMult(_lookAngleVector, 400.0f);
-                vec2D meleeAccel = vec2DMult(meleeVel, -2.0f);
-                Projectile meleeProj = Projectile("meleeProj", meleePos, meleeSize, true, meleeVel, 
-                    meleeAccel, olc::DARK_YELLOW, false, true, false);
-                meleeProj.lifespan = 0.5f;
-                meleeProj.pierce = 3;
-                meleeProj.dmg = _currentWeapon.dmg;
+        case Weapons::SWORD: {
+            vec2D meleeSize = { _partialSpriteSize.y, _partialSpriteSize.y };
+            vec2D meleePosOffset = vec2DDiv(meleeSize, 2.0f);
+            vec2D meleePos = vec2DSub(_center, meleePosOffset);
+            vec2D meleeVel = vec2DMult(_lookAngleVector, 400.0f);
+            vec2D meleeAccel = vec2DMult(meleeVel, -2.0f);
+            Projectile meleeProj = Projectile("meleeProj", meleePos, meleeSize, true, meleeVel,
+                meleeAccel, olc::DARK_YELLOW, false, true, false);
+            meleeProj.lifespan = 0.5f;
+            meleeProj.pierce = 3;
+            meleeProj.dmg = _currentWeapon.dmg;
 
-                env->addProjectile(meleeProj);
-                break;
-            }
+            env->addProjectile(meleeProj);
+            break;
+        }
 
-            case Weapons::GUN: {
-                vec2D projVel = vec2DMult(_lookAngleVector, 2000.0f);
-                Projectile gunProj = Projectile("gunProj", _center, 10, ProjShape::LINE, true, projVel,
-                    { 0, 0 }, olc::GREEN);
-                gunProj.bounces = 3;
-                gunProj.pierce = 2;
+        case Weapons::GUN: {
+            vec2D projVel = vec2DMult(_lookAngleVector, 2000.0f);
+            Projectile gunProj = Projectile("gunProj", _center, 10, ProjShape::LINE, true, projVel,
+                { 0, 0 }, olc::GREEN);
+            gunProj.bounces = 3;
+            gunProj.pierce = 2;
 
-                env->addProjectile(gunProj);
+            env->addProjectile(gunProj);
 
-                std::cout << projVel.x << " " << projVel.y << std::endl;
-                break;
-            }
+            std::cout << projVel.x << " " << projVel.y << std::endl;
+            break;
+        }
         }
 
         _weaponCDCtr += 0.001f;
@@ -298,7 +309,7 @@ inline void Player::_updatePlayerInfo(olc::PixelGameEngine* engine, vec2D& pcn, 
 
 inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
     vec2D pct; vec2D pcn; float pt;
-    
+
     for (auto& e : env->getEntities()) {
         if (checkDynamicRectVsRectCollision(*this, e, fElapsedTime, pct, pcn, pt) && e.getType() == EntityType::ENEMY) {
             std::cout << "collided with enemy" << std::endl;
@@ -311,58 +322,58 @@ inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environ
 inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
     std::vector<Projectile>* envProjectilesPtr = env->getActualProjectilesVec();
 
-    for (auto &p : *envProjectilesPtr) {
+    for (auto& p : *envProjectilesPtr) {
         if (p.isFriendly) continue;
 
         switch (p.getShape()) {
-            case ProjShape::LINE: {
-                if (checkPtCollision(p.pos, _hitbox)) {
-                    hp -= p.dmg;
-                    p.pierce--;
-                    _iFramesCounter += 0.0001f;
-                }
-                break;
+        case ProjShape::LINE: {
+            if (checkPtCollision(p.pos, _hitbox)) {
+                hp -= p.dmg;
+                p.pierce--;
+                _iFramesCounter += 0.0001f;
             }
-            case ProjShape::CIRCLE: {
-                AABB projHB = p.getHitbox();
-                // does not account for corners (tbd)
-                if (checkAABBCollision(projHB, _hitbox)) {
-                    hp -= p.dmg;
-                    p.pierce--;
-                    _iFramesCounter += 0.0001f;
-                }
-                break;
+            break;
+        }
+        case ProjShape::CIRCLE: {
+            AABB projHB = p.getHitbox();
+            // does not account for corners (tbd)
+            if (checkAABBCollision(projHB, _hitbox)) {
+                hp -= p.dmg;
+                p.pierce--;
+                _iFramesCounter += 0.0001f;
             }
+            break;
+        }
         }
     }
 }
 
-inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime, 
-    vec2D &pct, vec2D &pcn, float &pt) 
+inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime,
+    vec2D& pct, vec2D& pcn, float& pt)
 {
     if (vel.x == 0) {
-        if (animHandler.currentAnimState != IDLE) animHandler.setAnimType(IDLE, 1);
+        if (animHandler->currentAnimState != IDLE) animHandler->setAnimType(IDLE, 1);
     }
     else if (vel.x < 0) {
-        if (animHandler.currentAnimState != RUN) animHandler.setAnimType(RUN, 4);
-        animHandler.flip = 1;
+        if (animHandler->currentAnimState != RUN) animHandler->setAnimType(RUN, 4);
+        animHandler->flip = 1;
     }
     else {
-        if (animHandler.currentAnimState != RUN) animHandler.setAnimType(RUN, 4);
-        animHandler.flip = 0;
+        if (animHandler->currentAnimState != RUN) animHandler->setAnimType(RUN, 4);
+        animHandler->flip = 0;
     }
     if (!_isColliding && (pt > 1.0f || pt < 0.0f)) {
-        if (animHandler.currentAnimState != JUMP) animHandler.setAnimType(JUMP, 1);
+        if (animHandler->currentAnimState != JUMP) animHandler->setAnimType(JUMP, 1);
     }
-    animHandler.update(engine, _displayPos, fElapsedTime);
+    animHandler->update(engine, _displayPos, fElapsedTime);
 
     vec2D displayPos = vec2DAdd(pos, _displayOffset);
-    engine->DrawRect({(int)displayPos.x, (int)displayPos.y}, {(int)_partialSpriteSize.x, (int)_partialSpriteSize.y}, olc::WHITE);
+    engine->DrawRectDecal({ displayPos.x, displayPos.y }, { _partialSpriteSize.x, _partialSpriteSize.y }, olc::WHITE);
 }
 
 inline void Player::_updatePlayerUI(olc::PixelGameEngine* engine, float& fElapsedTime) {
-    engine->DrawString({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN, 2);
-    engine->DrawString({ 50, 100 }, "Current Weapon: " + _currentWeapon.name, olc::GREEN, 2);
+    engine->DrawStringDecal({ 50, 50 }, "HP: " + std::to_string((int)hp), olc::GREEN, { 2.0f, 2.0f });
+    engine->DrawStringDecal({ 50, 100 }, "Current Weapon: " + _currentWeapon.name, olc::GREEN, { 2.0f, 2.0f });
 }
 
 inline void Player::_updateResetMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {

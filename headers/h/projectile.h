@@ -9,22 +9,24 @@
 #include "collision.h"
 // #include "environment.h"
 
-const enum class ProjShape {LINE, CIRCLE, RECT};
+const enum class ProjShape { LINE, CIRCLE, RECT };
 
 class Projectile : public GameObject {
 public:
 	// need this to work with pge
 	Projectile();
-	Projectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = {0, 0},
-		vec2D initAccel = {0, 0}, olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true,
-		 bool parriable = true);
-	Projectile(std::string name, vec2D initPos, vec2D size, bool friendly, 
-		vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel initColor = olc::BLACK, 
+	Projectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = { 0, 0 },
+		vec2D initAccel = { 0, 0 }, olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true,
+		bool parriable = true);
+	Projectile(std::string name, vec2D initPos, vec2D size, bool friendly,
+		vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel initColor = olc::BLACK,
 		bool affectedByGrav = false, bool tangible = true, bool parriable = true);
 	~Projectile();
 
-	void update(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& mouse, vec2D& displayOffset);
+	void update(float& fElapsedTime);
 	void updateHitbox();
+	void draw(olc::PixelGameEngine* engine, vec2D& displayOffset);
+
 	ProjShape getShape();
 	bool isParriable();
 
@@ -38,7 +40,7 @@ public:
 	float lifespan = 10.0f; // how long the projectile is allowed to last, maximum (seconds)
 
 	float speed;
-	
+
 	// kind of like the iframes of the projectile
 	// will be janky when supposed to collide with multiple entities
 	float activeCtr;

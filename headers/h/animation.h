@@ -17,7 +17,7 @@ const enum AnimationState { IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, P
 // if no animation for a specific action, leave that row blank
 // (i.e. no run animation, leave row 2 blank)
 // default direction is right (+x)
-struct animationHandler {
+struct AnimationHandler {
 	// std::unique_ptr<olc::Decal> spriteSheetDecal;
 	std::unique_ptr<olc::Sprite> spriteSheet;
 	std::unique_ptr<olc::Decal> spriteSheetDecal;
@@ -34,19 +34,19 @@ struct animationHandler {
 	int FPS = 60;
 	float frameDuration;
 	float timeSinceLastFrame = 0.0f;
-	
+
 	bool flip = 0;
 
 	// animations and how many frames they have
 	// std::vector<std::pair<AnimationState, int>> animationsData;
-	
+
 	// data of the current animation (type and number of frames);
 	// std::pair<AnimationState, int> currentAnimData;
 
-
-	void init(std::string& filename, AnimationState initAnim, vec2D& partialSpriteSize, int initFrame = 0) {
+	AnimationHandler() {}
+	AnimationHandler(std::string& filename, AnimationState initAnim, vec2D& partialSpriteSize, int initFrame = 0) {
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
-		// spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
+		spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet.get());
 		spriteSheetSize = get_png_image_dimensions(filename);
 		std::cout << filename << " loaded: " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
 
@@ -59,8 +59,9 @@ struct animationHandler {
 
 		frameDuration = 1.0f / FPS;
 	}
+	~AnimationHandler() {}
 
-	void update(olc::PixelGameEngine *engine, vec2D & screenPos, float& fElapsedTime) {
+	void update(olc::PixelGameEngine* engine, vec2D& screenPos, float& fElapsedTime) {
 		// update animation based on FPS
 		timeSinceLastFrame += fElapsedTime;
 		if (timeSinceLastFrame > frameDuration) {
@@ -88,10 +89,16 @@ struct animationHandler {
 	void drawAnimation(olc::PixelGameEngine* engine, vec2D& screenPos) {
 		// partial sprite x = spritesize.x * frame
 		// partial sprite y = spritesize.y * animType
-		// use sprite sheet because decal cannot flip
-		engine->DrawPartialSprite((int)screenPos.x, (int)screenPos.y, spriteSheet.get(),
+		// what is the center parameter for DrawPartialRotatedDecal()?
+
+		//												readjust pos if flip                             
+		engine->DrawPartialRotatedDecal({ screenPos.x + (partialSize.x * flip),
+			screenPos.y }, spriteSheetDecal.get(), 0, { 0.0f, 0.0f },
+			{ partialSize.x * currentFrame, partialSize.y * currentAnimState },
+			{ partialSize.x, partialSize.y }, { 1.0f + (-2.0f * (float)flip), 1.0f });
+		/*engine->DrawPartialSprite((int)screenPos.x, (int)screenPos.y, spriteSheet.get(),
 			(int)(partialSize.x * currentFrame), (int)(partialSize.y * currentAnimState),
-			(int)partialSize.x, (int)partialSize.y, 1U, 0 + flip);
+			(int)partialSize.x, (int)partialSize.y, 1U, 0 + flip);*/
 	}
 
 };

@@ -1,7 +1,7 @@
 #include "../h/environment.h"
 
 Environment::Environment() {}
-Environment::Environment(const std::string &worldDataFile) {
+Environment::Environment(const std::string& worldDataFile) {
 	std::ifstream worldData(worldDataFile);
 
 	if (!worldData.is_open()) {
@@ -28,12 +28,12 @@ Environment::Environment(const std::string &worldDataFile) {
 
 		if (fileline[0] == 't') {
 
-			vec2D initPos; vec2D size; vec2D initVel; vec2D initAccel; 
-			olc::Pixel color; 
+			vec2D initPos; vec2D size; vec2D initVel; vec2D initAccel;
+			olc::Pixel color;
 			bool affectedByGrav; bool tangible;
 
-			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size.x >> size.y >> initVel.x >> initVel.y 
-				>> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >> 
+			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size.x >> size.y >> initVel.x >> initVel.y
+				>> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >>
 				affectedByGrav >> std::boolalpha >> tangible;
 
 			addTile(name, initPos, size, initVel, initAccel, olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible);
@@ -42,7 +42,7 @@ Environment::Environment(const std::string &worldDataFile) {
 
 		if (fileline[0] == 'e') {
 			//e posx posy velx vely accelx accely sizex sizey velx vely entityType aiType dmg affectedByGrav tangible 
-			vec2D initPos; vec2D initVel; vec2D initAccel; vec2D size; 
+			vec2D initPos; vec2D initVel; vec2D initAccel; vec2D size;
 			int entityTypeNum; int aiTypeNum; float damage;
 			bool affectedByGrav; bool tangible;
 
@@ -63,8 +63,8 @@ Environment::Environment(const std::string &worldDataFile) {
 			vec2D initAccel; olc::Pixel initColor; bool affectedByGrav;
 			bool tangible; bool parriable;
 
-			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size >> shape >> friendly >> initVel.x 
-				>> initVel.y >> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >> 
+			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size >> shape >> friendly >> initVel.x
+				>> initVel.y >> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >>
 				affectedByGrav >> std::boolalpha >> tangible >> std::boolalpha >> parriable;
 
 			addProjectile(name, initPos, size, ProjShape(shape), friendly, initVel, initAccel,
@@ -79,12 +79,28 @@ Environment::Environment(const std::string &worldDataFile) {
 }
 Environment::~Environment() {}
 
-void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &displayOffset) {
+void Environment::update(olc::PixelGameEngine* pge, float& fElapsedTime, vec2D& displayOffset,
+	vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr)
+{
+	_notFrozen = globalFreezeCtr == 0.0f;
+	drawTiles(pge, fElapsedTime, displayOffset);
+	drawProjectiles(pge, fElapsedTime, mouse, displayOffset);
+	drawEntities(pge, fElapsedTime, mouse, displayOffset, playerPos);
+}
+
+void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime,
+	vec2D& displayOffset) {
 
 	if (_tangibleTiles.size() == 0 && _intangibleTiles.size() == 0) return;
 
-	for (Tile &t : _tangibleTiles) t.update(pge, fElapsedTime, displayOffset);
-	for (Tile &t : _intangibleTiles) t.update(pge, fElapsedTime, displayOffset);
+	for (Tile& t : _tangibleTiles) {
+		if (_notFrozen) t.update(fElapsedTime);
+		t.draw(pge, displayOffset);
+	}
+	for (Tile& t : _intangibleTiles) {
+		if (_notFrozen) t.update(fElapsedTime);
+		t.draw(pge, displayOffset);
+	}
 
 	if (pge->GetKey(olc::T).bPressed) std::cout << _tangibleTiles.size() << std::endl;
 }
@@ -103,7 +119,7 @@ std::vector<Tile> Environment::getIntangibleTiles() { return _intangibleTiles; }
 
 void Environment::addProjectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly,
 	vec2D initVel, vec2D initAccel, olc::Pixel initColor,
-	bool affectedByGrav, bool tangible, bool parriable) 
+	bool affectedByGrav, bool tangible, bool parriable)
 {
 	Projectile proj = Projectile(name, initPos, size, shape, friendly, initVel, initAccel, initColor, affectedByGrav, tangible, parriable);
 	_projectiles.push_back(proj);
@@ -113,41 +129,37 @@ void Environment::addProjectile(Projectile& projectile) {
 	_projectiles.push_back(projectile);
 }
 
-void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse, 
-	vec2D &displayOffset) 
+void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse,
+	vec2D& displayOffset)
 {
 	if (_projectiles.size() == 0) return;
 
 	int screenWidth = pge->GetScreenSize().x;
 	int screenHeight = pge->GetScreenSize().y;
 
-	for (int i = 0; i < _projectiles.size(); i++) {
-		Projectile* p = &_projectiles[i];
+	// check projectile collisions with tiles and entities (projectile reaction only)
+	// but only if screen is not frozen
+	if (_notFrozen) {
+		for (int i = 0; i < _projectiles.size(); i++) {
+			Projectile* p = &_projectiles[i];
 
-		p->update(pge, fElapsedTime, mouse, displayOffset);
+			// filter from projectiles no longer "alive"
+			if (p->bounces < 1 || p->pierce < 1 || p->lifespanCtr > p->lifespan) {
+				_eraseProj(i);
+				continue;
+			}
 
-		// if out of screen
-		vec2D projDisplayPos = { p->pos.x + displayOffset.x, p->pos.y + displayOffset.y };
+			p->update(fElapsedTime);
 
-		// delete point if its out of screen, out of bounces, out of pierces, or lived past its lifespan
-		// actually, because of lifespan implementation, out-of-screen is no longer necessary
-		if (/*!checkPtCollision(projDisplayPos, {{0, 0}, {(float)screenWidth, (float)screenHeight}})
-			||*/ p->bounces < 1 || p->pierce < 1 || p->lifespanCtr > p->lifespan) {
+			vec2D projCtPt; vec2D projCtN; float projCtT;
+			vec2D projDir = vec2DMult(p->vel, fElapsedTime);
+			AABB projHB = p->getHitbox();
 
-			_eraseProj(i);
-			continue;
+			for (auto& t : _tangibleTiles) {
+				AABB tileHB = t.getHitbox();
 
-		}
-		
-		vec2D projCtPt; vec2D projCtN; float projCtT;
-		vec2D projDir = vec2DMult(p->vel, fElapsedTime);
-		AABB projHB = p->getHitbox();
-
-		for (auto& t : _tangibleTiles) {
-			AABB tileHB = t.getHitbox();
-
-			// if not collided with tile, continue
-			switch (p->getShape()) {
+				// if not collided with tile, continue
+				switch (p->getShape()) {
 				case ProjShape::LINE: {
 					if (!(checkRayCollision(p->pos, projDir, tileHB, projCtPt, projCtN, projCtT) &&
 						projCtT >= 0.0f && projCtT <= 1.0f)) continue;
@@ -157,20 +169,24 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 				case ProjShape::CIRCLE:
 				case ProjShape::RECT: {
 					if (!(checkDynamicRectVsRectCollision(*p, t, fElapsedTime, projCtPt, projCtN, projCtT)
-						&& projCtT >= 0.0f && projCtT <= 1.0f) ) continue;
+						&& projCtT >= 0.0f && projCtT <= 1.0f)) continue;
 					break;
 				}
 
+				}
+
+				p->bounces--;
+				if (projCtN.x != 0) p->vel.x *= -1.0f;
+				if (projCtN.y != 0) p->vel.y *= -1.0f;
+
 			}
 
-			p->bounces--;
-			if (projCtN.x != 0) p->vel.x *= -1.0f;
-			if (projCtN.y != 0) p->vel.y *= -1.0f;
-
 		}
+	}
 
-		p->lifespanCtr += fElapsedTime;
-
+	for (auto& p : _projectiles) {
+		vec2D projDisplayPos = { p.pos.x + displayOffset.x, p.pos.y + displayOffset.y };
+		p.draw(pge, displayOffset);
 	}
 }
 
@@ -180,16 +196,17 @@ void Environment::_eraseProj(int& index) {
 }
 
 std::vector<Projectile> Environment::getProjectiles() { return _projectiles; }
-std::vector<Projectile>* Environment::getActualProjectilesVec() { 
+std::vector<Projectile>* Environment::getActualProjectilesVec() {
 	std::vector<Projectile>* projPtr = new std::vector<Projectile>;
 	projPtr = &_projectiles;
 	return projPtr;
 }
 
-void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, 
+void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse,
 	vec2D& displayOffset, vec2D& playerPos) {
 	if (_entities.size() == 0) return;
-	
+
+	// delete dead entities
 	for (int i = 0; i < _entities.size(); i++) {
 		if (_entities[i].hp <= 0) {
 			_deleteEntity(i);
@@ -197,12 +214,16 @@ void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, ve
 		}
 	}
 
-	handleEntityTileCollisions(fElapsedTime);
-	handleEntityProjCollisions(fElapsedTime);
+	if (_notFrozen) {
+		handleEntityTileCollisions(fElapsedTime);
+		handleEntityProjCollisions(fElapsedTime);
 
-	for (auto &e: _entities) e.update(pge, fElapsedTime, mouse, displayOffset);
+		for (Entity& e : _entities) e.update(fElapsedTime);
 
-	updateEntityBehaviors(pge, fElapsedTime, playerPos);
+		updateEntityBehaviors(pge, fElapsedTime, playerPos);
+	}
+
+	for (Entity& e : _entities) e.draw(pge, displayOffset);
 }
 
 void Environment::addEntity(Entity& entity) {
@@ -211,7 +232,7 @@ void Environment::addEntity(Entity& entity) {
 
 void Environment::addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
 	AIType aiType, float damage, bool affectedByGrav, bool tangible) {
-	Entity entity = Entity(name, initPos, initVel, initAccel, size, entityType, aiType, damage, affectedByGrav, 
+	Entity entity = Entity(name, initPos, initVel, initAccel, size, entityType, aiType, damage, affectedByGrav,
 		tangible);
 	_entities.push_back(entity);
 }
@@ -220,7 +241,8 @@ void Environment::_deleteEntity(int& index) {
 	_entities.erase(_entities.begin() + index);
 }
 
-void Environment::handleEntityTileCollisions(float &fElapsedTime) {
+// entity reaction to tiles
+void Environment::handleEntityTileCollisions(float& fElapsedTime) {
 
 	for (auto& e : _entities) {
 		e.vel.x += e.accel.x * fElapsedTime;
@@ -255,6 +277,7 @@ void Environment::handleEntityTileCollisions(float &fElapsedTime) {
 	}
 }
 
+// entity reaction to projectiles
 void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 
 	vec2D projCtPt; vec2D projCtNorm; float projT;
@@ -303,25 +326,25 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 		if (e.getAI() == AIType::STATIONARY) continue;
 
 		switch (e.getAI()) {
-			case AIType::SENTRY: {
-				if (e.attackCtr == 0.0f) {
+		case AIType::SENTRY: {
+			if (e.attackCtr == 0.0f) {
 
-					vec2D entityCenter = e.getCenter();
+				vec2D entityCenter = e.getCenter();
 
-					vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
-					playerDirVec = vec2DNormalise(playerDirVec);
-					vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
+				vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
+				playerDirVec = vec2DNormalise(playerDirVec);
+				vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
 
-					Projectile entityProj = Projectile("entityProj", entityCenter, 10, ProjShape::LINE, false, projVel, { 0, 0 }, olc::RED);
-					addProjectile(entityProj);
+				Projectile entityProj = Projectile("entityProj", entityCenter, 10, ProjShape::LINE, false, projVel, { 0, 0 }, olc::RED);
+				addProjectile(entityProj);
 
-					e.attackCtr += 0.0001f;
-				}
-				else {
-					(e.attackCtr > e.attackInterval) ? e.attackCtr = 0.0f : e.attackCtr += fElapsedTime;
-				}
-				break;
+				e.attackCtr += 0.0001f;
 			}
+			else {
+				(e.attackCtr > e.attackInterval) ? e.attackCtr = 0.0f : e.attackCtr += fElapsedTime;
+			}
+			break;
+		}
 		}
 	}
 

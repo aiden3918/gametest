@@ -19,14 +19,18 @@
 class Environment {
 public:
 	Environment();
-	Environment(const std::string &worldDataFile);
+	Environment(const std::string& worldDataFile);
 	~Environment();
 
 	// bool gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile);
 
+	void update(olc::PixelGameEngine* pge, float& fElapsedTime, vec2D& displayOffset,
+		vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr);
+
 	void drawTiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& displayOffset);
-	void drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D &mouse, vec2D& displayOffset);
-	void drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset, 
+	void drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse,
+		vec2D& displayOffset);
+	void drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset,
 		vec2D& playerPos);
 
 	void addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel color = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
@@ -40,7 +44,7 @@ public:
 	void addEntity(Entity& entity);
 	void addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
 		AIType aiType, float damage = 1.0f, bool affectedByGrav = true, bool tangible = true);
-	void handleEntityTileCollisions(float &fElapsedTime);
+	void handleEntityTileCollisions(float& fElapsedTime);
 	void handleEntityProjCollisions(float& fElapsedTime);
 	void updateEntityBehaviors(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos);
 
@@ -58,7 +62,7 @@ protected:
 	std::vector<Projectile> _projectiles;
 	std::vector<Entity> _entities;
 
-	void _eraseProj(int &index);
+	void _eraseProj(int& index);
 	void _deleteEntity(int& index);
 
 	std::map<std::string, EntityType> _entityTypeMap{
@@ -75,12 +79,13 @@ protected:
 		{"DRONE", AIType::DRONE}
 	};
 
-	std::map <std::string, ProjShape> _projShapeMap {
+	std::map <std::string, ProjShape> _projShapeMap{
 		{"LINE", ProjShape::LINE},
 		{"CIRCLE", ProjShape::CIRCLE}
 	};
 
 	vec2D _spawnLocation;
+	bool _notFrozen = true; // updated every frame
 };
 
 #endif

@@ -24,13 +24,15 @@ public:
         float damage = 1.0f, bool affectedByGrav = true, bool tangible = true);
     ~Entity();
 
-    void update(olc::PixelGameEngine* engine, float fElapsedTime, vec2D& mouse, vec2D& displayOffset);
+    void update(float& fElapsedTime);
+    void draw(olc::PixelGameEngine* engine, vec2D& displayOffset);
+
     EntityType getType();
     AIType getAI();
 
-    void updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos);
+    // void updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos);
 
-    float hp = 1.0f; 
+    float hp = 1.0f;
     float dmg = 0.0f;
 
     //test (use sprites in future)

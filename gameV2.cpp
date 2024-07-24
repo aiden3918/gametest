@@ -1,6 +1,9 @@
 #define OLC_PGE_APPLICATION
-
 #include "headers/extern-lib/olcPixelGameEngine.h"  
+
+#define OLC_SOUNDWAVE
+#include "headers/extern-lib/olcSoundWaveEngine.h"
+
 #include "headers/h/collision.h"
 #include "headers/h/environment.h"
 #include "headers/h/gameObject.h"
@@ -30,30 +33,38 @@ public:
         const std::string playerSpriteRef = "assets/sprites/player.png";
         mainPlayer = new Player(worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
 
-        const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png", 
+        const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png",
             "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
         bgHandler = new Background();
         bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2]);
-        
+
+        soundEngine.InitialiseAudio();
+        // accepts waveform only
+        parrySound.LoadAudioWaveform("assets/sounds/ping-pixabay.mp3");
+
         return true;
     }
 
     bool OnUserUpdate(float fElapsedTime) override
     {
+
         vec2D mouseInfo = { GetMouseX(), GetMouseY() };
         vec2D playerPos = mainPlayer->pos;
         vec2D playerCenter = mainPlayer->getCenter();
 
         vec2D displayOffset = mainPlayer->getDisplayOffset();
 
-        Clear(olc::BLUE);
+        float globalFreezeCtr = mainPlayer->freezeCtr;
+
+        Clear(olc::GREY);
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
         bgHandler->update(this, playerPos);
 
         mainPlayer->update(this, fElapsedTime, worldEnvironment, mouseInfo);
-        worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
+        worldEnvironment->update(this, fElapsedTime, displayOffset, mouseInfo, playerPos, globalFreezeCtr);
+        /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
-        worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);
+        worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/
 
         return true;
     }
@@ -72,6 +83,9 @@ private:
     Player* mainPlayer = nullptr;
     Environment* worldEnvironment = nullptr;
     Background* bgHandler = nullptr;
+
+    olc::sound::WaveEngine soundEngine;
+    olc::sound::Wave parrySound;
 };
 
 int main(int* argc, char** argv)

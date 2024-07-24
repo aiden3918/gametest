@@ -17,7 +17,7 @@
 //#include "../extern-lib/rapidjson/writer.h"
 //#include "../extern-lib/rapidjson/stringbuffer.h"
 
-const enum class Weapons {SWORD, GUN};
+const enum class Weapons { SWORD, GUN };
 
 struct GeneralWeapon {
     std::string name;
@@ -64,6 +64,10 @@ public:
     float hp = 100.0f;
     float movespeed = 200.0f;
     float jumpspeed = 500.0f;
+
+    // global "freeze" effect
+    float freezeCtr = 0.0f;
+    float freezeDuration = 0.5f;
 
 private:
 
@@ -122,7 +126,7 @@ private:
 
     // animation data
     vec2D _partialSpriteSize = { 50.0f, 100.0f };
-    animationHandler animHandler;
+    AnimationHandler* animHandler;
 
     // weapon data
     GeneralWeapon _currentWeapon = weaponData[static_cast<int>(Weapons::SWORD)];

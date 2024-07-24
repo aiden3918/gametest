@@ -68,8 +68,8 @@ void Background::setBackground(std::string id, const std::string backRef, const 
 }
 
 void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos) {
-	if (_backSprite.get() == nullptr || _middleSprite.get() == nullptr || 
-		_frontSprite.get() == nullptr) return
+	if (_backSprite.get() == nullptr || _middleSprite.get() == nullptr ||
+		_frontSprite.get() == nullptr) return;
 
 	//engine->DrawSprite({ 0, 0 }, _backSprite.get(), 1U);
 	//engine->DrawSprite({ 0, 0 }, _middleSprite.get(), 1U);

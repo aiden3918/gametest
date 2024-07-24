@@ -16,7 +16,8 @@ public:
 		olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
 	~Tile();
 
-	void update(olc::PixelGameEngine* engine, float elapsedTime, vec2D displayOffset);
+	void update(float& fElapsedTime);
+	void draw(olc::PixelGameEngine* engine, vec2D displayOffset);
 
 public:
 	olc::Pixel color;

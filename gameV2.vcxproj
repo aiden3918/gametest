@@ -107,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +141,9 @@
     <ClCompile Include="headers\cpp\tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\extern-lib\olcPGEX_Sound.h" />
     <ClInclude Include="headers\extern-lib\olcPixelGameEngine.h" />
+    <ClInclude Include="headers\extern-lib\olcSoundWaveEngine.h" />
     <ClInclude Include="headers\h\animation.h" />
     <ClInclude Include="headers\h\background.h" />
     <ClInclude Include="headers\h\collision.h" />
@@ -164,6 +167,7 @@
     <Text Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="data\weapons.json" />
     <None Include="README.md" />
   </ItemGroup>

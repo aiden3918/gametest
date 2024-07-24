@@ -28,5 +28,5 @@ vec2D GameObject::getCenter() { return _center; }
 std::string GameObject::getName() { return _name; }
 
 void GameObject::fillBasicRect(olc::PixelGameEngine* engine, vec2D& displayOffset) {
-	engine->FillRect({ (int)(pos.x + displayOffset.x), (int)(pos.y + displayOffset.y) }, { (int)_size.x, (int)_size.y }, color);
+	engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) }, { _size.x, _size.y }, color);
 }

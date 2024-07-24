@@ -3,7 +3,7 @@
 Tile::Tile() {}
 Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible) {
 	_name = name;
-	
+
 	pos = initPos;
 	vel = initVel;
 	accel = initAccel;
@@ -18,7 +18,17 @@ Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D ini
 }
 Tile::~Tile() {}
 
-void Tile::update(olc::PixelGameEngine* engine, float elapsedTime, vec2D displayOffset) {
+void Tile::update(float& fElapsedTime) {
+	vel.x += accel.x * fElapsedTime;
+	vel.y += accel.y * fElapsedTime;
+
+	pos.x += vel.x * fElapsedTime;
+	pos.y += vel.y * fElapsedTime;
+
 	updateHitbox();
-	engine->FillRect({ (int)(pos.x + displayOffset.x), (int)(pos.y + displayOffset.y)}, {(int)_size.x, (int)_size.y}, color);
+}
+
+void Tile::draw(olc::PixelGameEngine* engine, vec2D displayOffset) {
+	engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
+		{ _size.x, _size.y }, color);
 }
