@@ -66,6 +66,10 @@ public:
         _worldEnvironment->update(this, _soundHandler, fElapsedTime, displayOffset, mouseInfo, 
             playerCenter, globalFreezeCtr);
         _soundHandler->update();
+
+        for (std::string s : _soundHandler->soundQueue) {
+            _soundHandler->waveEngine.PlayWaveform(_soundHandler->sounds[s]);
+        }
         /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
         worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
         worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/
