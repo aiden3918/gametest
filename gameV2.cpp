@@ -36,7 +36,7 @@ public:
         const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png",
             "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
         _bgHandler = new Background();
-        _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2]);
+        _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2], screenSize);
 
         _ma = new olc::MiniAudio;
 
@@ -56,15 +56,11 @@ public:
 
         Clear(olc::GREY);
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
-        _bgHandler->update(this, playerPos);
+        _bgHandler->update(this, playerPos, displayOffset);
 
         _mainPlayer->update(this, _ma, fElapsedTime, _worldEnvironment, mouseInfo);
         _worldEnvironment->update(this, _ma, fElapsedTime, displayOffset, mouseInfo, 
             playerCenter, globalFreezeCtr);
-
-        /*worldEnvironment->drawTiles(this, fElapsedTime, displayOffset);
-        worldEnvironment->drawProjectiles(this, fElapsedTime, mouseInfo, displayOffset);
-        worldEnvironment->drawEntities(this, fElapsedTime, mouseInfo, displayOffset, playerCenter);*/
 
         return true;
     }

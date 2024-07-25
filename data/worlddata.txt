@@ -39,7 +39,7 @@ e enemy1 1200 200 0 0 0 0 50 100 ENEMY SENTRY 1.0 true true
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Tiles
-t floor -500 600 2500 120 0 0 0 0 0 0 0 false true
+t floor -2000 600 5000 120 0 0 0 0 0 0 0 false true
 t ceiling 0 0 1280 50 0 0 0 0 0 0 0 false true
 t wall1 100 200 50 200 0 0 0 0 0 0 0 false true
 t wall2 700 400 200 50 0 0 0 0 0 0 0 false true

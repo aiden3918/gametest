@@ -15,8 +15,8 @@ public:
 	~Background();
 
 	void setBackground(std::string id, const std::string backRef, const std::string midRef, 
-		const std::string frontRef);
-	void update(olc::PixelGameEngine* engine, vec2D& playerPos);
+		const std::string frontRef, vec2D screenSize);
+	void update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& displayOffset);
 
 private:
 	std::string _id;
@@ -32,6 +32,12 @@ private:
 	std::unique_ptr<olc::Decal> _backDecal;
 	std::unique_ptr<olc::Decal> _middleDecal;
 	std::unique_ptr<olc::Decal> _frontDecal;
+
+	vec2D _screenSize;
+
+	float _midX;
+	float _frontX;
+
 };
 
 #endif

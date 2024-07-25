@@ -231,7 +231,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
 
                 // redirect projectile
                 float projSpeed = vec2DMag(p.vel);
-                p.vel = vec2DMult(_lookAngleVector, projSpeed * 2.0f);
+                p.vel = vec2DMult(_lookAngleVector, projSpeed * 3.0f);
                 p.isFriendly = true;
 
                 // extra incentive to parry
