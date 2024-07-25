@@ -42,6 +42,11 @@ public:
     float attackInterval = 1.0f; // attack cooldown interval (in sec)
 
     float projSpeed = 500.0f;
+    vec2D moveSpeed;
+
+    std::vector<std::pair<GameObject, float>> possibleColTiles;
+    vec2D pcp; vec2D pcn; float pt;
+    float jumpSpeed;
 
 private:
     EntityType _type;

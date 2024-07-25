@@ -15,6 +15,7 @@ man i really need to learn how to properly use github
 - various entity types and basic ai implementation
 - parry (freezing/"hitstop" effect)
 - sounds (wip)
+- background system with parallax effect
 
 ## License (OLC-3)
 Copyright 2018 - 2024 OneLoneCoder.com

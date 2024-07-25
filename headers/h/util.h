@@ -14,6 +14,11 @@
 struct vec2D {
 	float x = 0.0f;
 	float y = 0.0f;
+	bool operator == (vec2D& rhs) {
+		if (this->x != rhs.x) return false;
+		if (this->y != rhs.y) return false;
+		return true;
+	}
 };
 
 struct AABB {
@@ -37,6 +42,12 @@ inline vec2D dotProduct2D(vec2D& a, vec2D& b) { return { a.x * b.x, a.y * b.y };
 inline float vec2DMag(vec2D& vec) { return sqrt((vec.x * vec.x) + vec.y * vec.y); }
 inline vec2D vec2DNormalise(vec2D& vec) { return vec2DDiv(vec, vec2DMag(vec)); }
 inline float vec2DDotProduct(vec2D& vec1, vec2D& vec2) { return (vec1.x * vec2.x) + (vec1.y + vec2.y); }
+inline vec2D vec2DAbs(vec2D& vec) { return { std::abs(vec.x), std::abs(vec.y) }; }
+//bool operator == (vec2D &lhs, vec2D &rhs) {
+//	if (lhs.x != rhs.x) return false;
+//	if (lhs.y != rhs.y) return false;
+//	return true;
+//}
 
 // d = (v_i)(t) + 0.5(a)(t^2)
 inline float getDisp1(float initVel, float accel, float time) { return (initVel * time) + (0.5 * accel * time * time); }

@@ -53,8 +53,11 @@ Environment::Environment(const std::string& worldDataFile) {
 				initAccel.y >> size.x >> size.y >> entityTypeStr >> aiTypeStr >> damage >> std::boolalpha >>
 				affectedByGrav >> std::boolalpha >> tangible;
 
-			addEntity(name, initPos, initVel, initAccel, size, _entityTypeMap[entityTypeStr], _aiTypeMap[aiTypeStr],
+			Entity e = Entity(name, initPos, initVel, initAccel, size, _entityTypeMap[entityTypeStr], _aiTypeMap[aiTypeStr],
 				damage, affectedByGrav, tangible);
+			e.moveSpeed = vec2DAbs(e.vel);
+			e.jumpSpeed = 400.0f; // set something later, maybe
+			addEntity(e);
 
 		}
 
@@ -249,30 +252,27 @@ void Environment::handleEntityTileCollisions(float& fElapsedTime) {
 		e.vel.x += e.accel.x * fElapsedTime;
 		e.vel.y += e.accel.y * fElapsedTime;
 
-		std::vector<std::pair<GameObject, float>> possibleColTiles;
-		vec2D pct; vec2D pcn; float pt;
-
 		for (auto& i : getTangibleTiles()) {
-			if (checkDynamicRectVsRectCollision(e, i, fElapsedTime, pct, pcn, pt)) {
+			if (checkDynamicRectVsRectCollision(e, i, fElapsedTime, e.pcp, e.pcn, e.pt)) {
 
 				//std::cout << "Player contact with test box" << std::endl;
 				//std::cout << pcn.x << " " << pcn.y << std::endl;
 
-				possibleColTiles.push_back({ i, pt });
+				e.possibleColTiles.push_back({ i, e.pt });
 			}
 		}
 
 		// sort tiles by proximity by checking tNear;
-		std::sort(possibleColTiles.begin(), possibleColTiles.end(),
+		std::sort(e.possibleColTiles.begin(), e.possibleColTiles.end(),
 			[](const std::pair<GameObject, float>& a, const std::pair<GameObject, float>& b) {
 				return a.second < b.second;
 			}
 		);
 
-		for (auto& k : possibleColTiles) {
-			if (checkDynamicRectVsRectCollision(e, k.first, fElapsedTime, pct, pcn, pt)) {
-				e.vel.x += pcn.x * std::abs(e.vel.x) * (1 - pt);
-				e.vel.y += pcn.y * std::abs(e.vel.y) * (1 - pt);
+		for (auto& k : e.possibleColTiles) {
+			if (checkDynamicRectVsRectCollision(e, k.first, fElapsedTime, e.pcp, e.pcn, e.pt)) {
+				e.vel.x += e.pcn.x * std::abs(e.vel.x) * (1 - e.pt);
+				e.vel.y += e.pcn.y * std::abs(e.vel.y) * (1 - e.pt);
 			}
 		}
 	}
@@ -326,14 +326,13 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 
 		if (e.getAI() == AIType::STATIONARY) continue;
 
+		vec2D entityCenter = e.getCenter();
+		vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
+		playerDirVec = vec2DNormalise(playerDirVec);
+
 		switch (e.getAI()) {
 		case AIType::SENTRY: {
 			if (e.attackCtr == 0.0f) {
-
-				vec2D entityCenter = e.getCenter();
-
-				vec2D playerDirVec = vec2DSub(playerPos, entityCenter);
-				playerDirVec = vec2DNormalise(playerDirVec);
 				vec2D projVel = vec2DMult(playerDirVec, e.projSpeed);
 
 				Projectile entityProj = Projectile("entityProj", entityCenter, 10, ProjShape::LINE, false, projVel, { 0, 0 }, olc::RED);
@@ -343,6 +342,16 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 			}
 			else {
 				(e.attackCtr > e.attackInterval) ? e.attackCtr = 0.0f : e.attackCtr += fElapsedTime;
+			}
+			break;
+		}
+		case AIType::WALKER: {
+			// move to player's x
+			(playerDirVec.x > 0) ? e.vel.x = e.moveSpeed.x : e.vel.x = -e.moveSpeed.x;
+			// attempt to jump if player is above
+			vec2D onGround = { 0, -1 };
+			if (playerDirVec.y < -0.3f && e.pcn == onGround && e.pt == 0.0f) {
+				e.vel.y = -e.jumpSpeed;
 			}
 			break;
 		}
