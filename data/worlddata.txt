@@ -37,6 +37,7 @@ e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY 0 true true
 e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY 0 true true
 e enemy1 1200 200 0 0 0 0 50 100 ENEMY SENTRY 1.0 true true 
 e enemy2 -200 200 100 0 0 0 50 100 ENEMY WALKER 1.0 true true
+e enemy3 -500 200 100 0 0 0 50 50 ENEMY DRONE 1.0 false true
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Tiles

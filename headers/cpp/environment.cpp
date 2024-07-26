@@ -55,7 +55,8 @@ Environment::Environment(const std::string& worldDataFile) {
 
 			Entity e = Entity(name, initPos, initVel, initAccel, size, _entityTypeMap[entityTypeStr], _aiTypeMap[aiTypeStr],
 				damage, affectedByGrav, tangible);
-			e.moveSpeed = vec2DAbs(e.vel);
+			e.moveSpeedVec = vec2DAbs(e.vel);
+			e.moveSpeed = vec2DMag(e.moveSpeedVec);
 			e.jumpSpeed = 400.0f; // set something later, maybe
 			addEntity(e);
 
@@ -321,7 +322,7 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 
 void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
 
-	// cannot move this to entity.cpp because it spawns in projectiles
+	// cannot move this to entity.cpp because it spawns in projectiles (cyclical linker error)
 	for (auto& e : _entities) {
 
 		if (e.getAI() == AIType::STATIONARY) continue;
@@ -347,12 +348,18 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 		}
 		case AIType::WALKER: {
 			// move to player's x
-			(playerDirVec.x > 0) ? e.vel.x = e.moveSpeed.x : e.vel.x = -e.moveSpeed.x;
+			(playerDirVec.x > 0) ? e.vel.x = e.moveSpeedVec.x : e.vel.x = -e.moveSpeedVec.x;
 			// attempt to jump if player is above
 			vec2D onGround = { 0, -1 };
 			if (playerDirVec.y < -0.3f && e.pcn == onGround && e.pt == 0.0f) {
 				e.vel.y = -e.jumpSpeed;
 			}
+			break;
+		}
+		case AIType::DRONE: {
+			// simply just fly towards player
+			e.vel = vec2DMult(playerDirVec, e.moveSpeed);
+			// should i set all drones' affectedByGrav to false by default?
 			break;
 		}
 		}

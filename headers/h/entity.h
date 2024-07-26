@@ -12,7 +12,7 @@
 
 // most implementations should be in dummy, friendly, and enemy, in that order
 const enum class EntityType { DUMMY, FRIENDLY, ENEMY };
-const enum class AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
+const enum class AIType { STATIONARY, SENTRY, WALKER, DRONE };
 
 const olc::Pixel defaultEntityColors[3] = { olc::WHITE, olc::GREEN, olc::RED };
 
@@ -42,7 +42,8 @@ public:
     float attackInterval = 1.0f; // attack cooldown interval (in sec)
 
     float projSpeed = 500.0f;
-    vec2D moveSpeed;
+    vec2D moveSpeedVec;
+    float moveSpeed;
 
     std::vector<std::pair<GameObject, float>> possibleColTiles;
     vec2D pcp; vec2D pcn; float pt;

@@ -182,7 +182,7 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
     engine->DrawLine({ (int)_displayCenter.x, (int)_displayCenter.y }, { (int)mouse.x, (int)mouse.y }, olc::YELLOW);
     vec2D mouseDist = { mouse.x - _displayCenter.x, mouse.y - _displayCenter.y };
     _lookAngleVector = vec2DNormalise(mouseDist);
-    engine->DrawString({ 50, 630 }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
+    engine->DrawStringDecal({ 50.0f, 630.0f }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
     //_lookAngleDeg = atan2f(mouseDist.y, mouseDist.x);
     //_lookAngleDeg = radToDeg(_lookAngleDeg);
     // engine->DrawString({ 50, 660 }, "look angle: " + std::to_string(_lookAngleDeg) + " deg");
@@ -259,6 +259,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
 inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
 
     // bheld for automatic weapons, bpressed for semi-auto weapons (in-game)
+    // DEBUG: when moving, cannot use weapons (only occurs on win10 instance)
     if (engine->GetMouse(0).bHeld && _weaponCDCtr == 0.0f) {
         std::cout << "attack" << std::endl;
 
@@ -294,9 +295,7 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
         }
 
         _weaponCDCtr += 0.001f;
-    }
-
-    if (_weaponCDCtr > 0.0f) {
+    } else {
         (_weaponCDCtr > _currentWeapon.cooldownTime) ? _weaponCDCtr = 0.0f : _weaponCDCtr += fElapsedTime;
     }
 
