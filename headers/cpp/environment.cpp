@@ -202,9 +202,7 @@ void Environment::_eraseProj(int& index) {
 
 std::vector<Projectile> Environment::getProjectiles() { return _projectiles; }
 std::vector<Projectile>* Environment::getActualProjectilesVec() {
-	std::vector<Projectile>* projPtr = new std::vector<Projectile>;
-	projPtr = &_projectiles;
-	return projPtr;
+	return &_projectiles;
 }
 
 void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse,

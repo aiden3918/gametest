@@ -170,7 +170,7 @@ inline void Player::_updateWeapons(olc::PixelGameEngine* engine) {
         std::cout << _currentWeapon.name << " equipped" << std::endl;
         std::cout << "cooldown time: " << _currentWeapon.cooldownTime << std::endl;
     }
-    else if (engine->GetKey(olc::K2).bPressed) {
+    if (engine->GetKey(olc::K2).bPressed) {
         int gunInt = static_cast<int>(Weapons::GUN);
         _currentWeapon = weaponData[gunInt];
         std::cout << _currentWeapon.name << " equipped" << std::endl;
@@ -182,7 +182,7 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
     engine->DrawLine({ (int)_displayCenter.x, (int)_displayCenter.y }, { (int)mouse.x, (int)mouse.y }, olc::YELLOW);
     vec2D mouseDist = { mouse.x - _displayCenter.x, mouse.y - _displayCenter.y };
     _lookAngleVector = vec2DNormalise(mouseDist);
-    engine->DrawStringDecal({ 50.0f, 630.0f }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
+    engine->DrawStringDecal({ 50.0f, 630.0f }, "look vector: (" + std::to_string(_lookAngleVector.x) + ", " + std::to_string(_lookAngleVector.y) + ")");
     //_lookAngleDeg = atan2f(mouseDist.y, mouseDist.x);
     //_lookAngleDeg = radToDeg(_lookAngleDeg);
     // engine->DrawString({ 50, 660 }, "look angle: " + std::to_string(_lookAngleDeg) + " deg");
@@ -217,7 +217,9 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
             _parryCtr += fElapsedTime;
 
             // memory leak, perhaps?
+            // yeah probably
             std::vector<Projectile>* envProjsPtr = env->getActualProjectilesVec();
+
             AABB parryBoxHB = _parryBox->getHitbox();
 
             for (auto& p : *envProjsPtr) {
@@ -246,6 +248,8 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
                 // soundHandler->addSoundToQueue("playerParry");
                 ma->Play("assets/audio/ultrakillparry.wav");
             }
+
+            delete envProjsPtr;
 
         }
         else {
@@ -295,7 +299,9 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
         }
 
         _weaponCDCtr += 0.001f;
-    } else {
+    } 
+    
+    if (_weaponCDCtr > 0.0f) {
         (_weaponCDCtr > _currentWeapon.cooldownTime) ? _weaponCDCtr = 0.0f : _weaponCDCtr += fElapsedTime;
     }
 
@@ -325,9 +331,11 @@ inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environ
 }
 
 inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
-    std::vector<Projectile>* envProjectilesPtr = env->getActualProjectilesVec();
+    
+    // memory leak here, prob
+    std::vector<Projectile>* envProjsPtr = env->getActualProjectilesVec();
 
-    for (auto& p : *envProjectilesPtr) {
+    for (auto& p : *envProjsPtr) {
         if (p.isFriendly) continue;
 
         switch (p.getShape()) {
@@ -351,6 +359,10 @@ inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environm
         }
         }
     }
+    
+    envProjsPtr->clear();
+    delete envProjsPtr;
+
 }
 
 inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElapsedTime,

@@ -38,7 +38,7 @@ public:
         _bgHandler = new Background();
         _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2], screenSize);
 
-        _ma = new olc::MiniAudio;
+        _audio = new olc::MiniAudio;
 
         return true;
     }
@@ -58,8 +58,8 @@ public:
         SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
         _bgHandler->update(this, playerPos, displayOffset);
 
-        _mainPlayer->update(this, _ma, fElapsedTime, _worldEnvironment, mouseInfo);
-        _worldEnvironment->update(this, _ma, fElapsedTime, displayOffset, mouseInfo, 
+        _mainPlayer->update(this, _audio, fElapsedTime, _worldEnvironment, mouseInfo);
+        _worldEnvironment->update(this, _audio, fElapsedTime, displayOffset, mouseInfo,
             playerCenter, globalFreezeCtr);
 
         return true;
@@ -69,7 +69,7 @@ public:
         delete _mainPlayer;
         delete _worldEnvironment;
         delete _bgHandler;
-        delete _ma;
+        delete _audio;
 
         return true;
     }
@@ -80,7 +80,7 @@ private:
     Player* _mainPlayer = nullptr;
     Environment* _worldEnvironment = nullptr;
     Background* _bgHandler = nullptr;
-    olc::MiniAudio* _ma;
+    olc::MiniAudio* _audio;
 };
 
 int main(int* argc, char** argv)

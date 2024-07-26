@@ -136,6 +136,9 @@ private:
     GeneralWeapon _currentWeapon = weaponData[static_cast<int>(Weapons::SWORD)];
     float _weaponCDCtr = 0.0f;
 
+    // env data
+    std::vector<Projectile>* _envProjsPtr;
+
 };
 
 #endif // !player_h
