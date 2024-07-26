@@ -182,7 +182,7 @@ inline void Player::_updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse)
     engine->DrawLine({ (int)_displayCenter.x, (int)_displayCenter.y }, { (int)mouse.x, (int)mouse.y }, olc::YELLOW);
     vec2D mouseDist = { mouse.x - _displayCenter.x, mouse.y - _displayCenter.y };
     _lookAngleVector = vec2DNormalise(mouseDist);
-    engine->DrawString({ 50, 630 }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
+    engine->DrawStringDecal({ 50.0f, 630.0f }, "look vector: (" + std::to_string(_lookAngleVector.x) + " " + std::to_string(_lookAngleVector.y) + ")");
     //_lookAngleDeg = atan2f(mouseDist.y, mouseDist.x);
     //_lookAngleDeg = radToDeg(_lookAngleDeg);
     // engine->DrawString({ 50, 660 }, "look angle: " + std::to_string(_lookAngleDeg) + " deg");
