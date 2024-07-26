@@ -259,6 +259,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
 inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
 
     // bheld for automatic weapons, bpressed for semi-auto weapons (in-game)
+    // DEBUG: when moving, cannot use weapons (only occurs on win10 instance)
     if (engine->GetMouse(0).bHeld && _weaponCDCtr == 0.0f) {
         std::cout << "attack" << std::endl;
 
@@ -294,9 +295,7 @@ inline void Player::_updateMouseMechanics(olc::PixelGameEngine* engine, Environm
         }
 
         _weaponCDCtr += 0.001f;
-    }
-
-    if (_weaponCDCtr > 0.0f) {
+    } else {
         (_weaponCDCtr > _currentWeapon.cooldownTime) ? _weaponCDCtr = 0.0f : _weaponCDCtr += fElapsedTime;
     }
 

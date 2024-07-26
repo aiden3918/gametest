@@ -44,7 +44,9 @@ struct AnimationHandler {
 	// std::pair<AnimationState, int> currentAnimData;
 
 	AnimationHandler() {}
-	AnimationHandler(std::string& filename, AnimationState initAnim, vec2D& partialSpriteSize, int initFrame = 0) {
+	AnimationHandler(std::string& filename, AnimationState initAnim, 
+		vec2D& partialSpriteSize, int initFrame = 0)
+	{
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
 		spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet.get());
 		spriteSheetSize = get_png_image_dimensions(filename);
@@ -80,10 +82,10 @@ struct AnimationHandler {
 		frameDuration = 1.0f / FPS;
 	}
 
-	void setAnimType(AnimationState animType, int frames, int initFrame = 0) {
+	void setAnimType(AnimationState animType, int frames, int initFrame = 1) {
 		currentAnimState = animType;
-		numFrames = frames - 1; // because frames are counted from 0
-		currentFrame = initFrame;
+		numFrames = frames - 1; // because frames are indexed from 0 on the handler
+		currentFrame = initFrame - 1;
 	}
 
 	void drawAnimation(olc::PixelGameEngine* engine, vec2D& screenPos) {
@@ -96,9 +98,6 @@ struct AnimationHandler {
 			screenPos.y }, spriteSheetDecal.get(), 0, { 0.0f, 0.0f },
 			{ partialSize.x * currentFrame, partialSize.y * currentAnimState },
 			{ partialSize.x, partialSize.y }, { 1.0f + (-2.0f * (float)flip), 1.0f });
-		/*engine->DrawPartialSprite((int)screenPos.x, (int)screenPos.y, spriteSheet.get(),
-			(int)(partialSize.x * currentFrame), (int)(partialSize.y * currentAnimState),
-			(int)partialSize.x, (int)partialSize.y, 1U, 0 + flip);*/
 	}
 
 };

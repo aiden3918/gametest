@@ -74,7 +74,6 @@ protected:
 
 	std::map <std::string, AIType> _aiTypeMap{
 		{"STATIONARY", AIType::STATIONARY},
-		{"FOLLOWER", AIType::FOLLOWER},
 		{"SENTRY", AIType::SENTRY},
 		{"WALKER", AIType::WALKER},
 		{"DRONE", AIType::DRONE}

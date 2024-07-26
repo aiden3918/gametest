@@ -12,7 +12,7 @@
 
 // most implementations should be in dummy, friendly, and enemy, in that order
 const enum class EntityType { DUMMY, FRIENDLY, ENEMY };
-const enum class AIType { STATIONARY, FOLLOWER, SENTRY, WALKER, DRONE };
+const enum class AIType { STATIONARY, SENTRY, WALKER, DRONE };
 
 const olc::Pixel defaultEntityColors[3] = { olc::WHITE, olc::GREEN, olc::RED };
 

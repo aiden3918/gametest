@@ -322,7 +322,7 @@ void Environment::handleEntityProjCollisions(float& fElapsedTime) {
 
 void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos) {
 
-	// cannot move this to entity.cpp because it spawns in projectiles
+	// cannot move this to entity.cpp because it spawns in projectiles (cyclical linker error)
 	for (auto& e : _entities) {
 
 		if (e.getAI() == AIType::STATIONARY) continue;
@@ -357,6 +357,7 @@ void Environment::updateEntityBehaviors(olc::PixelGameEngine* engine, float& fEl
 			break;
 		}
 		case AIType::DRONE: {
+			// simply just fly towards player
 			e.vel = vec2DMult(playerDirVec, e.moveSpeed);
 			// should i set all drones' affectedByGrav to false by default?
 			break;
