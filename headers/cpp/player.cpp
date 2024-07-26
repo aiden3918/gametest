@@ -34,7 +34,6 @@ void Player::update(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
 {
 
     // movement and collisions
-
     vec2D playerContactPoint, playerContactNormal;
     float playerT;
     std::vector<std::pair<GameObject, float>> possibleCollidingTiles;
@@ -105,14 +104,14 @@ void Player::update(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
 void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
     std::vector<std::pair<GameObject, float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt)
 {
-    for (auto& i : env->getTangibleTiles()) {
-        _isColliding = checkDynamicRectVsRectCollision(*this, i, fElapsedTime, pct, pcn, pt);
+    for (auto& t : env->getTangibleTiles()) {
+        _isColliding = checkDynamicRectVsRectCollision(*this, t, fElapsedTime, pct, pcn, pt);
         if (_isColliding) {
 
             //std::cout << "Player contact with test box" << std::endl;
             //std::cout << pcn.x << " " << pcn.y << std::endl;
 
-            possibleColTiles.push_back({ i, pt });
+            possibleColTiles.push_back({ t, pt });
         }
     }
 
@@ -129,6 +128,9 @@ void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
             vel.y += pcn.y * std::abs(vel.y) * (1 - pt);
         }
     }
+
+    possibleColTiles.clear();
+
 }
 
 inline void Player::_updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT) {
@@ -218,11 +220,11 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
 
             // memory leak, perhaps?
             // yeah probably
-            std::vector<Projectile>* envProjsPtr = env->getActualProjectilesVec();
+            _envProjs = env->getActualProjectilesVec();
 
             AABB parryBoxHB = _parryBox->getHitbox();
 
-            for (auto& p : *envProjsPtr) {
+            for (auto& p : _envProjs) {
 
                 AABB projHB = p.getHitbox();
 
@@ -248,8 +250,6 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
                 // soundHandler->addSoundToQueue("playerParry");
                 ma->Play("assets/audio/ultrakillparry.wav");
             }
-
-            delete envProjsPtr;
 
         }
         else {
@@ -333,9 +333,9 @@ inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environ
 inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
     
     // memory leak here, prob
-    std::vector<Projectile>* envProjsPtr = env->getActualProjectilesVec();
+    _envProjs = env->getActualProjectilesVec();
 
-    for (auto& p : *envProjsPtr) {
+    for (auto& p : _envProjs) {
         if (p.isFriendly) continue;
 
         switch (p.getShape()) {
@@ -359,9 +359,6 @@ inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environm
         }
         }
     }
-    
-    envProjsPtr->clear();
-    delete envProjsPtr;
 
 }
 

@@ -185,7 +185,6 @@ void Environment::drawProjectiles(olc::PixelGameEngine* pge, float fElapsedTime,
 				if (projCtN.y != 0) p->vel.y *= -1.0f;
 
 			}
-
 		}
 	}
 
@@ -201,8 +200,8 @@ void Environment::_eraseProj(int& index) {
 }
 
 std::vector<Projectile> Environment::getProjectiles() { return _projectiles; }
-std::vector<Projectile>* Environment::getActualProjectilesVec() {
-	return &_projectiles;
+std::vector<Projectile>& Environment::getActualProjectilesVec() {
+	return _projectiles;
 }
 
 void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse,
@@ -274,6 +273,8 @@ void Environment::handleEntityTileCollisions(float& fElapsedTime) {
 				e.vel.y += e.pcn.y * std::abs(e.vel.y) * (1 - e.pt);
 			}
 		}
+
+		e.possibleColTiles.clear();
 	}
 }
 

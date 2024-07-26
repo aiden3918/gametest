@@ -27,7 +27,7 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 	if (_backSprite.get() == nullptr || _middleSprite.get() == nullptr ||
 		_frontSprite.get() == nullptr) return;
 
-	// calculate relative x positions of all backgrounds
+	// calculate relative x positions of all og background
 	_midX = -playerPos.x / 3.0f;
 	_frontX = -playerPos.x / 1.5f;
 
