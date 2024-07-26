@@ -82,7 +82,8 @@ protected:
 
 	std::map <std::string, ProjShape> _projShapeMap{
 		{"LINE", ProjShape::LINE},
-		{"CIRCLE", ProjShape::CIRCLE}
+		{"CIRCLE", ProjShape::CIRCLE},
+		{"RECT", ProjShape::RECT}
 	};
 
 	vec2D _spawnLocation;
