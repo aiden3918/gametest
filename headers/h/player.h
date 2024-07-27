@@ -137,7 +137,7 @@ private:
     float _weaponCDCtr = 0.0f;
 
     // env data
-    std::vector<Projectile> _envProjs;
+    std::vector<Projectile>* _envProjs;
 
 };
 

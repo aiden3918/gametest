@@ -224,7 +224,7 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
 
             AABB parryBoxHB = _parryBox->getHitbox();
 
-            for (auto& p : _envProjs) {
+            for (auto& p : *_envProjs) {
 
                 AABB projHB = p.getHitbox();
 
@@ -335,7 +335,7 @@ inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environm
     // memory leak here, prob
     _envProjs = env->getActualProjectilesVec();
 
-    for (auto& p : _envProjs) {
+    for (auto& p : *_envProjs) {
         if (p.isFriendly) continue;
 
         switch (p.getShape()) {

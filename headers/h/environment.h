@@ -53,7 +53,7 @@ public:
 	std::vector<Tile> getIntangibleTiles();
 	std::vector<Entity> getEntities();
 	std::vector<Projectile> getProjectiles();
-	std::vector<Projectile>& getActualProjectilesVec();
+	std::vector<Projectile>* getActualProjectilesVec();
 
 	vec2D getSpawnPoint();
 
