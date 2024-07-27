@@ -8,7 +8,7 @@
 #include "util.h"
 
 // probably will add on as we go
-const enum AnimationState { IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4 };
+const enum class AnimationState { IDLE, RUN, JUMP, HURT, SHOOT, DEATH, WALK, RELOAD, PARRY, ACTION1, ACTION2, ACTION3, ACTION4 };
 
 // probably want it on the gpu because its quicker
 // MAKE SURE SPRITESHEET FOLLOWS ANIMATIONSTATE RULES AS FOLLOWS:
@@ -29,6 +29,8 @@ struct AnimationHandler {
 
 	// keeps track of current anim type and frame
 	AnimationState currentAnimState;
+	int currentASInt;
+
 	int currentFrame;
 	int numFrames;
 	int FPS = 60;
@@ -48,13 +50,14 @@ struct AnimationHandler {
 
 		partialSize = partialSpriteSize;
 		currentAnimState = initAnim;
+		currentASInt = static_cast<int>(currentAnimState);
 		currentFrame = initFrame;
 
 		frameDuration = 1.0f / FPS;
 	}
 	~AnimationHandler() {}
 
-	void update(olc::PixelGameEngine* engine, vec2D& screenPos, float& fElapsedTime) {
+	void update(olc::PixelGameEngine* engine, vec2D& pos, vec2D& size, vec2D& displayOffset, float& fElapsedTime, bool isTexture) {
 		// update animation based on FPS
 		timeSinceLastFrame += fElapsedTime;
 		if (timeSinceLastFrame > frameDuration) {
@@ -65,7 +68,7 @@ struct AnimationHandler {
 			timeSinceLastFrame = 0.0f;
 		}
 
-		drawAnimation(engine, screenPos);
+		drawAnimation(engine, pos, size, displayOffset, isTexture);
 	}
 
 	void setFPS(int fps) {
@@ -75,20 +78,37 @@ struct AnimationHandler {
 
 	void setAnimType(AnimationState animType, int frames, int initFrame = 1) {
 		currentAnimState = animType;
+		currentASInt = static_cast<int>(currentAnimState);
 		numFrames = frames - 1; // because frames are indexed from 0 on the handler
 		currentFrame = initFrame - 1;
 	}
 
-	void drawAnimation(olc::PixelGameEngine* engine, vec2D& screenPos) {
+	void drawAnimation(olc::PixelGameEngine* engine, vec2D& pos, vec2D& size, vec2D& displayOffset,
+		bool &isTexture) {
 		// partial sprite x = spritesize.x * frame
 		// partial sprite y = spritesize.y * animType
 		// what is the center parameter for DrawPartialRotatedDecal()?
 
-		//												readjust pos if flip                             
-		engine->DrawPartialRotatedDecal({ screenPos.x + (partialSize.x * flip),
-			screenPos.y }, spriteSheetDecal.get(), 0, { 0.0f, 0.0f },
-			{ partialSize.x * currentFrame, partialSize.y * currentAnimState },
-			{ partialSize.x, partialSize.y }, { 1.0f + (-2.0f * (float)flip), 1.0f });
+		//											readjust pos if flip  
+		if (isTexture) {
+			olc::vf2d vec2DPos = { pos.x, pos.y };
+			olc::vf2d vec2DSize = { size.x, size.y };
+			olc::vf2d vfDispOffset = { displayOffset.x, displayOffset.y };
+			std::array<olc::vf2d, 4U> positions = { 
+				vec2DPos + vfDispOffset, 
+				{vec2DPos.x + vfDispOffset.x + vec2DSize.x, vec2DPos.y + vfDispOffset.y }, 
+				{vec2DPos.x + vfDispOffset.x, vec2DPos.y + vec2DSize.y + vfDispOffset.y }, 
+				vec2DPos + vec2DSize + vfDispOffset };
+			engine->DrawPartialWarpedDecal(spriteSheetDecal.get(), positions,
+				{ partialSize.x * currentFrame, partialSize.y * currentASInt },
+				{ partialSize.x, partialSize.y });
+		}
+		else {
+			engine->DrawPartialRotatedDecal({ displayOffset.x + (partialSize.x * flip),
+				displayOffset.y }, spriteSheetDecal.get(), 0, { 0.0f, 0.0f },
+				{ partialSize.x * currentFrame, partialSize.y * currentASInt },
+				{ partialSize.x, partialSize.y }, { 1.0f + (-2.0f * (float)flip), 1.0f });
+		}
 	}
 
 };

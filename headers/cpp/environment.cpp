@@ -28,15 +28,19 @@ Environment::Environment(const std::string& worldDataFile) {
 
 		if (fileline[0] == 't') {
 
-			vec2D initPos; vec2D size; vec2D initVel; vec2D initAccel;
-			olc::Pixel color;
-			bool affectedByGrav; bool tangible;
+			vec2D initPos; vec2D size; vec2D initVel = { 0, 0 }; vec2D initAccel = { 0, 0 };
+			std::string spriteSheetFilename = "NULL";
+			olc::Pixel color = (0, 0, 0);
+			bool affectedByGrav = false; bool tangible = true;
 
 			stream >> typeJunk >> name >> initPos.x >> initPos.y >> size.x >> size.y >> initVel.x >> initVel.y
-				>> initAccel.x >> initAccel.y >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >>
+				>> initAccel.x >> initAccel.y >> spriteSheetFilename >> rgb[0] >> rgb[1] >> rgb[2] >> std::boolalpha >>
 				affectedByGrav >> std::boolalpha >> tangible;
 
-			addTile(name, initPos, size, initVel, initAccel, olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible);
+			Tile t = Tile(name, initPos, size, initVel, initAccel, spriteSheetFilename, 
+				olc::Pixel(rgb[0], rgb[1], rgb[2]), affectedByGrav, tangible);
+
+			addTile(t);
 
 		}
 
@@ -100,19 +104,21 @@ void Environment::drawTiles(olc::PixelGameEngine* pge, float fElapsedTime,
 
 	for (Tile& t : _tangibleTiles) {
 		if (_notFrozen) t.update(fElapsedTime);
-		t.draw(pge, displayOffset);
+		t.draw(pge, displayOffset, fElapsedTime);
 	}
 	for (Tile& t : _intangibleTiles) {
 		if (_notFrozen) t.update(fElapsedTime);
-		t.draw(pge, displayOffset);
+		t.draw(pge, displayOffset, fElapsedTime);
 	}
 
 	if (pge->GetKey(olc::T).bPressed) std::cout << _tangibleTiles.size() << std::endl;
 }
 
-void Environment::addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel, vec2D initAccel, olc::Pixel color, bool affectedByGrav, bool tangible) {
+void Environment::addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel, vec2D initAccel, 
+	std::string spriteSheetFilename, olc::Pixel color, bool affectedByGrav, bool tangible) {
 
-	Tile newTile = Tile(name, initPos, size, initVel, initAccel, color, affectedByGrav, tangible);
+	Tile newTile = Tile(name, initPos, size, initVel, initAccel, spriteSheetFilename, color, 
+		affectedByGrav, tangible);
 	(newTile.isTangible) ? _tangibleTiles.push_back(newTile) : _intangibleTiles.push_back(newTile);
 
 }

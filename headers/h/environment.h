@@ -32,7 +32,9 @@ public:
 	void drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, vec2D& mouse, vec2D& displayOffset,
 		vec2D& playerPos);
 
-	void addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, olc::Pixel color = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
+	void addTile(std::string name, vec2D& initPos, vec2D& size, vec2D initVel = { 0, 0 }, 
+		vec2D initAccel = { 0, 0 }, std::string spriteSheetFilename = "NULL", olc::Pixel color = olc::BLACK,
+		bool affectedByGrav = false, bool tangible = true);
 	void addTile(Tile& newTile);
 
 	void addProjectile(std::string name, vec2D initPos, float size, ProjShape shape, bool friendly, vec2D initVel = { 0, 0 },

@@ -14,7 +14,7 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
     if (affectedByGrav) accel.y = 1000.0f;
 
     vec2D spriteSheetSize = get_png_image_dimensions(filename);
-    animHandler = new AnimationHandler(filename, IDLE, _partialSpriteSize);
+    animHandler = new AnimationHandler(filename, AnimationState::IDLE, _partialSpriteSize);
     animHandler->setFPS(15);
 
     //_sprite = std::make_unique<olc::Sprite>(filename);
@@ -363,20 +363,24 @@ inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElaps
     vec2D& pct, vec2D& pcn, float& pt)
 {
     if (vel.x == 0) {
-        if (animHandler->currentAnimState != IDLE) animHandler->setAnimType(IDLE, 1);
+        if (animHandler->currentAnimState != AnimationState::IDLE) 
+            animHandler->setAnimType(AnimationState::IDLE, 1);
     }
     else if (vel.x < 0) {
-        if (animHandler->currentAnimState != RUN) animHandler->setAnimType(RUN, 4);
+        if (animHandler->currentAnimState != AnimationState::RUN) 
+            animHandler->setAnimType(AnimationState::RUN, 4);
         animHandler->flip = 1;
     }
     else {
-        if (animHandler->currentAnimState != RUN) animHandler->setAnimType(RUN, 4);
+        if (animHandler->currentAnimState != AnimationState::RUN) 
+            animHandler->setAnimType(AnimationState::RUN, 4);
         animHandler->flip = 0;
     }
     if (!_isColliding && (pt > 1.0f || pt < 0.0f)) {
-        if (animHandler->currentAnimState != JUMP) animHandler->setAnimType(JUMP, 1);
+        if (animHandler->currentAnimState != AnimationState::JUMP) 
+            animHandler->setAnimType(AnimationState::JUMP, 1);
     }
-    animHandler->update(engine, _displayPos, fElapsedTime);
+    animHandler->update(engine, pos, _size, _displayPos, fElapsedTime, false);
 
     vec2D displayPos = vec2DAdd(pos, _displayOffset);
     engine->DrawRectDecal({ displayPos.x, displayPos.y }, { _partialSpriteSize.x, _partialSpriteSize.y }, olc::WHITE);

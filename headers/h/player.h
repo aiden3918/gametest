@@ -11,7 +11,6 @@
 #include "util.h"
 #include "gameObject.h"
 #include "entity.h"
-#include "animation.h"
 #include <algorithm>
 #include <fstream>
 
@@ -129,7 +128,6 @@ private:
 
     // animation data
     vec2D _partialSpriteSize = { 50.0f, 100.0f };
-    AnimationHandler* animHandler;
 
     // weapon data
     GeneralWeapon _currentWeapon = weaponData[static_cast<int>(Weapons::SWORD)];

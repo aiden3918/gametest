@@ -1,7 +1,9 @@
 #include "../h/tile.h"
 
 Tile::Tile() {}
-Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, olc::Pixel initColor, bool affectedByGrav, bool tangible) {
+Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, 
+	std::string spriteSheet, olc::Pixel initColor, bool affectedByGrav, bool tangible) 
+{
 	_name = name;
 
 	pos = initPos;
@@ -9,6 +11,9 @@ Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D ini
 	accel = initAccel;
 	color = initColor;
 	isTangible = tangible;
+	spriteSheetFilename = spriteSheet;
+	animHandler = new AnimationHandler(spriteSheet, AnimationState::IDLE, size);
+	animHandler->setFPS(1);
 
 	_size = size;
 	_affectedByGrav = affectedByGrav;
@@ -28,7 +33,14 @@ void Tile::update(float& fElapsedTime) {
 	updateHitbox();
 }
 
-void Tile::draw(olc::PixelGameEngine* engine, vec2D displayOffset) {
-	engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
-		{ _size.x, _size.y }, color);
+void Tile::draw(olc::PixelGameEngine* engine, vec2D displayOffset, float& fElapsedTime) {
+	if (spriteSheetFilename == "NULL") {
+		std::cout << "tiles are null" << std::endl;
+		engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
+			{ _size.x, _size.y }, color);
+	} else {
+		std::cout << "spritesheet is not NULL" << std::endl;
+		animHandler->update(engine, pos, _size, displayOffset, fElapsedTime, true);
+	}
+
 }

@@ -1,7 +1,9 @@
 #include "../h/gameObject.h"
 
 GameObject::GameObject() {}
-GameObject::GameObject(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel, bool affectedByGrav, bool tangible) {
+GameObject::GameObject(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D initAccel,
+	bool affectedByGrav, bool tangible) 
+{
 	_name = name;
 
 	pos = initPos;

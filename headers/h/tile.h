@@ -12,12 +12,14 @@
 class Tile : public GameObject {
 public:
 	Tile();
+
+	// when creating a sprite for the tile, make sure the sprite is the same size as the specified size
 	Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 },
-		olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
+		std::string spriteSheet = "NULL", olc::Pixel initColor = olc::BLACK, bool affectedByGrav = false, bool tangible = true);
 	~Tile();
 
 	void update(float& fElapsedTime);
-	void draw(olc::PixelGameEngine* engine, vec2D displayOffset);
+	void draw(olc::PixelGameEngine* engine, vec2D displayOffset, float& fElapsedTime);
 
 public:
 	olc::Pixel color;

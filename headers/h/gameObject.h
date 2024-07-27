@@ -5,6 +5,7 @@
 
 #include "util.h"
 #include "collision.h"
+#include "animation.h"
 #include <iostream>
 #include "../extern-lib/olcPixelGameEngine.h"
 
@@ -12,7 +13,8 @@ class GameObject {
 public:
 	// need this to work with pge
 	GameObject();
-	GameObject(std::string name, vec2D initPos, vec2D size, vec2D initVel = { 0, 0 }, vec2D initAccel = { 0, 0 }, bool affectedByGrav = false, bool tangible = true);
+	GameObject(std::string name, vec2D initPos, vec2D size, vec2D initVel = { 0, 0 }, 
+		vec2D initAccel = { 0, 0 }, bool affectedByGrav = false, bool tangible = true);
 	~GameObject();
 
 	void updateHitbox();
@@ -32,9 +34,8 @@ public:
 
 	olc::Pixel color;
 
-	//void setDirColState(collisionDirectionState collDirState) { _collDirState = collDirState; }
-	//void resetDirColState() { _collDirState = { false, false, false, false, false }; }
-	//collisionDirectionState getCollisionState() { return _collDirState; }
+	std::string spriteSheetFilename;
+	AnimationHandler* animHandler;
 
 protected:
 	std::string _name;
