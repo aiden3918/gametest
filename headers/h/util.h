@@ -43,11 +43,6 @@ inline float vec2DMag(vec2D& vec) { return sqrt((vec.x * vec.x) + vec.y * vec.y)
 inline vec2D vec2DNormalise(vec2D& vec) { return vec2DDiv(vec, vec2DMag(vec)); }
 inline float vec2DDotProduct(vec2D& vec1, vec2D& vec2) { return (vec1.x * vec2.x) + (vec1.y + vec2.y); }
 inline vec2D vec2DAbs(vec2D& vec) { return { std::abs(vec.x), std::abs(vec.y) }; }
-//bool operator == (vec2D &lhs, vec2D &rhs) {
-//	if (lhs.x != rhs.x) return false;
-//	if (lhs.y != rhs.y) return false;
-//	return true;
-//}
 
 // d = (v_i)(t) + 0.5(a)(t^2)
 inline float getDisp1(float initVel, float accel, float time) { return (initVel * time) + (0.5 * accel * time * time); }

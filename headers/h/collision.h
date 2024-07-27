@@ -58,7 +58,6 @@ inline bool checkCircleRectCollision(vec2D &circlePos, float &radius, AABB &rect
 // 1. position of origin of ray
 // 2. direction of ray as vector (not normalised, i think)
 // 3. AABB coordinates of target rect
-// i NEED to learn how to properly use vectors / get familiar with them
 inline bool checkRayCollision(vec2D& rayOrigin, vec2D& rayDir, AABB& targetRect,
     vec2D& contactPoint, vec2D& contactNormal, float& tHitNear) {
     // get near and far collision vectors

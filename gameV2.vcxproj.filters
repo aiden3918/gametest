@@ -102,9 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="data\weapons.json">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>

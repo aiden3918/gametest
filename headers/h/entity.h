@@ -30,8 +30,6 @@ public:
     EntityType getType();
     AIType getAI();
 
-    // void updateEntityBehavior(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos);
-
     float hp = 1.0f;
     float dmg = 0.0f;
 

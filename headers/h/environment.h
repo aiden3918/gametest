@@ -23,8 +23,6 @@ public:
 	Environment(const std::string& worldDataFile);
 	~Environment();
 
-	// bool gameObjCollidedWithEnv(GameObject& gameObject, GameObject& collidedTile);
-
 	void update(olc::PixelGameEngine* pge, olc::MiniAudio* ma, float& fElapsedTime, 
 		vec2D& displayOffset, vec2D& mouse, vec2D& playerPos, float& globalFreezeCtr);
 
@@ -88,7 +86,6 @@ protected:
 	vec2D _spawnLocation;
 	bool _notFrozen = true; // updated every frame
 	std::unique_ptr<olc::Pixel> _screenFlash = std::make_unique<olc::Pixel>(255, 255, 255, 100);
-	// olc::Pixel* _screenFlash = new olc::Pixel(255, 255, 255, 200);
 };
 
 #endif

@@ -7,11 +7,10 @@
 #include "../extern-lib/olcPixelGameEngine.h"
 
 // will include parallax effect
-// for best results, make the background the same resolution as the game (1280 * 720) px
+// for ideal results, make the background the same resolution as the game (1280 * 720) px
 class Background {
 public:
 	Background();
-	// Background(bgSpriteRefVec spriteRefs);
 	~Background();
 
 	void setBackground(std::string id, const std::string backRef, const std::string midRef, 

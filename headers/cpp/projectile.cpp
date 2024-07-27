@@ -47,7 +47,6 @@ Projectile::~Projectile() {}
 
 void Projectile::update(float& fElapsedTime) {
 
-	// vec2D oldPos = pos;
 	vel.x += accel.x * fElapsedTime;
 	vel.y += accel.y * fElapsedTime;
 
@@ -65,7 +64,7 @@ void Projectile::draw(olc::PixelGameEngine* engine, vec2D& displayOffset) {
 	switch (_shape) {
 	case ProjShape::CIRCLE: engine->FillCircle({ (int)pos.x, (int)pos.y }, _radius, color); break;
 	case ProjShape::LINE: {
-		// thicker bullet
+		// thicker bullet (kinda jank rn)
 		for (int i = -1; i < 2; i++) {
 			engine->DrawLineDecal({
 				(pos.x - vel.x * 0.01f) + displayOffset.x + i,
@@ -107,21 +106,3 @@ void Projectile::updateHitbox() {
 
 ProjShape Projectile::getShape() { return _shape; }
 bool Projectile::isParriable() { return _parriable; }
-
-//bool Projectile::checkCollision(Environment* env, Tile& possibleTileCollided) {
-//	for (auto& i : env->getTangibleTiles()) {
-//		if (_shape == CIRCLE) {
-//			// might have to create a dynamic circle rect collision lol
-//			// same idea with dynamic rect vs rect collision, make a ray for circle
-//
-//			// actually, probably just have to reverse velocities on collision for bouncing
-//			// dont eve have to do dynamic
-//			if (checkCircleRectCollision())
-//		}
-//		else {
-//			if (checkRayCollision())
-//		}
-//	}
-//
-//	return false;
-//}

@@ -55,6 +55,7 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 		limiter++;
 	}
 	limiter = 0;
+
 	while (currentMidX < 0.0f && limiter < 10) {
 		currentMidX += _screenSize.x;
 		engine->DrawDecal({ currentMidX, 0 }, _middleDecal.get());
@@ -68,6 +69,7 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 		limiter++;
 	}
 	limiter = 0;
+
 	while (currentFrontX < 0.0f && limiter < 10) {
 		currentFrontX += _screenSize.x;
 		engine->DrawDecal({ currentFrontX, 0 }, _frontDecal.get());

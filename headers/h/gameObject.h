@@ -97,46 +97,4 @@ inline bool checkDynamicCircleVsRectCollision(GameObject &circle, float &radius,
 	return false;
 }
 
-// deprecated, i think
-// DEBUG: logic here incorrect
-// there is a better thing in place
-//collisionDirectionState getObjCollisionDirection(GameObject& mainObject, GameObject& sideObject) {
-//
-//	// all false by default
-//	collisionDirectionState collDirOutput;
-//
-//	AABB a = mainObject.getHitbox();
-//	a.min.x++; a.max.x--; a.min.y++; a.max.y--;
-//	AABB b = sideObject.getHitbox();
-//	b.min.x++; b.max.x--; b.min.y++; b.max.y--;
-//
-//	// just check if actually collided first
-//	if (!checkAABBCollision(a, b)) return collDirOutput;
-//	else collDirOutput.hasCollided = true;
-//
-//	// DEBUG: dont think this logic works
-//	//collDirOutput.left = (float)a.min.x < (float)b.max.x;
-//	//collDirOutput.right = (float)a.max.x > (float)b.min.x;
-//	//collDirOutput.up = (float)a.min.y < (float)b.max.y;
-//	//collDirOutput.down = (float)a.max.y > (float)b.min.y;
-//
-//	// DEBUG: doesnt work rn but something along these lines
-//	// first comparison for both is whats causing issues
-//	// pretty sure this is heuristic, but whateva
-//	// make sure x axis is actually colliding first
-//	if (!(a.max.x < b.min.x || a.min.x > b.max.x)) {
-//		std::cout << mainObject.getCenter().x << ", " << sideObject.getCenter().x << std::endl;
-//		(mainObject.getCenter().x < sideObject.getCenter().x) ? collDirOutput.right = true : collDirOutput.left = true;
-//	}
-//
-//	// make sure y axis is actually colliding first
-//	if (!(a.max.y < b.min.y || a.min.y > b.max.y)) {
-//		std::cout << mainObject.getCenter().y << ", " << sideObject.getCenter().y << std::endl;
-//		(mainObject.getCenter().y < sideObject.getCenter().y) ? collDirOutput.down = true : collDirOutput.up = true;
-//	}
-//
-//	return collDirOutput;
-//
-//}
-
 #endif // !gameObject_h

@@ -14,9 +14,6 @@
 #include "animation.h"
 #include <algorithm>
 #include <fstream>
-//#include "../extern-lib/rapidjson/document.h"
-//#include "../extern-lib/rapidjson/writer.h"
-//#include "../extern-lib/rapidjson/stringbuffer.h"
 
 const enum class Weapons { SWORD, GUN };
 

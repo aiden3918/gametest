@@ -41,7 +41,7 @@ Environment::Environment(const std::string& worldDataFile) {
 		}
 
 		if (fileline[0] == 'e') {
-			//e posx posy velx vely accelx accely sizex sizey velx vely entityType aiType dmg affectedByGrav tangible 
+		
 			vec2D initPos; vec2D initVel; vec2D initAccel; vec2D size;
 			int entityTypeNum; int aiTypeNum; float damage;
 			bool affectedByGrav; bool tangible;

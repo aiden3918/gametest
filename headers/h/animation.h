@@ -37,12 +37,6 @@ struct AnimationHandler {
 
 	bool flip = 0;
 
-	// animations and how many frames they have
-	// std::vector<std::pair<AnimationState, int>> animationsData;
-
-	// data of the current animation (type and number of frames);
-	// std::pair<AnimationState, int> currentAnimData;
-
 	AnimationHandler() {}
 	AnimationHandler(std::string& filename, AnimationState initAnim, 
 		vec2D& partialSpriteSize, int initFrame = 0)
@@ -53,11 +47,8 @@ struct AnimationHandler {
 		std::cout << filename << " loaded: " << spriteSheetSize.x << " x " << spriteSheetSize.y << " px" << std::endl;
 
 		partialSize = partialSpriteSize;
-		// currentAnimData = initAnim;
 		currentAnimState = initAnim;
 		currentFrame = initFrame;
-
-		// spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet);
 
 		frameDuration = 1.0f / FPS;
 	}
