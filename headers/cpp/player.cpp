@@ -101,6 +101,10 @@ void Player::update(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
 
 }
 
+void Player::linkEnvProjs(Environment* env) {
+    _envProjs = env->getActualProjectilesVec();
+}
+
 void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
     std::vector<std::pair<GameObject, float>>& possibleColTiles, vec2D& pct, vec2D& pcn, float& pt)
 {
@@ -218,10 +222,6 @@ inline void Player::_updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* m
             _parryBox->fillBasicRect(engine, _displayOffset);
             _parryCtr += fElapsedTime;
 
-            // memory leak, perhaps?
-            // yeah probably
-            _envProjs = env->getActualProjectilesVec();
-
             AABB parryBoxHB = _parryBox->getHitbox();
 
             for (auto& p : *_envProjs) {
@@ -331,9 +331,6 @@ inline void Player::_updateEnemyCollisions(olc::PixelGameEngine* engine, Environ
 }
 
 inline void Player::_updateProjCollisions(olc::PixelGameEngine* engine, Environment* env, float& fElapsedTime) {
-    
-    // memory leak here, prob
-    _envProjs = env->getActualProjectilesVec();
 
     for (auto& p : *_envProjs) {
         if (p.isFriendly) continue;

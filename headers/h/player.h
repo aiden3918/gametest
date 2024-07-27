@@ -64,6 +64,8 @@ public:
 
     vec2D getDisplayOffset();
 
+    void linkEnvProjs(Environment* env);
+
     float hp = 100.0f;
     float movespeed = 200.0f;
     float jumpspeed = 500.0f;

@@ -30,8 +30,10 @@ public:
         const std::string worldDataRef = "data/worlddata.txt";
         _worldEnvironment = new Environment(worldDataRef);
 
+        // player must be created after the env to pass it as a param
         const std::string playerSpriteRef = "assets/sprites/player.png";
         _mainPlayer = new Player(_worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
+        _mainPlayer->linkEnvProjs(_worldEnvironment);
 
         const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png",
             "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
