@@ -7,6 +7,9 @@ uhhhh if you're here, then you probably know what you are doing. if something bo
 
 man i really need to learn how to properly use github
 
+built on visual studio, but base code (headers, data, assets, main code) can probably be adapted to 
+other IDEs
+
 ## Features (that were built from scratch)
 - Controllable player
 - basic weapon implementation
@@ -14,7 +17,7 @@ man i really need to learn how to properly use github
 - background (soon to be parallax)
 - various entity types and basic ai implementation
 - parry (freezing/"hitstop" effect)
-- sounds (wip)
+- sounds
 - background system with parallax effect
 
 ## License (OLC-3)

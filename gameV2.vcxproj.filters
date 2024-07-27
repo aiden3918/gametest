@@ -74,9 +74,6 @@
     <ClInclude Include="headers\h\background.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\extern-lib\olcSoundWaveEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\sprites\sprite-temp.png">
@@ -96,7 +93,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="todo.txt" />
     <Text Include="data\worlddata.txt">
       <Filter>Resource Files</Filter>
     </Text>
