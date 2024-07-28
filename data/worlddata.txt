@@ -33,7 +33,7 @@
 -----------------------------------------------------------------------------------------------------------
 
 / Entities
-e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY NULL 0 true true
+e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY assets/sprites/player.png 0 true true
 e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY NULL 0 true true
 e enemy1 1200 200 0 0 0 0 50 100 ENEMY SENTRY NULL 1.0 true true 
 e enemy2 -200 200 100 0 0 0 50 100 ENEMY WALKER NULL 1.0 true true

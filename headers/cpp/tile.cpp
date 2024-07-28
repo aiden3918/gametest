@@ -39,11 +39,9 @@ void Tile::update(float& fElapsedTime) {
 
 void Tile::draw(olc::PixelGameEngine* engine, vec2D displayOffset, float& fElapsedTime) {
 	if (spriteSheetFilename == "NULL") {
-		std::cout << "tiles are null" << std::endl;
 		engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
 			{ _size.x, _size.y }, color);
 	} else {
-		std::cout << "spritesheet is not NULL" << std::endl;
 		animHandler->update(engine, pos, _size, displayOffset, fElapsedTime, true);
 	}
 

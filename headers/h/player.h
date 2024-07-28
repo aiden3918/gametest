@@ -92,8 +92,8 @@ private:
     // "scroll effect" data
     vec2D _displayPos;
     vec2D _displayCenter;
-
     vec2D _displayOffset;
+    vec2D _zeroVec = { 0, 0 };
 
     // sprite data
     std::unique_ptr<olc::Sprite> _sprite;

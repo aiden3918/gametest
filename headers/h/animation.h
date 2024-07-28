@@ -41,7 +41,7 @@ struct AnimationHandler {
 
 	AnimationHandler() {}
 	AnimationHandler(std::string& filename, AnimationState initAnim, 
-		vec2D& partialSpriteSize, int initFrame = 0)
+		vec2D& partialSpriteSize, int initFrame = 1)
 	{
 		spriteSheet = std::make_unique<olc::Sprite>(filename);
 		spriteSheetDecal = std::make_unique<olc::Decal>(spriteSheet.get());
@@ -51,7 +51,7 @@ struct AnimationHandler {
 		partialSize = partialSpriteSize;
 		currentAnimState = initAnim;
 		currentASInt = static_cast<int>(currentAnimState);
-		currentFrame = initFrame;
+		currentFrame = initFrame - 1;
 
 		frameDuration = 1.0f / FPS;
 	}
@@ -109,8 +109,8 @@ struct AnimationHandler {
 				{ partialSize.x, partialSize.y });
 		}
 		else {
-			engine->DrawPartialRotatedDecal({ displayOffset.x + (partialSize.x * flip),
-				displayOffset.y }, spriteSheetDecal.get(), 0, { 0.0f, 0.0f },
+			engine->DrawPartialRotatedDecal({ pos.x + displayOffset.x + (partialSize.x * flip),
+				pos.y + displayOffset.y }, spriteSheetDecal.get(), 0, { 0.0f, 0.0f },
 				{ partialSize.x * currentFrame, partialSize.y * currentASInt },
 				{ partialSize.x, partialSize.y }, { 1.0f + (-2.0f * (float)flip), 1.0f });
 		}

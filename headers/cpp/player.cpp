@@ -62,7 +62,6 @@ void Player::update(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
         updateHitbox();
 
         // calculate display positions for scrolling effect
-        // _displayPos = { (engine->ScreenWidth() - _size.x) / 2.0f, 1.5f * (engine->ScreenHeight() - _size.y) / 2.0f };
         _displayCenter = { _displayPos.x + (_size.x / 2.0f), _displayPos.y + (_size.y / 2.0f) };
         _displayOffset = vec2DSub(_displayPos, pos);
 
@@ -380,7 +379,8 @@ inline void Player::_handleAnimation(olc::PixelGameEngine* engine, float& fElaps
         if (animHandler->currentAnimState != AnimationState::JUMP) 
             animHandler->setAnimType(AnimationState::JUMP, 1);
     }
-    animHandler->update(engine, pos, _size, _displayPos, fElapsedTime, false);
+    
+    animHandler->update(engine, _zeroVec, _size, _displayPos, fElapsedTime, false);
 
     vec2D displayPos = vec2DAdd(pos, _displayOffset);
     engine->DrawRectDecal({ displayPos.x, displayPos.y }, { _partialSpriteSize.x, _partialSpriteSize.y }, olc::WHITE);

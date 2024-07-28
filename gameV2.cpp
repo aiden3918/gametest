@@ -38,9 +38,16 @@ public:
 
     bool OnUserUpdate(float fElapsedTime) override
     {
+        vec2D mouseInfo = { GetMouseX(), GetMouseY() };
+
         switch (_gameState) {
         case GameState::MENU: {
-            Clear(olc::GREY);
+            Clear(olc::BLACK);
+
+            DrawStringDecal({ screenSize.x * 0.2f, screenSize.y * 0.4f}, "TEST MENU",
+                olc::WHITE, { 10.0f, 10.0f });
+            DrawStringDecal({ screenSize.x * 0.2f, screenSize.y * 0.6f },
+                "Press [Left Click] to Continue", olc::WHITE, { 3.0f, 3.0f });
 
             if (GetMouse(0).bPressed) {
                 const std::string worldDataRef = "data/worlddata.txt";
@@ -61,7 +68,6 @@ public:
             break;
         }
         case GameState::TESTLEVEL: {
-            vec2D mouseInfo = { GetMouseX(), GetMouseY() };
             vec2D playerPos = _mainPlayer->pos;
             vec2D playerCenter = _mainPlayer->getCenter();
 
@@ -79,6 +85,10 @@ public:
             break;
         }
         }
+
+        std::string mouseInfoStr = "mouse: (" + std::to_string(mouseInfo.x) + ", " +
+            std::to_string(mouseInfo.y) + ")";
+        DrawStringDecal({ 5.0f, 5.0f }, mouseInfoStr);
 
         return true;
     }

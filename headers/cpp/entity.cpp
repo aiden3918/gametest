@@ -60,7 +60,6 @@ void Entity::draw(olc::PixelGameEngine* engine, vec2D& displayOffset, float& fEl
             { _size.x, _size.y }, color);
     }
     else {
-        std::cout << "heh" << std::endl;
         animHandler->update(engine, pos, _size, displayOffset, fElapsedTime, false);
     }
     engine->DrawStringDecal({ pos.x + displayOffset.x, pos.y - 15 + displayOffset.y },
