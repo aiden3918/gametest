@@ -1,8 +1,10 @@
 #include "../h/entity.h"
 
 Entity::Entity() {}
-Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
-    AIType aiType, float damage, bool affectedByGrav, bool tangible) {
+Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, 
+    EntityType entityType, AIType aiType, const std::string spriteSheet, float damage, 
+    bool affectedByGrav, bool tangible)
+{
 
     _name = name;
 
@@ -31,6 +33,10 @@ Entity::Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, 
     }
 
     dmg = damage;
+    spriteSheetFilename = spriteSheet;
+    animHandler = new AnimationHandler(spriteSheetFilename, AnimationState::IDLE, _size);
+    animHandler->setFPS(15);
+    animHandler->setAnimType(AnimationState::IDLE, 1);
 }
 Entity::~Entity() {}
 
@@ -44,11 +50,19 @@ void Entity::update(float& fElapsedTime) {
     pos.y += vel.y * fElapsedTime;
 
     updateHitbox();
+
+    (vel.x > 0) ? animHandler->flip = 0 : animHandler->flip = 1;
 }
 
-void Entity::draw(olc::PixelGameEngine* engine, vec2D& displayOffset) {
-    engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
-        { _size.x, _size.y }, color);
+void Entity::draw(olc::PixelGameEngine* engine, vec2D& displayOffset, float& fElapsedTime) {
+    if (spriteSheetFilename == "NULL") {
+        engine->FillRectDecal({ (pos.x + displayOffset.x), (pos.y + displayOffset.y) },
+            { _size.x, _size.y }, color);
+    }
+    else {
+        std::cout << "heh" << std::endl;
+        animHandler->update(engine, pos, _size, displayOffset, fElapsedTime, false);
+    }
     engine->DrawStringDecal({ pos.x + displayOffset.x, pos.y - 15 + displayOffset.y },
         "HP: " + std::to_string(hp), color);
 }

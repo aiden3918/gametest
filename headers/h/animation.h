@@ -95,10 +95,15 @@ struct AnimationHandler {
 			olc::vf2d vec2DSize = { size.x, size.y };
 			olc::vf2d vfDispOffset = { displayOffset.x, displayOffset.y };
 			std::array<olc::vf2d, 4U> positions = { 
+				// for conventional quad, start at top left, rotate ccw
 				vec2DPos + vfDispOffset, 
-				{vec2DPos.x + vfDispOffset.x + vec2DSize.x, vec2DPos.y + vfDispOffset.y }, 
-				{vec2DPos.x + vfDispOffset.x, vec2DPos.y + vec2DSize.y + vfDispOffset.y }, 
-				vec2DPos + vec2DSize + vfDispOffset };
+				{vec2DPos.x + vfDispOffset.x, vec2DPos.y + vec2DSize.y + vfDispOffset.y },
+				vec2DPos + vec2DSize + vfDispOffset,
+				{vec2DPos.x + vfDispOffset.x + vec2DSize.x, vec2DPos.y + vfDispOffset.y } 
+			};
+			// if source size is greater than the sprite's size itself, then it fills in the rest
+			// (bottom and right) with the pixel color of the rightmost column and lowest row
+			// very cool
 			engine->DrawPartialWarpedDecal(spriteSheetDecal.get(), positions,
 				{ partialSize.x * currentFrame, partialSize.y * currentASInt },
 				{ partialSize.x, partialSize.y });

@@ -20,12 +20,13 @@ class Entity : public GameObject {
 public:
     // need this to work with pge
     Entity();
-    Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType, AIType aiType,
+    Entity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size,
+        EntityType entityType, AIType aiType, const std::string spriteSheet,
         float damage = 1.0f, bool affectedByGrav = true, bool tangible = true);
     ~Entity();
 
     void update(float& fElapsedTime);
-    void draw(olc::PixelGameEngine* engine, vec2D& displayOffset);
+    void draw(olc::PixelGameEngine* engine, vec2D& displayOffset, float& fElapsedTime);
 
     EntityType getType();
     AIType getAI();

@@ -159,6 +159,7 @@
     <Image Include="assets\backgrounds\midbgtest.png" />
     <Image Include="assets\sprites\player.png" />
     <Image Include="assets\sprites\sprite-temp.png" />
+    <Image Include="assets\textures\dirttile.png" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\sounds.txt" />

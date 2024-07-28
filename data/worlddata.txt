@@ -1,7 +1,7 @@
 / Syntax:
 
 / Entity:
-/ e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
+/ e name posx posy velx vely accelx accely sizex sizey entityType aiType spritesheet[default="NULL"] dmg affectedByGrav tangible 
 
 / Entity AI Types:
 / const enum EntityType { DUMMY, FRIENDLY, ENEMY };
@@ -33,19 +33,19 @@
 -----------------------------------------------------------------------------------------------------------
 
 / Entities
-e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY 0 true true
-e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY 0 true true
-e enemy1 1200 200 0 0 0 0 50 100 ENEMY SENTRY 1.0 true true 
-e enemy2 -200 200 100 0 0 0 50 100 ENEMY WALKER 1.0 true true
-e enemy3 -500 200 100 0 0 0 50 50 ENEMY DRONE 1.0 false true
+e dummy1 800 200 0 0 0 0 50 100 DUMMY STATIONARY NULL 0 true true
+e friendly1 1000 200 0 0 0 0 50 100 FRIENDLY STATIONARY NULL 0 true true
+e enemy1 1200 200 0 0 0 0 50 100 ENEMY SENTRY NULL 1.0 true true 
+e enemy2 -200 200 100 0 0 0 50 100 ENEMY WALKER NULL 1.0 true true
+e enemy3 -500 200 100 0 0 0 50 50 ENEMY DRONE NULL 1.0 false true
 / e name posx posy velx vely accelx accely sizex sizey entityType aiType dmg affectedByGrav tangible 
 
 / Tiles
-t floor -2000 600 5000 120 0 0 0 0 NULL 0 0 0 false true
-t ceiling 0 0 1280 50 0 0 0 0 NULL 0 0 0 false true
-t wall1 100 200 50 200 0 0 0 0 NULL 0 0 0 false true
-t wall2 700 400 200 50 0 0 0 0 NULL 0 0 0 false true
-/ t name posx posy sizex sizey velx vely accelx accely rCol gCol bCol affectedByGrav tangible
+t floor -2000 600 5000 120 0 0 0 0 assets/textures/dirttile.png 0 0 0 false true
+t ceiling 0 0 1280 50 0 0 0 0 assets/textures/dirttile.png 0 0 0 false true
+t wall1 100 200 50 200 0 0 0 0 assets/textures/dirttile.png 0 0 0 false true
+t wall2 700 400 200 50 0 0 0 0 assets/textures/dirttile.png 0 0 0 false true
+/ t name posx posy sizex sizey velx vely accelx accely spritesheet[default="NULL"] rCol gCol bCol affectedByGrav tangible
 
 / Projectiles
 

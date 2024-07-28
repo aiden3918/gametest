@@ -14,11 +14,11 @@
 struct vec2D {
 	float x = 0.0f;
 	float y = 0.0f;
-	bool operator == (vec2D& rhs) {
-		if (this->x != rhs.x) return false;
-		if (this->y != rhs.y) return false;
-		return true;
-	}
+	bool operator == (vec2D& rhs) { return (this->x == rhs.x) && (this->x == rhs.y); }
+	vec2D operator + (vec2D& rhs) { return { this->x + rhs.x, this->y + rhs.y };  }
+	vec2D operator - (vec2D& rhs) { return { this->x - rhs.x, this->y - rhs.y }; }
+	vec2D operator * (float& factor) { return { factor * this->x, factor * this->y }; }
+	vec2D operator / (float& factor) { return { factor / this->x, factor / this->y }; }
 };
 
 struct AABB {

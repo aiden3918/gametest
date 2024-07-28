@@ -44,7 +44,7 @@ public:
 
 	void addEntity(Entity& entity);
 	void addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
-		AIType aiType, float damage = 1.0f, bool affectedByGrav = true, bool tangible = true);
+		AIType aiType, const std::string spriteSheet = "NULL", float damage = 1.0f, bool affectedByGrav = true, bool tangible = true);
 	void handleEntityTileCollisions(float& fElapsedTime);
 	void handleEntityProjCollisions(float& fElapsedTime);
 	void updateEntityBehaviors(olc::PixelGameEngine* engine, float& fElapsedTime, vec2D& playerPos);

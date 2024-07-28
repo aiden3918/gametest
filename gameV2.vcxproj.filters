@@ -91,6 +91,9 @@
     <Image Include="assets\backgrounds\midbgtest.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\textures\dirttile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\worlddata.txt">

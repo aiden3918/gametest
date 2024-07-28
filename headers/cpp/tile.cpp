@@ -12,8 +12,12 @@ Tile::Tile(std::string name, vec2D initPos, vec2D size, vec2D initVel, vec2D ini
 	color = initColor;
 	isTangible = tangible;
 	spriteSheetFilename = spriteSheet;
+
+	// vec2D spriteSheetSize = get_png_image_dimensions(spriteSheet);
+
 	animHandler = new AnimationHandler(spriteSheet, AnimationState::IDLE, size);
 	animHandler->setFPS(1);
+	animHandler->setAnimType(AnimationState::IDLE, 1);
 
 	_size = size;
 	_affectedByGrav = affectedByGrav;

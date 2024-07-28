@@ -47,18 +47,20 @@ Environment::Environment(const std::string& worldDataFile) {
 		if (fileline[0] == 'e') {
 		
 			vec2D initPos; vec2D initVel; vec2D initAccel; vec2D size;
-			int entityTypeNum; int aiTypeNum; float damage;
-			bool affectedByGrav; bool tangible;
+			int entityTypeNum; int aiTypeNum; 
+			std::string spriteSheet = "NULL"; 
+			float damage = 1.0f;
+			bool affectedByGrav = true; bool tangible = true;
 
 			// use std::map to create a conversion table for both
 			std::string entityTypeStr; std::string aiTypeStr;
 
 			stream >> typeJunk >> name >> initPos.x >> initPos.y >> initVel.x >> initVel.y >> initAccel.x >>
-				initAccel.y >> size.x >> size.y >> entityTypeStr >> aiTypeStr >> damage >> std::boolalpha >>
-				affectedByGrav >> std::boolalpha >> tangible;
+				initAccel.y >> size.x >> size.y >> entityTypeStr >> aiTypeStr >> spriteSheet >> 
+				damage >> std::boolalpha >> affectedByGrav >> std::boolalpha >> tangible;
 
-			Entity e = Entity(name, initPos, initVel, initAccel, size, _entityTypeMap[entityTypeStr], _aiTypeMap[aiTypeStr],
-				damage, affectedByGrav, tangible);
+			Entity e = Entity(name, initPos, initVel, initAccel, size, _entityTypeMap[entityTypeStr],
+				_aiTypeMap[aiTypeStr], spriteSheet, damage, affectedByGrav, tangible);
 			e.moveSpeedVec = vec2DAbs(e.vel);
 			e.moveSpeed = vec2DMag(e.moveSpeedVec);
 			e.jumpSpeed = 400.0f; // set something later, maybe
@@ -231,17 +233,19 @@ void Environment::drawEntities(olc::PixelGameEngine* pge, float fElapsedTime, ve
 		updateEntityBehaviors(pge, fElapsedTime, playerPos);
 	}
 
-	for (Entity& e : _entities) e.draw(pge, displayOffset);
+	for (Entity& e : _entities) e.draw(pge, displayOffset, fElapsedTime);
 }
 
 void Environment::addEntity(Entity& entity) {
 	_entities.push_back(entity);
 }
 
-void Environment::addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, vec2D size, EntityType entityType,
-	AIType aiType, float damage, bool affectedByGrav, bool tangible) {
-	Entity entity = Entity(name, initPos, initVel, initAccel, size, entityType, aiType, damage, affectedByGrav,
-		tangible);
+void Environment::addEntity(std::string name, vec2D initPos, vec2D initVel, vec2D initAccel, 
+	vec2D size, EntityType entityType, AIType aiType, const std::string spriteSheet, float damage, 
+	bool affectedByGrav, bool tangible) 
+{
+	Entity entity = Entity(name, initPos, initVel, initAccel, size, entityType, aiType, spriteSheet, 
+		damage, affectedByGrav, tangible);
 	_entities.push_back(entity);
 }
 
