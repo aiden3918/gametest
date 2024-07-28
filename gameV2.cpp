@@ -100,7 +100,7 @@ private:
     Background* _bgHandler = nullptr;
     olc::MiniAudio* _audio;
 
-    GameState _gameState = GameState::MENU;
+    GameState _gameState;
 };
 
 int main(int* argc, char** argv)
