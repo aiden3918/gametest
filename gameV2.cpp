@@ -14,6 +14,8 @@
 #include "headers/h/background.h"
 #include <random>
 
+const enum class GameState {MENU, TESTLEVEL, SETTINGS};
+
 class Game : public olc::PixelGameEngine {
 public:
     Game()
@@ -27,42 +29,56 @@ public:
     {
         srand(time(NULL));
 
-        const std::string worldDataRef = "data/worlddata.txt";
-        _worldEnvironment = new Environment(worldDataRef);
-
-        // player must be created after the env to pass it as a param
-        const std::string playerSpriteRef = "assets/sprites/player.png";
-        _mainPlayer = new Player(_worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
-        _mainPlayer->linkEnvProjs(_worldEnvironment);
-
-        const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png",
-            "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
-        _bgHandler = new Background();
-        _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2], screenSize);
-
         _audio = new olc::MiniAudio;
+        _gameState = GameState::MENU;
+
 
         return true;
     }
 
     bool OnUserUpdate(float fElapsedTime) override
     {
+        switch (_gameState) {
+        case GameState::MENU: {
+            Clear(olc::GREY);
 
-        vec2D mouseInfo = { GetMouseX(), GetMouseY() };
-        vec2D playerPos = _mainPlayer->pos;
-        vec2D playerCenter = _mainPlayer->getCenter();
+            if (GetMouse(0).bPressed) {
+                const std::string worldDataRef = "data/worlddata.txt";
+                _worldEnvironment = new Environment(worldDataRef);
 
-        vec2D displayOffset = _mainPlayer->getDisplayOffset();
+                // player must be created after the env to pass it as a param
+                const std::string playerSpriteRef = "assets/sprites/player.png";
+                _mainPlayer = new Player(_worldEnvironment->getSpawnPoint(), { 0, 0 }, { 0, 0 }, playerSpriteRef, screenSize, true, true);
+                _mainPlayer->linkEnvProjs(_worldEnvironment);
 
-        float globalFreezeCtr = _mainPlayer->freezeCtr;
+                const std::string testBgs[3] = { "assets/backgrounds/backbgtest.png",
+                    "assets/backgrounds/midbgtest.png", "assets/backgrounds/frontbgtest.png", };
+                _bgHandler = new Background();
+                _bgHandler->setBackground("test", testBgs[0], testBgs[1], testBgs[2], screenSize);
 
-        Clear(olc::GREY);
-        SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
-        _bgHandler->update(this, playerPos, displayOffset);
+                _gameState = GameState::TESTLEVEL;
+            }
+            break;
+        }
+        case GameState::TESTLEVEL: {
+            vec2D mouseInfo = { GetMouseX(), GetMouseY() };
+            vec2D playerPos = _mainPlayer->pos;
+            vec2D playerCenter = _mainPlayer->getCenter();
 
-        _mainPlayer->update(this, _audio, fElapsedTime, _worldEnvironment, mouseInfo);
-        _worldEnvironment->update(this, _audio, fElapsedTime, displayOffset, mouseInfo,
-            playerCenter, globalFreezeCtr);
+            vec2D displayOffset = _mainPlayer->getDisplayOffset();
+
+            float globalFreezeCtr = _mainPlayer->freezeCtr;
+
+            Clear(olc::GREY);
+            SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
+            _bgHandler->update(this, playerPos, displayOffset);
+
+            _mainPlayer->update(this, _audio, fElapsedTime, _worldEnvironment, mouseInfo);
+            _worldEnvironment->update(this, _audio, fElapsedTime, displayOffset, mouseInfo,
+                playerCenter, globalFreezeCtr);
+            break;
+        }
+        }
 
         return true;
     }
@@ -83,6 +99,8 @@ private:
     Environment* _worldEnvironment = nullptr;
     Background* _bgHandler = nullptr;
     olc::MiniAudio* _audio;
+
+    GameState _gameState = GameState::MENU;
 };
 
 int main(int* argc, char** argv)
