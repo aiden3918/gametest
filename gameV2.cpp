@@ -79,9 +79,9 @@ public:
             SetPixelMode(olc::Pixel::MASK); // do not draw any transparent pixels
             _bgHandler->update(this, playerPos, displayOffset);
 
-            _mainPlayer->update(this, _audio, fElapsedTime, _worldEnvironment, mouseInfo);
             _worldEnvironment->update(this, _audio, fElapsedTime, displayOffset, mouseInfo,
                 playerCenter, globalFreezeCtr);
+            _mainPlayer->update(this, _audio, fElapsedTime, _worldEnvironment, mouseInfo);
             break;
         }
         }

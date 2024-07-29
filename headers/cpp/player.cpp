@@ -21,8 +21,6 @@ Player::Player(vec2D initPos, vec2D initVel, vec2D initAccel, std::string filena
     //_size = get_png_image_dimensions(filename);
     _size = _partialSpriteSize;
 
-    // _canMove = true;
-
     _displayPos = { (screenSize.x - _size.x) / 2.0f, 1.33f * (screenSize.y - _size.y) / 2.0f };
 
     updateHitbox();
@@ -39,7 +37,7 @@ void Player::update(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
     std::vector<std::pair<GameObject, float>> possibleCollidingTiles;
 
     if (freezeCtr == 0.0f) {
-        _updateHorizontalMovement(engine);
+        if (_noMoveCtr == 0.0f) _updateHorizontalMovement(engine, fElapsedTime);
 
         vel.x += accel.x * fElapsedTime;
         vel.y += accel.y * fElapsedTime;
@@ -54,7 +52,8 @@ void Player::update(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
         }
         else (_iFramesCounter > _iFramesInterval) ? _iFramesCounter = 0.0f : _iFramesCounter += fElapsedTime;
 
-        _updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
+        if (_noMoveCtr == 0.0f) _updateJumpMechanics(engine, fElapsedTime, playerContactNormal, playerT);
+        else { (_noMoveCtr < _noMoveDuration) ? _noMoveCtr += fElapsedTime : _noMoveCtr = 0.0f; }
 
         // technically an approximation, but is ok 
         pos.x += vel.x * fElapsedTime;
@@ -138,29 +137,33 @@ void Player::_updateTileCollisions(float& fElapsedTime, Environment* env,
 
 inline void Player::_updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT) {
     // walljump mechanics
-    if (_movementCtr > 0.0f) {
-        if (_movementCtr < _movementDuration) _movementCtr += fElapsedTime;
-        else _movementCtr = 0.0f;
-    }
 
-    if (_canMove && (engine->GetKey(olc::W).bPressed || engine->GetKey(olc::SPACE).bPressed) &&
-        pcn.y != 1 && playerT == 0.0f && _movementCtr == 0.0f)
+    if ((engine->GetKey(olc::W).bPressed || engine->GetKey(olc::SPACE).bPressed) &&
+        pcn.y != 1 && playerT == 0.0f && _noMoveCtr == 0.0f)
     {
         std::cout << "pcn: " << pcn.x << ", " << pcn.y << std::endl;
         vel.y = -jumpspeed;
         // walljump
         if (pcn.x != 0.0f) {
             vel.x = (pcn.x * 400.0f);
-            _movementCtr += 0.0001f;
+            _noMoveDuration = 0.1f;
+            _noMoveCtr += 0.0001f;
         }
     }
 }
 
-inline void Player::_updateHorizontalMovement(olc::PixelGameEngine* engine) {
-    if (_movementCtr == 0.0f) {
+inline void Player::_updateHorizontalMovement(olc::PixelGameEngine* engine, float &fElapsedTime) {
+    if (_noMoveCtr == 0.0f) {
         vel.x = 0.0f;
         if (engine->GetKey(olc::A).bHeld) vel.x = -movespeed;
         if (engine->GetKey(olc::D).bHeld) vel.x = movespeed;
+        if (engine->GetKey(olc::SHIFT).bPressed && vel.x != 0.0f) {
+            vel.x *= 3.0f;
+            _noMoveDuration = 0.25f;
+            // hack to give iframes for the correct amount of time
+            _iFramesCounter = _iFramesInterval - _noMoveDuration;
+            _noMoveCtr += 0.0001f;
+        }
     }
     // if (engine->GetKey(olc::S).bHeld) vel.y = 100.0f;
 }

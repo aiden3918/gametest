@@ -76,7 +76,7 @@ private:
         float>>&possibleColTiles, vec2D& pct, vec2D& pcn, float& pt);
 
     inline void _updateJumpMechanics(olc::PixelGameEngine* engine, float fElapsedTime, vec2D pcn, float playerT);
-    inline void _updateHorizontalMovement(olc::PixelGameEngine* engine);
+    inline void _updateHorizontalMovement(olc::PixelGameEngine* engine, float& fElapsedTime);
     inline void _updateMouseInfo(olc::PixelGameEngine* engine, vec2D& mouse);
     inline void _updateWeapons(olc::PixelGameEngine* engine);
     inline void _updateParry(olc::PixelGameEngine* engine, olc::MiniAudio* ma,
@@ -117,8 +117,8 @@ private:
     float _parryCooldownDuration = 0.5f;
 
     // movement data
-    float _movementCtr = 0.0f;
-    float _movementDuration = 0.1f;
+    float _noMoveCtr = 0.0f;
+    float _noMoveDuration = 0.0f; // set dynamically based on action
     bool _canMove = true;
 
     //iframes data
