@@ -7,7 +7,8 @@
 #include "../extern-lib/olcPixelGameEngine.h"
 
 // will include parallax effect
-// for ideal results, make the background the same resolution as the game (1280 * 720) px
+// background WIDTHS do NOT have to be the same size as the SCREEN WIDTH, it will align the backdrops
+// automatically :)
 class Background {
 public:
 	Background();
@@ -33,6 +34,8 @@ private:
 	std::unique_ptr<olc::Decal> _frontDecal;
 
 	vec2D _screenSize;
+	vec2D _middleSpriteSize;
+	vec2D _frontSpriteSize;
 
 	float _midX;
 	float _frontX;

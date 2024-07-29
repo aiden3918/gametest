@@ -10,6 +10,8 @@ void Background::setBackground(std::string id, const std::string backRef, const 
 	_backFileRef = backRef;
 	_middleFileRef = midRef;
 	_frontFileRef = frontRef;
+	_middleSpriteSize = get_png_image_dimensions(_middleFileRef);
+	_frontSpriteSize = get_png_image_dimensions(_frontFileRef);
 	//
 	_backSprite = std::make_unique<olc::Sprite>(_backFileRef);
 	_middleSprite = std::make_unique<olc::Sprite>(_middleFileRef);
@@ -50,28 +52,28 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 	int limiter = 0; // since im using for loops
 
 	while (currentMidX > 0.0f && limiter < 10) {
-		currentMidX -= _screenSize.x;
+		currentMidX -= _middleSpriteSize.x;
 		engine->DrawDecal({ currentMidX, 0 }, _middleDecal.get());
 		limiter++;
 	}
 	limiter = 0;
 
 	while (currentMidX < 0.0f && limiter < 10) {
-		currentMidX += _screenSize.x;
+		currentMidX += _middleSpriteSize.x;
 		engine->DrawDecal({ currentMidX, 0 }, _middleDecal.get());
 		limiter++;
 	}
 	limiter = 0;
 
 	while (currentFrontX > 0.0f && limiter < 10) {
-		currentFrontX -= _screenSize.x;
+		currentFrontX -= _frontSpriteSize.x;
 		engine->DrawDecal({ currentFrontX, 0 }, _frontDecal.get());
 		limiter++;
 	}
 	limiter = 0;
 
 	while (currentFrontX < 0.0f && limiter < 10) {
-		currentFrontX += _screenSize.x;
+		currentFrontX += _frontSpriteSize.x;
 		engine->DrawDecal({ currentFrontX, 0 }, _frontDecal.get());
 		limiter++;
 	}
