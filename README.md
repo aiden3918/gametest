@@ -7,14 +7,16 @@ uhhhh if you're here, then you probably know what you are doing. if something bo
 
 man i really need to learn how to properly use github
 
-built on visual studio, but base code (headers, data, assets, main code) can probably be adapted to 
+built on visual studio & c++, but base code (headers, data, assets, main code) can probably be adapted to 
 other IDEs
+
+## if you want proper documentation, please email me at liaiden3918@gmail.com about it (idk if anyone will actually use this). im putting it off because writing documentation is hard :(
 
 ## Features (that were built from scratch)
 - Controllable player
 - basic weapon implementation
 - 2D platformer-like physics, including walljumps and dashes/dodges
-- background (soon to be parallax)
+- parallax background
 - various entity types and basic ai implementation
 - parry (freezing/"hitstop" effect)
 - sounds
