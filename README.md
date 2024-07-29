@@ -13,7 +13,7 @@ other IDEs
 ## Features (that were built from scratch)
 - Controllable player
 - basic weapon implementation
-- 2D platformer-like physics
+- 2D platformer-like physics, including walljumps and dashes/dodges
 - background (soon to be parallax)
 - various entity types and basic ai implementation
 - parry (freezing/"hitstop" effect)

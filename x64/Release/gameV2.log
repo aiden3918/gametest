@@ -6,13 +6,40 @@ C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(30,19): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(64,42): warning C4838: conversion from 'int32_t' to 'float' requires a narrowing conversion
-C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(64,42): warning C4244: 'initializing': conversion from 'int32_t' to 'float', possible loss of data
-C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(64,55): warning C4838: conversion from 'int32_t' to 'float' requires a narrowing conversion
-C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(64,55): warning C4244: 'initializing': conversion from 'int32_t' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(41,38): warning C4838: conversion from 'int32_t' to 'float' requires a narrowing conversion
+C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(41,38): warning C4244: 'initializing': conversion from 'int32_t' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(41,51): warning C4838: conversion from 'int32_t' to 'float' requires a narrowing conversion
+C:\Users\endem\source\repos\game\gameV2\gameV2.cpp(41,51): warning C4244: 'initializing': conversion from 'int32_t' to 'float', possible loss of data
+  entity.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  environment.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\cpp\environment.cpp(50,8): warning C4101: 'entityTypeNum': unreferenced local variable
+C:\Users\endem\source\repos\game\gameV2\headers\cpp\environment.cpp(50,27): warning C4101: 'aiTypeNum': unreferenced local variable
+  gameObject.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  player.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  projectile.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\cpp\projectile.cpp(65,73): warning C4244: 'argument': conversion from 'float' to 'int32_t', possible loss of data
+  tile.cpp
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(48,89): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(73,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\endem\source\repos\game\gameV2\headers\h\util.h(74,59): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Generating code
-  17 of 4488 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    41 functions had inline decision re-evaluated but remain unchanged
+  289 of 4488 functions ( 6.4%) were compiled, the rest were copied from previous compilation.
+    1 functions were new in current compilation
+    129 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   gameV2.vcxproj -> C:\Users\endem\source\repos\game\gameV2\gameV2.exe
