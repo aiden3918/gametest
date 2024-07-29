@@ -21,6 +21,7 @@ other IDEs
 - parry (freezing/"hitstop" effect)
 - sounds
 - background system with parallax effect
+- .txt file implementation for generating world environments
 
 ## License (OLC-3)
 Copyright 2018 - 2024 OneLoneCoder.com

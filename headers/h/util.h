@@ -10,6 +10,7 @@
 #include <math.h>
 
 #define PI 3.14159f
+#define TINY_FLOAT 0.0001f
 
 struct vec2D {
 	float x = 0.0f;
@@ -52,6 +53,7 @@ inline float getFinalVel2(float initVel, float accel, float disp) { return sqrt(
 inline float lerp(float init, float end, float factor) { return init + (factor * (end - init)); }
 
 // rads to deg and vice versa
+inline float getAngleFromVec2D(vec2D& vec) { return atan2f(vec.y, vec.x); }
 inline float radToDeg(float& rad) { return rad * 180.0f / PI; }
 inline float degToRad(float& deg) { return deg * PI / 180.0f; }
 
