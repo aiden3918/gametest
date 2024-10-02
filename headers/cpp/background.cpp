@@ -3,7 +3,7 @@
 Background::Background() {}
 Background::~Background() {}
 
-void Background::setBackground(std::string id, const std::string backRef, const std::string midRef, 
+void Background::setBackground(std::string id, const std::string backRef, const std::string midRef,
 	const std::string frontRef, vec2D screenSize) {
 
 	_id = id;
@@ -12,6 +12,8 @@ void Background::setBackground(std::string id, const std::string backRef, const 
 	_frontFileRef = frontRef;
 	_middleSpriteSize = get_png_image_dimensions(_middleFileRef);
 	_frontSpriteSize = get_png_image_dimensions(_frontFileRef);
+	std::cout << "middle bg size: " << _middleSpriteSize.x << " x " << _middleSpriteSize.y << " px" << std::endl;
+	std::cout << "front bg size: " << _frontSpriteSize.x << " x " << _frontSpriteSize.y << " px" << std::endl;
 	//
 	_backSprite = std::make_unique<olc::Sprite>(_backFileRef);
 	_middleSprite = std::make_unique<olc::Sprite>(_middleFileRef);
@@ -35,7 +37,7 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 
 	// get background data
 	if (engine->GetKey(olc::B).bPressed) {
-		std::cout << "original mid bg x pos: " << _midX<< std::endl;
+		std::cout << "original mid bg x pos: " << _midX << std::endl;
 		std::cout << "original front bg x pos: " << _frontX << std::endl;
 	}
 
@@ -58,7 +60,7 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 	}
 	limiter = 0;
 
-	while (currentMidX < 0.0f && limiter < 10) {
+	while (currentMidX + _middleSpriteSize.x < _screenSize.x && limiter < 10) {
 		currentMidX += _middleSpriteSize.x;
 		engine->DrawDecal({ currentMidX, 0 }, _middleDecal.get());
 		limiter++;
@@ -72,7 +74,7 @@ void Background::update(olc::PixelGameEngine* engine, vec2D& playerPos, vec2D& d
 	}
 	limiter = 0;
 
-	while (currentFrontX < 0.0f && limiter < 10) {
+	while (currentFrontX + _frontSpriteSize.x < _screenSize.x && limiter < 10) {
 		currentFrontX += _frontSpriteSize.x;
 		engine->DrawDecal({ currentFrontX, 0 }, _frontDecal.get());
 		limiter++;
